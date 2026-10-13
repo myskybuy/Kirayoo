@@ -1,0 +1,35 @@
+import { chromium } from 'playwright-core';
+const [S, ADM, ARJUN, BID] = process.argv.slice(2);
+const base = 'http://localhost:3001';
+const log = (...a) => console.log(...a);
+const b = await chromium.launch({ channel: 'msedge' });
+async function as(token, w = 1440) {
+  const ctx = await b.newContext({ viewport: { width: w, height: 1000 } });
+  await ctx.addCookies([{ name: 'kirayo_session', value: token, url: base }]);
+  const p = await ctx.newPage(); p.on('pageerror', (e) => log('PAGEERROR', e.message)); p.on('dialog', (d) => d.accept()); return p;
+}
+const msg = async (p) => (await p.locator('.k-alert').first().innerText().catch(() => '')).replace(/\n/g, ' ');
+const a = await as(ADM);
+await a.goto(base + '/admin'); log('1 dashboard tiles:', (await a.locator('a.q').allInnerTexts()).map((t) => t.replace(/\n/g, ' ')).join(' || '));
+await a.screenshot({ path: S + '/shots/a-dash.png', fullPage: true });
+await a.goto(base + '/admin/disputes');
+await a.screenshot({ path: S + '/shots/a-disputes.png', fullPage: true });
+await a.getByRole('button', { name: /Split 50/ }).click();
+await a.locator('#why').fill('Plate not visible in the pickup photos either; splitting.');
+await a.getByRole('button', { name: 'Close dispute' }).click(); await a.waitForURL(/ok=/); log('2', await msg(a));
+await a.goto(base + '/admin/payouts'); log('3 payouts rows:', await a.locator('tbody tr').count());
+await a.locator('tbody tr').first().locator('input[name=reference]').fill('UTR123456789');
+await a.locator('tbody tr').first().getByRole('button', { name: 'Mark paid' }).click(); await a.waitForURL(/ok=/); log('4', await msg(a));
+await a.screenshot({ path: S + '/shots/a-payouts.png', fullPage: true });
+await a.goto(base + '/admin/refunds?tab=refunded'); log('5 refunds rows:', await a.locator('tbody tr').count());
+await a.goto(base + '/admin/bookings?q=KR-2026-228207'); log('6 booking timeline items:', await a.locator('ol li').count());
+await a.screenshot({ path: S + '/shots/a-bookings.png', fullPage: true });
+await a.goto(base + '/admin/users?q=vikram'); await a.getByRole('button', { name: 'Block' }).click(); await a.waitForURL(/ok=/); log('7', await msg(a));
+await a.getByRole('button', { name: 'Unblock' }).click(); await a.waitForURL(/ok=Unblocked/); log('8', await msg(a));
+await a.goto(base + '/admin/users?q=arjun'); await a.locator('tbody a').first().click(); await a.waitForURL(/u=/); log('9 drawer sections:', await a.locator('[aria-label="User details"] b').count());
+await a.goto(base + '/admin/complaints?tab=contact'); log('10 contact msgs:', await a.locator('section').count());
+const o = await as(ARJUN);
+await o.goto(base + `/owner/bookings/${BID}`); log('11 owner next:', (await o.locator('.k-next').innerText()).replace(/\n/g, ' | '));
+await o.goto(base + '/owner/earnings'); await o.screenshot({ path: S + '/shots/o-earnings.png', fullPage: true }); log('12 earnings first row:', (await o.locator('tbody tr').first().innerText()).replace(/\s+/g, ' '));
+await o.goto(base + '/owner'); await o.screenshot({ path: S + '/shots/o-dash.png', fullPage: true }); log('13 owner tasks:', await o.locator('.task').count());
+await b.close();

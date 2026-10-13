@@ -1,8 +1,8 @@
 # Kirayo — build progress
 
-**Current phase:** 8 — Money settlement + admin money screens (Phase 7 done)
+**Current phase:** 9 — Reviews, static pages, states, polish, seed bookings, README, LOGINS (Phase 8 done)
 
-**Next step:** Phase 8 — admin `/admin/disputes` (A06: both condition reports side by side, claim, renter note → decide amount via `decideDispute`), `/admin/payouts` (A07 mark paid with reference + email), `/admin/refunds` (list + retry via `retryRefund`), `/admin/bookings` (A05 search/filter/timeline/cancel with refund), `/admin/users` (A04), `/admin/complaints`, `/admin` dashboard (A01); owner `/owner/earnings` (O08) and `/owner` dashboard (O01 "Needs your action").
+**Next step:** Phase 9 — reviews (`/bookings/[id]/review` R19, `/owner/bookings/[id]/review`, `/owner/reviews` O09, `lib/reviews` + e2e case); static pages (About R21, How it works R22, Contact R23 + ContactMessage, Terms R24, Privacy R25, Deposit policy R26, 404 R27); `loading.tsx`/`error.tsx` (S02/S03); seed bookings in every status (`prisma/seed-bookings.ts`); `LOGINS.md`; final README; 360 px pass.
 
 ---
 
@@ -83,7 +83,11 @@
 - [x] **Phase 7 done** (browser: tools/ui/phase7.mjs)
 
 ### Phase 8 — Money settlement
-- [ ] Deposit refund; payouts; admin disputes, payouts, refunds; owner earnings
+- [x] Deposit refund (Razorpay Refunds API / demo) → DEPOSIT_REFUNDED → payout (done in Phase 7 lib, verified here)
+- [x] Admin: dashboard (A01), disputes (A06, decide amount), payouts (A07, mark paid + reference + email), refunds (list + retry), bookings (A05 search/filter/timeline/cancel+refund), users (A04 search, block/unblock, details drawer), complaints & contact (resolve with note)
+- [x] Owner: dashboard (O01 KPIs + "Needs your action"), earnings (O08 payouts, fees, cash bookings)
+
+- [x] **Phase 8 done** (browser: tools/ui/phase8.mjs; e2e 66/66)
 
 ### Phase 9 — Polish
 - [ ] Reviews; static pages; 404; loading/empty/error; 360 px polish; README; LOGINS.md; e2e
@@ -160,6 +164,8 @@ The kit as delivered uses `design/renter|owner|admin/*.html` + `css/` + `png/` a
 ---
 
 ## Decisions
+- **Deposit refund timing:** the whole (deposit − claim) is refunded once the claim is settled (brief: "Refund = deposit − accepted or decided claim"); the design's "unclaimed part refunded right away" partial refund is not implemented.
+- **Owner bank details / CSV export / earnings chart:** not in the brief's data model or scope ("analytics charts" out of scope), so O01's chart and O08/A07 bank rows are replaced by a "Coming up" list and a "How payouts work" card; admin records the UTR/UPI reference when marking a payout paid.
 - **Payment page:** the design's UPI/card/netbanking picker is handled inside Razorpay Checkout, so R11 shows the brief's two options instead: "Option 1 — Pay online now" and "Option 2 — Pay at pickup (cash / UPI)". The design's "Add to calendar" / "Receipt PDF" buttons on R12 are not in the brief and were left out.
 - **Pickup time:** bookings are by date (the brief has no time field); times are agreed in chat, and pages say so.
 - **Request handover mode:** booking requests carry dates only; pickup vs delivery is chosen at checkout (`/book/[id]`), so the held booking starts as PICKUP (or DELIVERY if the item can't be picked up).

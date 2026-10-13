@@ -6,6 +6,8 @@ import { getUser } from '@/lib/auth';
 import { backTo } from '@/lib/admin';
 import { postSystem } from '@/lib/chat';
 import { mail } from '@/lib/mail';
+import { BookingError, cancelBooking, decideDispute, retryRefund } from '@/lib/bookings';
+import { inr } from '@/lib/format';
 
 async function admin() {
   const u = await getUser();
@@ -78,4 +80,109 @@ export async function rejectIdAction(fd: FormData) {
   await mail.idRejected(u.email, reason);
   revalidatePath('/admin', 'layout');
   redirect(withMsg(back, 'ok', `Rejected ${u.name}'s ID — they were told why.`));
+}
+
+// ---------------- Money: disputes, payouts, refunds ----------------
+
+async function guarded(back: string, fn: () => Promise<string>) {
+  let msg: string;
+  try {
+    msg = withMsg(back, 'ok', await fn());
+  } catch (e) {
+    if (!(e instanceof BookingError)) throw e;
+    msg = withMsg(back, 'error', e.message);
+  }
+  revalidatePath('/admin', 'layout');
+  redirect(msg);
+}
+
+export async function decideDisputeAction(fd: FormData) {
+  const me = await admin();
+  const back = backTo(fd.get('back'), '/admin/disputes');
+  await guarded(back, async () => {
+    const amount = Number(String(fd.get('amount') ?? '').replace(/[^\d]/g, ''));
+    if (String(fd.get('amount') ?? '').trim() === '' || Number.isNaN(amount)) throw new BookingError('Choose the amount that goes to the owner.');
+    await decideDispute(String(fd.get('bookingId')), me.id, amount, String(fd.get('note') || '').trim().slice(0, 500));
+    return `Dispute closed — ${inr(amount)} to the owner, the rest refunded.`;
+  });
+}
+
+export async function markPayoutPaidAction(fd: FormData) {
+  await admin();
+  const back = backTo(fd.get('back'), '/admin/payouts');
+  await guarded(back, async () => {
+    const ref = String(fd.get('reference') || '').trim();
+    if (ref.length < 4) throw new BookingError('Enter the bank / UPI reference of the transfer.');
+    const p = await prisma.payout.findUnique({ where: { id: String(fd.get('id')) }, include: { owner: true, booking: { select: { conversationId: true, id: true, code: true } } } });
+    if (!p) throw new BookingError('Payout not found.');
+    const r = await prisma.payout.updateMany({ where: { id: p.id, status: 'PENDING' }, data: { status: 'PAID', paidAt: new Date(), reference: ref.slice(0, 80) } });
+    if (r.count !== 1) throw new BookingError('This payout was already marked paid.');
+    await postSystem(prisma, p.booking.conversationId, `Kirayo paid ${inr(p.amount)} to the owner (ref ${ref}).`, p.booking.id);
+    await mail.payoutPaid(p.owner.email, inr(p.amount), ref);
+    return `Marked ${inr(p.amount)} to ${p.owner.name} as paid.`;
+  });
+}
+
+export async function retryRefundAction(fd: FormData) {
+  await admin();
+  const back = backTo(fd.get('back'), '/admin/refunds');
+  await guarded(back, async () => {
+    const r = await retryRefund(String(fd.get('id')));
+    if (r.status !== 'REFUNDED') throw new BookingError(`Refund failed again: ${r.error ?? 'unknown error'}`);
+    return `Refunded ${inr(r.amount)} (${r.refundId}).`;
+  });
+}
+
+export async function adminCancelBookingAction(fd: FormData) {
+  const me = await admin();
+  const back = backTo(fd.get('back'), '/admin/bookings');
+  await guarded(back, async () => {
+    const reason = String(fd.get('reason') || '').trim();
+    if (reason.length < 3) throw new BookingError('Write a reason — both sides see it.');
+    const b = await cancelBooking(String(fd.get('bookingId')), { role: 'ADMIN', userId: me.id }, reason.slice(0, 200));
+    return `Cancelled ${b.code}. Any online payment is refunded in full.`;
+  });
+}
+
+// ---------------- Users ----------------
+
+export async function setBlockedAction(fd: FormData) {
+  await admin();
+  const back = backTo(fd.get('back'), '/admin/users');
+  await guarded(back, async () => {
+    const u = await prisma.user.findUnique({ where: { id: String(fd.get('id')) } });
+    if (!u) throw new BookingError('User not found.');
+    if (u.isAdmin) throw new BookingError('The admin account cannot be blocked.');
+    const block = fd.get('block') === '1';
+    await prisma.$transaction([
+      prisma.user.update({ where: { id: u.id }, data: { isBlocked: block } }),
+      ...(block ? [prisma.session.deleteMany({ where: { userId: u.id } })] : []),
+    ]);
+    return block ? `Blocked ${u.name} — they are logged out and their items are hidden.` : `Unblocked ${u.name}.`;
+  });
+}
+
+// ---------------- Complaints & contact ----------------
+
+export async function resolveComplaintAction(fd: FormData) {
+  await admin();
+  const back = backTo(fd.get('back'), '/admin/complaints');
+  await guarded(back, async () => {
+    const note = String(fd.get('note') || '').trim().slice(0, 500);
+    const c = await prisma.complaint.findUnique({ where: { id: String(fd.get('id')) }, include: { booking: true, byUser: true } });
+    if (!c) throw new BookingError('Complaint not found.');
+    await prisma.complaint.update({ where: { id: c.id }, data: { status: 'RESOLVED', adminNote: note || null } });
+    await postSystem(prisma, c.booking.conversationId, `Kirayo admin resolved the reported problem (${c.reason})${note ? `: ${note}` : '.'}`, c.bookingId);
+    await mail.status(c.byUser.email, `Your report was resolved · ${c.booking.code}`, `Kirayo admin resolved your report "${c.reason}"${note ? `: ${note}` : '.'}`, `/bookings/${c.bookingId}`);
+    return 'Complaint resolved.';
+  });
+}
+
+export async function resolveContactAction(fd: FormData) {
+  await admin();
+  const back = backTo(fd.get('back'), '/admin/complaints?tab=contact');
+  await guarded(back, async () => {
+    await prisma.contactMessage.update({ where: { id: String(fd.get('id')) }, data: { resolved: true, adminNote: String(fd.get('note') || '').trim().slice(0, 500) || null } });
+    return 'Message marked resolved.';
+  });
 }
