@@ -10,7 +10,7 @@
     "setup": "prisma generate && prisma db push && prisma db seed",
     "db:push": "prisma db push",
     "db:seed": "prisma db seed",
-    "db:reset": "prisma db push --force-reset && prisma db seed",
+    "db:reset": "prisma db push --skip-generate && prisma db seed",
     "db:add-demo-owners": "tsx prisma/add-demo-owners.ts",
     "e2e": "tsx scripts/e2e-flow.ts",
     "test:unit": "tsx scripts/unit-bookings.ts",
