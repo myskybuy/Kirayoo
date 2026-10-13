@@ -1,8 +1,8 @@
 # Kirayo — build progress
 
-**Current phase:** 9 — Reviews, static pages, states, polish, seed bookings, README, LOGINS (Phase 8 done)
+**Current phase:** All phases done (0–9).
 
-**Next step:** Phase 9 — reviews (`/bookings/[id]/review` R19, `/owner/bookings/[id]/review`, `/owner/reviews` O09, `lib/reviews` + e2e case); static pages (About R21, How it works R22, Contact R23 + ContactMessage, Terms R24, Privacy R25, Deposit policy R26, 404 R27); `loading.tsx`/`error.tsx` (S02/S03); seed bookings in every status (`prisma/seed-bookings.ts`); `LOGINS.md`; final README; 360 px pass.
+**Next step:** None required. Optional follow-ups: test with real Razorpay test keys and real SMTP (code paths are implemented but were only exercised in demo/console mode here).
 
 ---
 
@@ -90,7 +90,13 @@
 - [x] **Phase 8 done** (browser: tools/ui/phase8.mjs; e2e 66/66)
 
 ### Phase 9 — Polish
-- [ ] Reviews; static pages; 404; loading/empty/error; 360 px polish; README; LOGINS.md; e2e
+- [x] Reviews (R19 renter → owner + item, owner → renter, O09 owner reviews page)
+- [x] About, How it works, Contact (saves ContactMessage), Terms, Privacy, Deposit policy (text aligned with the real rules), 404, loading (S02) and error (S03) states; empty states on lists
+- [x] Seed bookings in every status (`prisma/seed-bookings.ts`), `LOGINS.md` (`tools/write-logins.ts`)
+- [x] 360 px pass: no horizontal overflow or console errors on any page (tools/shot.mjs)
+- [x] Final README; typecheck + build; unit checks; e2e 71/71
+
+- [x] **Phase 9 done**
 
 ---
 
@@ -164,6 +170,8 @@ The kit as delivered uses `design/renter|owner|admin/*.html` + `css/` + `png/` a
 ---
 
 ## Decisions
+- **`db:reset`** is `prisma db push --skip-generate && prisma db seed`: the seed itself wipes the DB only when every user is a `@*.test` demo account (Prisma also refuses `--force-reset` from an AI agent without explicit user consent). `--skip-generate` avoids the Windows EPERM lock while `next dev` runs.
+- **Reviews:** one rating per side; the renter's rating counts for both the owner and the item (`Review.itemId`). Reviews show immediately (the O09 "after 7 days / both submit" note was not in the brief).
 - **Deposit refund timing:** the whole (deposit − claim) is refunded once the claim is settled (brief: "Refund = deposit − accepted or decided claim"); the design's "unclaimed part refunded right away" partial refund is not implemented.
 - **Owner bank details / CSV export / earnings chart:** not in the brief's data model or scope ("analytics charts" out of scope), so O01's chart and O08/A07 bank rows are replaced by a "Coming up" list and a "How payouts work" card; admin records the UTR/UPI reference when marking a payout paid.
 - **Payment page:** the design's UPI/card/netbanking picker is handled inside Razorpay Checkout, so R11 shows the brief's two options instead: "Option 1 — Pay online now" and "Option 2 — Pay at pickup (cash / UPI)". The design's "Add to calendar" / "Receipt PDF" buttons on R12 are not in the brief and were left out.
