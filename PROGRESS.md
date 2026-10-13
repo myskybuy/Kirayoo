@@ -1,8 +1,8 @@
 # Kirayo — build progress
 
-**Current phase:** 2 — Owner listings (Phase 1 done)
+**Current phase:** 3 — Discovery (Phase 2 done)
 
-**Next step:** Phase 2 — `lib/storage.ts` + upload route, then `/owner/start`, owner panel layout (side nav), item form (O02).
+**Next step:** Phase 3 — demo photos in `public/demo/` + fuller seed (owners/items per area), then home rails (R01), browse (R03), item page (R04 + S04).
 
 ---
 
@@ -30,11 +30,13 @@
 - [x] **Phase 1 done** (browser flow: tools/ui/phase1.mjs)
 
 ### Phase 2 — Owner listings
-- [ ] `/owner/start`
-- [ ] Item form + uploads (`lib/storage.ts`, `/uploads/[...path]`)
-- [ ] Blocked-dates calendar (form + `/owner/calendar`)
-- [ ] My listings tabs, pause/resume/delete rules
-- [ ] Admin listing approvals
+- [x] `/owner/start`
+- [x] Item form + uploads (`lib/storage.ts`, `/uploads/[...path]`)
+- [x] Blocked-dates calendar (form + `/owner/calendar`)
+- [x] My listings tabs, pause/resume/delete rules
+- [x] Admin listing approvals
+
+- [x] **Phase 2 done** (browser flow: tools/ui/phase2.mjs)
 
 ### Phase 3 — Discovery
 - [ ] Home rails, categories
@@ -140,6 +142,11 @@ The kit as delivered uses `design/renter|owner|admin/*.html` + `css/` + `png/` a
 ---
 
 ## Decisions
+- **Item form:** no "Save draft" (no draft status in the brief) and no per-item delivery fee (brief: flat `DELIVERY_FEE`); added the cash-at-pickup toggle. Photos max 8 (brief) instead of the kit text "10".
+- **Delete item** = soft delete (`deletedAt`) so past bookings keep their item; blocked when any upcoming/active booking exists. Open requests on a deleted/taken-down item are declined with a SYSTEM message.
+- **Resume** of a PAUSED item goes straight back to ACTIVE (it was already approved). Admin "take down" sets REJECTED with reason "Taken down: …".
+- **Owner calendar** = the O05 all-items timeline; tapping an empty future day toggles a block.
+- **Dev gotcha:** Turbopack sometimes misses a rewritten `layout.tsx`; restart `npm run dev` if a layout change does not show.
 - **Login vs sign-up:** `/login` (R05) accepts any email; unknown emails get a SIGNUP code and the verify page (R06) asks for the name, exactly as the design shows. `/signup` is the same R05 card with a name field.
 - **First visit:** Home redirects to `/location` until a location is chosen (cookie for guests, saved on the user after login). After first login without a location, the user is sent to `/location`.
 - **Profile area** is read-only with a "Change city / area" link (location changes only via the header chip / location page).

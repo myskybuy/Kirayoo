@@ -1,4 +1,3 @@
-import 'server-only';
 import crypto from 'node:crypto';
 import type { OtpPurpose } from '@prisma/client';
 import { prisma } from './db';

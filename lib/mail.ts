@@ -1,4 +1,3 @@
-import 'server-only';
 import nodemailer, { type Transporter } from 'nodemailer';
 import { APP_URL } from './constants';
 

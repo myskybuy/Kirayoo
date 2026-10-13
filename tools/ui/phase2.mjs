@@ -1,0 +1,60 @@
+import { chromium } from 'playwright-core';
+const [S, OWN, ADM] = process.argv.slice(2);
+const base = 'http://localhost:3001';
+const b = await chromium.launch({ channel: 'msedge' });
+// make test images
+const gen = await b.newPage({ viewport: { width: 800, height: 600 } });
+const imgs = [];
+for (const [i, c] of ['#BFD1BD', '#EDE5D5', '#F1D9CB'].entries()) {
+  await gen.setContent(`<body style="margin:0;background:${c};display:flex;align-items:center;justify-content:center;height:100vh;font:700 60px sans-serif;color:#1F4D3A">Test photo ${i + 1}</body>`);
+  const p = `${S}/img${i}.jpg`; await gen.screenshot({ path: p, type: 'jpeg' }); imgs.push(p);
+}
+const log = (...a) => console.log(...a);
+async function as(token) {
+  const ctx = await b.newContext({ viewport: { width: 1440, height: 900 } });
+  await ctx.addCookies([{ name: 'kirayo_session', value: token, url: base }]);
+  const p = await ctx.newPage(); p.on('pageerror', (e) => log('PAGEERROR', e.message)); return p;
+}
+const o = await as(OWN);
+await o.goto(base + '/owner/new');
+await o.locator('input[type=file]').setInputFiles(imgs);
+await o.getByText('3/8').waitFor(); log('1 uploaded 3 photos');
+await o.getByLabel('Title').fill('Test tent for four');
+await o.getByLabel('Category').selectOption('CAMPING');
+await o.getByLabel(/Description/).fill('Four person tent with rain fly, pegs and carry bag included.');
+await o.getByLabel('Per day').fill('300');
+await o.getByLabel(/Per week/).fill('1500');
+await o.getByLabel('Refundable deposit').fill('3000');
+await o.getByLabel('Maximum days').fill('14');
+await o.getByRole('button', { name: 'Next month' }).click();
+await o.locator('button.day[aria-pressed=false]').nth(3).click();
+await o.locator('button.day[aria-pressed=false]').nth(3).click();
+log('  blocked days in form:', await o.locator('input[name=blocked]').inputValue());
+await o.locator('input[name=acceptsCashAtPickup]').check();
+await o.screenshot({ path: S + '/shots/o-new.png', fullPage: true });
+await o.getByRole('button', { name: 'Submit for approval' }).click();
+await o.waitForURL('**/owner/listings?tab=pending*'); log('2 saved ->', o.url());
+log('  pending row:', await o.getByText('Test tent for four').count());
+const a = await as(ADM);
+await a.goto(base + '/admin/listings?q=Test tent');
+await a.screenshot({ path: S + '/shots/a-listings.png', fullPage: true });
+await a.locator('article', { hasText: 'Test tent for four' }).getByRole('button', { name: 'Approve' }).click();
+await a.waitForURL(/ok=/); log('3 admin ->', decodeURIComponent(a.url().split('ok=')[1]));
+await o.goto(base + '/owner/listings?tab=active');
+log('4 active row:', await o.getByText('Test tent for four').count());
+await o.locator('tr', { hasText: 'Test tent for four' }).getByRole('switch').click();
+await o.waitForURL('**tab=paused'); log('5 paused, row:', await o.getByText('Test tent for four').count());
+await o.locator('tr', { hasText: 'Test tent for four' }).getByRole('switch').click();
+await o.waitForURL('**tab=active'); log('6 resumed');
+await o.goto(base + '/owner/calendar');
+const before = await o.locator('button[aria-label^="Unblock"]').count();
+await o.locator('button[aria-label^="Block"]').nth(2).click();
+await o.waitForLoadState('networkidle');
+log('7 calendar blocked cells', before, '->', await o.locator('button[aria-label^="Unblock"]').count());
+await o.screenshot({ path: S + '/shots/o-cal.png', fullPage: true });
+await o.goto(base + '/owner/listings?tab=active');
+await o.screenshot({ path: S + '/shots/o-listings.png', fullPage: true });
+o.on('dialog', (d) => d.accept());
+await o.locator('tr', { hasText: 'Test tent for four' }).getByRole('button', { name: 'Delete' }).click();
+await o.waitForURL('**deleted=1'); log('8 deleted');
+await b.close();

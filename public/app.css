@@ -106,3 +106,6 @@ textarea.k-in { padding: 12px 14px; min-height: 96px; resize: vertical; }
 .k-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .k-tw { overflow-x: auto; }
 .k-tw table { width: 100%; border-collapse: collapse; }
+
+/* Kit fix: .opt input{width:20px} also hit the text field inside an option card (O02) */
+.opt input.in { width: 100%; height: auto; margin-top: 8px; }

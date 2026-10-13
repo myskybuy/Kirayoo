@@ -1,4 +1,3 @@
-import 'server-only';
 import { prisma } from './db';
 import { addDays, todayIST, toDbDate } from './format';
 import type { SessionUser } from './auth';
