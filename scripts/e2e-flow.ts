@@ -6,6 +6,7 @@ import * as B from '../lib/bookings';
 import * as C from '../lib/chat';
 import { runDueJobs } from '../lib/jobs';
 import { payTarget } from '../lib/pay-target';
+import { submitReview } from '../lib/reviews';
 import { addDays, dayOf, todayIST } from '../lib/format';
 
 const prisma = new PrismaClient();
@@ -296,8 +297,22 @@ async function phase7(u: { owner: User; renter: User; renter2: User; it: Item })
   await phase9({ owner, renter, booking: done });
 }
 
-// Later phases plug in here.
-async function phase9(_u: { owner: User; renter: User; booking: { id: string } }) {}
+async function phase9(u: { owner: User; renter: User; booking: { id: string } }) {
+  const { owner, renter, booking: done } = u;
+  console.log('\n# Reviews');
+  await submitReview(done.id, renter.id, 5, ['On time', 'Friendly', 'Not a real tag'], 'Smooth rental.');
+  const rv = await prisma.review.findFirstOrThrow({ where: { bookingId: done.id, fromUserId: renter.id } });
+  check('renter rates owner (+ item), unknown tags dropped', rv.toUserId === owner.id && !!rv.itemId && rv.tags.length === 2);
+  await expectError('one review per side', () => submitReview(done.id, renter.id, 4, [], ''), /already reviewed/);
+  await submitReview(done.id, owner.id, 4, ['Returned on time'], 'Careful renter.');
+  check('owner rates renter (no item)', !!(await prisma.review.findFirst({ where: { bookingId: done.id, fromUserId: owner.id, toUserId: renter.id, itemId: null } })));
+  const it = await item(owner.id, { title: `E2E review gate ${TAG}` });
+  const early = await hold(it, owner, renter, d(50), d(51));
+  await expectError('no review before the return is confirmed', () => submitReview(early.id, renter.id, 5, [], ''), /after the return is confirmed/);
+  const b = await booking(done.id);
+  const ns = B.nextStepFor({ ...b, item: it, renter, owner, reviews: await prisma.review.findMany({ where: { bookingId: done.id } }) }, 'RENTER');
+  check('Next card after both reviews: all done', ns.tone === 'done');
+}
 
 async function cleanup() {
   const users = await prisma.user.findMany({ where: { email: { contains: `.${TAG}@` } }, select: { id: true } });

@@ -37,8 +37,10 @@ export const categoryBySlug = (s?: string | null) => CATEGORIES.find((x) => x.sl
 
 export const ID_DOC_TYPES = ['Aadhaar', 'PAN', 'Driving licence', 'Passport'] as const;
 
-export const RENTER_REVIEW_TAGS = ['On time', 'Item as described', 'Friendly owner', 'Easy handover', 'Good value', 'Clean & working'];
-export const OWNER_REVIEW_TAGS = ['On time', 'Took good care', 'Easy to talk to', 'Returned clean', 'Would rent again'];
+/** Tags a renter can give the owner/item (R19). */
+export const RENTER_REVIEW_TAGS = ['Item as described', 'Clean & working', 'On time', 'Friendly', 'Clear instructions', 'Flexible'];
+/** Tags an owner can give the renter (O09). */
+export const OWNER_REVIEW_TAGS = ['Returned on time', 'Careful with item', 'Good communication', 'Would lend again'];
 
 export const COMPLAINT_REASONS = ['Item not working', 'Item different from listing', 'Safety concern', 'Owner unreachable', 'Other'];
 
