@@ -1,8 +1,8 @@
 # Kirayo — build progress
 
-**Current phase:** 6 — Checkout + payment (Phase 5 done)
+**Current phase:** 7 — Handover, in use, return, claims, jobs (Phase 6 done)
 
-**Next step:** Phase 6 — `/book/[id]` checkout (R08: pickup/delivery + saved address, breakdown, policy, terms, ID blocker), `/pay/[id]` (R11 online Razorpay/demo + cash option, S06 failure/retry), Razorpay order/verify route handlers, `/bookings/[id]/confirmed` (R12); extend e2e with payment/cancellation cases.
+**Next step:** Phase 7 — fill `components/OwnerSections.tsx` (O06 pickup handover: photos + cash tick + OTP, no-show; O07 return: photos + OTP, All OK / claim form; extension answer) and `components/RenterSections.tsx` (R15 pickup OTP + own photos, R16/S07 in use + extension + report a problem, R17 return OTP, S08 claim accept/dispute, R18 refund); server actions in `app/actions/bookings.ts`; extend e2e (OTP, extension, return, claim→dispute→decision, no-show).
 
 ---
 
@@ -66,9 +66,12 @@
 - [x] **Phase 5 done** (browser: tools/ui/phase5.mjs)
 
 ### Phase 6 — Checkout + payment
-- [ ] `/book/[id]` checkout
-- [ ] `/pay/[id]` Razorpay / demo / cash; failure + retry
-- [ ] Atomic confirm + auto-refund on conflict; cancellation policy
+- [x] `/book/[id]` checkout (R08) — pickup/delivery + saved address/phone, breakdown, policy, terms, ID blocker
+- [x] `/pay/[id]` (R11) Razorpay test (order + Checkout + signature/payment verify) / demo / cash; S06 failure + retry; `/bookings/[id]/confirmed` (R12)
+- [x] Atomic, idempotent confirm + full auto-refund on conflict; cancellation policy (≥24 h full, <24 h one day kept, owner cancel full + counted)
+- [x] e2e: 35 checks pass
+
+- [x] **Phase 6 done** (browser: tools/ui/phase6.mjs)
 
 ### Phase 7 — Handover + in use + return + claims + jobs
 - [ ] Pickup handover (photos, cash tick, OTP)
@@ -154,6 +157,8 @@ The kit as delivered uses `design/renter|owner|admin/*.html` + `css/` + `png/` a
 ---
 
 ## Decisions
+- **Payment page:** the design's UPI/card/netbanking picker is handled inside Razorpay Checkout, so R11 shows the brief's two options instead: "Option 1 — Pay online now" and "Option 2 — Pay at pickup (cash / UPI)". The design's "Add to calendar" / "Receipt PDF" buttons on R12 are not in the brief and were left out.
+- **Pickup time:** bookings are by date (the brief has no time field); times are agreed in chat, and pages say so.
 - **Request handover mode:** booking requests carry dates only; pickup vs delivery is chosen at checkout (`/book/[id]`), so the held booking starts as PICKUP (or DELIVERY if the item can't be picked up).
 - **Counter-offers:** only the owner counters; the renter accepts the counter (which creates the hold) or withdraws. A new request from the renter withdraws their older pending one.
 - **Concurrency:** every date-changing transaction takes `pg_advisory_xact_lock(hashtext(itemId))` and re-checks availability inside; status changes use `updateMany where status = current` so double clicks can't apply twice.

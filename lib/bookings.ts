@@ -695,7 +695,7 @@ export async function payExtension(extensionId: string, renterId: string, paymen
 // ---------------------------------------------------------------------------
 
 export type ViewerRole = 'RENTER' | 'OWNER';
-export type NextStep = { text: string; buttonLabel?: string; href?: string; tone: 'action' | 'wait' | 'alert' | 'done' };
+export type NextStep = { text: string; buttonLabel?: string; href?: string; tone: 'action' | 'info' | 'wait' | 'alert' | 'done' };
 export type BookingForNext = Booking & {
   item: Pick<Item, 'title'>;
   renter: Pick<User, 'name'>;
@@ -734,9 +734,9 @@ export function nextStepFor(b: BookingForNext, role: ViewerRole, now = new Date(
       const cash = b.paymentMode === 'CASH_AT_PICKUP';
       if (role === 'RENTER') {
         const when = start === today ? 'today' : start === addDays(today, 1) ? 'tomorrow' : `on ${fmtDay(start)}`;
-        return { text: `Pickup ${when}. Show your pickup OTP to ${o} at handover${cash ? ` and pay ${inr(b.total)} in cash / UPI` : ''}.`, buttonLabel: 'Show your pickup OTP', href: `${page}#otp`, tone: start <= today ? 'action' : 'wait' };
+        return { text: `Pickup ${when}. Show your pickup OTP to ${o} at handover${cash ? ` and pay ${inr(b.total)} in cash / UPI` : ''}.`, buttonLabel: 'Show your pickup OTP', href: `${page}#otp`, tone: start <= today ? 'action' : 'info' };
       }
-      if (start > today) return { text: `Confirmed — on pickup day (${fmtDay(start)}) take condition photos${cash ? `, collect ${inr(b.total)}` : ''} and enter ${r}’s OTP.`, buttonLabel: 'Open handover', href: `${page}#handover`, tone: 'wait' };
+      if (start > today) return { text: `Confirmed — on pickup day (${fmtDay(start)}) take condition photos${cash ? `, collect ${inr(b.total)}` : ''} and enter ${r}’s OTP.`, buttonLabel: 'Open handover', href: `${page}#handover`, tone: 'info' };
       return { text: `Pickup ${start === today ? 'today' : `was due ${fmtDay(start)}`}: take at least 2 condition photos${cash ? `, tick “I collected ${inr(b.total)}”` : ''}, then enter ${r}’s OTP.`, buttonLabel: 'Start handover', href: `${page}#handover`, tone: 'action' };
     }
     case 'PICKED_UP': {
@@ -746,7 +746,7 @@ export function nextStepFor(b: BookingForNext, role: ViewerRole, now = new Date(
         if (end === today) return { text: 'Return due today — show your return OTP to the owner at handover.', buttonLabel: 'Show your return OTP', href: `${page}#otp`, tone: 'action' };
         if (end === addDays(today, 1)) return { text: `Return due tomorrow (${fmtDay(end)}). Need longer? Request an extension.`, buttonLabel: 'Show your return OTP', href: `${page}#otp`, tone: 'action' };
         if (ext?.status === 'PENDING') return { text: `Waiting for ${o} to answer your extension request to ${fmtDay(ext.newEndDate)}.`, tone: 'wait' };
-        return { text: `In use — return by ${fmtDay(end)} (${diffDays(today, end)} days left).`, buttonLabel: 'View rental', href: page, tone: 'wait' };
+        return { text: `In use — return by ${fmtDay(end)} (${diffDays(today, end)} days left). Need longer? Request an extension.`, buttonLabel: 'Request extension', href: `${page}#extension`, tone: 'info' };
       }
       if (ext?.status === 'PENDING') return { text: `${r} asked to extend until ${fmtDay(ext.newEndDate)} (${inr(ext.extraAmount)}) — accept or decline.`, buttonLabel: 'Answer extension', href: `${page}#extension`, tone: 'action' };
       if (late > 0) return { text: `Overdue by ${late} day${late > 1 ? 's' : ''}. When it comes back, take return photos and enter ${r}’s return OTP. You can claim a late fee.`, buttonLabel: 'Open return handover', href: `${page}#handover`, tone: 'alert' };

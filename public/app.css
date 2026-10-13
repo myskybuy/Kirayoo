@@ -131,3 +131,7 @@ textarea.k-in { padding: 12px 14px; min-height: 96px; resize: vertical; }
 .day:disabled { cursor: default; }
 .k-show-m { display: none; }
 @media (max-width: 720px) { .k-show-m { display: inline-flex; } }
+
+/* Checkout progress pill (same as R08–R11 .cs) so it also works on R12 */
+.k-cs { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 700; }
+.k-cs .k-n { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; flex: none; }
