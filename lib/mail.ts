@@ -20,6 +20,7 @@ function getTransport() {
 /** Sends a plain-text email. Without SMTP (dev) it prints to the console. Never throws. */
 export async function sendMail(to: string, subject: string, text: string) {
   const body = `${text}\n\n— Kirayo · ${APP_URL}`;
+  if (process.env.KIRAYO_MAIL_SILENT) return;
   if (!smtpConfigured()) {
     console.log(`\n[mail] to=${to}\n[mail] subject=${subject}\n[mail] ${body.replace(/\n/g, '\n[mail] ')}\n`);
     return;

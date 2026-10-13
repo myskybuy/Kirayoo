@@ -1,8 +1,8 @@
 # Kirayo — build progress
 
-**Current phase:** 4 — Chat + booking requests (Phase 3 done)
+**Current phase:** 5 — ID verification (Phase 4 done)
 
-**Next step:** Phase 4 — booking state machine in `lib/bookings.ts` (transition map, `transition()`, `nextStepFor`, `progressSteps`), `lib/chat.ts`, then `/chat/new` + `/chat/[id]` (R07) with polling route, request card, owner `/owner/requests` (O04).
+**Next step:** Phase 5 — `/verify-id` (R09 upload, R10 status, S05 rejected) with private uploads + hold extension on submit; admin `/admin/ids` (A02); then check the gates (owner items live only if VERIFIED, renter pays only if VERIFIED).
 
 ---
 
@@ -48,10 +48,15 @@
 - [x] **Phase 3 done**
 
 ### Phase 4 — Chat + booking requests
-- [ ] Chat list + thread, 5 s polling, unread, read receipts, quick replies
-- [ ] Request card: request / accept / decline / counter / withdraw
-- [ ] Held booking (12 h), expiry, cancel, auto-decline overlaps
-- [ ] Progress bar + Next card; header action badges
+- [x] Chat list + thread, 5 s polling, unread, read receipts, quick replies
+- [x] Request card: request / accept / decline / counter / withdraw (chat + O04 owner requests page)
+- [x] Held booking (12 h), expiry, cancel, auto-decline overlaps (advisory lock per item)
+- [x] Progress bar + Next card; header action badges
+- [x] Whole state machine in `lib/bookings.ts` (incl. payment confirm, cancel/no-show money, handover, claims, settlement, extensions) + `lib/jobs.ts` + `/api/cron`
+- [x] First versions of `/bookings`, `/bookings/[id]`, `/owner/bookings`, `/owner/bookings/[id]` (stepper + Next card + summary + cancel)
+- [x] `npm run e2e` started (Phase 4 cases, 18 checks) — extended in later phases
+
+- [x] **Phase 4 done** (browser: tools/ui/phase4.mjs, two users side by side)
 
 ### Phase 5 — ID verification
 - [ ] `/verify-id` private uploads, status page, resubmit
@@ -146,6 +151,12 @@ The kit as delivered uses `design/renter|owner|admin/*.html` + `css/` + `png/` a
 ---
 
 ## Decisions
+- **Request handover mode:** booking requests carry dates only; pickup vs delivery is chosen at checkout (`/book/[id]`), so the held booking starts as PICKUP (or DELIVERY if the item can't be picked up).
+- **Counter-offers:** only the owner counters; the renter accepts the counter (which creates the hold) or withdraws. A new request from the renter withdraws their older pending one.
+- **Concurrency:** every date-changing transaction takes `pg_advisory_xact_lock(hashtext(itemId))` and re-checks availability inside; status changes use `updateMany where status = current` so double clicks can't apply twice.
+- **No-show money:** everything paid is refunded except 1 day's rent, which goes to the owner (brief: "deposit and delivery refunded; 1 day's rent to owner"; the remaining rent is also refunded as the simplest fair reading).
+- **Refund records:** `DepositRefund` has a `kind` (DEPOSIT / CANCELLATION / CONFLICT) and a FAILED status so the admin refunds list covers every refund and can retry.
+- **Booking pages** use the R14 six-step stepper; chat uses a compact progress bar (`.k-steps`) above the thread.
 - **Demo photos** were downloaded once from Wikimedia Commons (`tools/fetch-demo-photos.mjs`) and are served from `public/demo/` — never hotlinked. Credits/licences in `public/demo/CREDITS.md`.
 - **Seed safety:** `prisma/seed.ts` wipes only when every user is a `.test` demo account; with real users it only tops up cities/admin/area owners.
 - **Nearest area** = difference of the seeded area order within the city (no GPS); browse shows area names, never km.

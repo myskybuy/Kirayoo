@@ -17,7 +17,9 @@ button, input, select, textarea { font-family: inherit; }
   .k-hide-s, .hide-m-k { display: none !important; }
   .k-hdr { padding: 10px 16px !important; }
   .k-search { order: 3; flex: 1 1 100% !important; }
-  .k-hdr-right { min-width: 0 !important; flex: 0 0 auto !important; }
+  .k-hdr-right { min-width: 0 !important; flex: 0 0 auto !important; margin-left: auto; }
+  .k-hdr > a:first-child { min-width: 0 !important; flex: 0 0 auto !important; }
+  .k-strip { flex-wrap: wrap; }
 }
 
 /* Header additions */
@@ -123,3 +125,9 @@ textarea.k-in { padding: 12px 14px; min-height: 96px; resize: vertical; }
   .k-mosaic > :first-child { grid-column: auto !important; grid-row: auto !important; border-radius: 24px !important; }
   .k-mosaic .k-mosaic-s { display: none !important; }
 }
+
+/* Calendar day cell (same as R04 .day) for pages whose kit CSS has none (chat, checkout). Page CSS loads later and wins. */
+.day { height: 40px; display: flex; align-items: center; justify-content: center; font: 600 14px var(--k-font-body); border: 0; padding: 0; cursor: pointer; }
+.day:disabled { cursor: default; }
+.k-show-m { display: none; }
+@media (max-width: 720px) { .k-show-m { display: inline-flex; } }

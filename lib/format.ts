@@ -51,7 +51,7 @@ const fmt = (opts: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat('en-IN
 /** "Fri 16 Oct" */
 export function fmtDay(day: string | Date): string {
   const d = typeof day === 'string' ? toDbDate(day) : day;
-  return fmt({ weekday: 'short', day: 'numeric', month: 'short' }).format(d);
+  return fmt({ weekday: 'short', day: 'numeric', month: 'short' }).format(d).replace(',', '');
 }
 
 /** "16 Oct 2026" */
@@ -65,7 +65,7 @@ export function fmtRange(a: string | Date, b: string | Date): string {
   const s = typeof a === 'string' ? a : dayOf(a);
   const e = typeof b === 'string' ? b : dayOf(b);
   const sm = s.slice(5, 7) === e.slice(5, 7);
-  const left = sm ? fmt({ weekday: 'short', day: 'numeric' }).format(toDbDate(s)) : fmtDay(s);
+  const left = sm ? fmt({ weekday: 'short', day: 'numeric' }).format(toDbDate(s)).replace(',', '') : fmtDay(s);
   return `${left} – ${fmtDay(e)}`;
 }
 

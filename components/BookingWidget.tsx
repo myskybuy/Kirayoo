@@ -16,7 +16,7 @@ type Props = {
 };
 
 const inr = (n: number) => '₹' + n.toLocaleString('en-IN');
-const nice = (d?: string) => (d ? new Intl.DateTimeFormat('en-IN', { timeZone: 'UTC', weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(d + 'T00:00:00Z')) : 'Add date');
+const nice = (d?: string) => (d ? new Intl.DateTimeFormat('en-IN', { timeZone: 'UTC', weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(d + 'T00:00:00Z')).replace(',', '') : 'Add date');
 
 export default function BookingWidget({ item, ownerFirst, today, unavailable, deliveryFee, initial, loggedIn, isOwner }: Props) {
   const [range, setRange] = useState<{ start?: string; end?: string }>(initial);
