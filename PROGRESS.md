@@ -1,8 +1,8 @@
 # Kirayo — build progress
 
-**Current phase:** 5 — ID verification (Phase 4 done)
+**Current phase:** 6 — Checkout + payment (Phase 5 done)
 
-**Next step:** Phase 5 — `/verify-id` (R09 upload, R10 status, S05 rejected) with private uploads + hold extension on submit; admin `/admin/ids` (A02); then check the gates (owner items live only if VERIFIED, renter pays only if VERIFIED).
+**Next step:** Phase 6 — `/book/[id]` checkout (R08: pickup/delivery + saved address, breakdown, policy, terms, ID blocker), `/pay/[id]` (R11 online Razorpay/demo + cash option, S06 failure/retry), Razorpay order/verify route handlers, `/bookings/[id]/confirmed` (R12); extend e2e with payment/cancellation cases.
 
 ---
 
@@ -59,8 +59,11 @@
 - [x] **Phase 4 done** (browser: tools/ui/phase4.mjs, two users side by side)
 
 ### Phase 5 — ID verification
-- [ ] `/verify-id` private uploads, status page, resubmit
-- [ ] Admin ID review; gates
+- [x] `/verify-id` private uploads (R09), status (R10), rejected (S05), resubmit; hold +12 h on submit
+- [x] Admin ID review (A02) with Pending/Verified/Rejected tabs, search, pagination; private images 403/401 for others
+- [x] Gates: owner panel + listing approval need VERIFIED owner; browse shows only VERIFIED owners; payment gate enforced in Phase 6 before an order is created
+
+- [x] **Phase 5 done** (browser: tools/ui/phase5.mjs)
 
 ### Phase 6 — Checkout + payment
 - [ ] `/book/[id]` checkout
@@ -166,7 +169,8 @@ The kit as delivered uses `design/renter|owner|admin/*.html` + `css/` + `png/` a
 - **Delete item** = soft delete (`deletedAt`) so past bookings keep their item; blocked when any upcoming/active booking exists. Open requests on a deleted/taken-down item are declined with a SYSTEM message.
 - **Resume** of a PAUSED item goes straight back to ACTIVE (it was already approved). Admin "take down" sets REJECTED with reason "Taken down: …".
 - **Owner calendar** = the O05 all-items timeline; tapping an empty future day toggles a block.
-- **Dev gotcha:** Turbopack sometimes misses a rewritten `layout.tsx`; restart `npm run dev` if a layout change does not show.
+- **Dev gotcha:** Turbopack sometimes misses a rewritten `layout.tsx` or newly added exports in an existing `'use server'` file (forms then render with no action and submit as GET); restart `npm run dev`.
+- **ID upload:** one ID photo (front) + one selfie, as the brief says (the design's optional "back side" slot is not used). ID types follow the brief: Aadhaar / PAN / Driving licence / Passport. The selfie input uses `capture="user"` so phones open the front camera.
 - **Login vs sign-up:** `/login` (R05) accepts any email; unknown emails get a SIGNUP code and the verify page (R06) asks for the name, exactly as the design shows. `/signup` is the same R05 card with a name field.
 - **First visit:** Home redirects to `/location` until a location is chosen (cookie for guests, saved on the user after login). After first login without a location, the user is sent to `/location`.
 - **Profile area** is read-only with a "Change city / area" link (location changes only via the header chip / location page).

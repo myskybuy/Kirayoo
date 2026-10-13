@@ -5,6 +5,7 @@ import { prisma } from '@/lib/db';
 import { getUser } from '@/lib/auth';
 import { backTo } from '@/lib/admin';
 import { postSystem } from '@/lib/chat';
+import { mail } from '@/lib/mail';
 
 async function admin() {
   const u = await getUser();
@@ -51,4 +52,30 @@ export async function rejectListingAction(fd: FormData) {
   }
   revalidatePath('/admin', 'layout');
   redirect(withMsg(back, 'ok', takeDown ? `Took down “${item.title}”.` : `Sent “${item.title}” back for changes.`));
+}
+
+// ---------------- ID verifications ----------------
+
+export async function approveIdAction(fd: FormData) {
+  await admin();
+  const back = backTo(fd.get('back'), '/admin/ids');
+  const u = await prisma.user.findUnique({ where: { id: String(fd.get('id')) } });
+  if (!u || u.idStatus !== 'PENDING') redirect(withMsg(back, 'error', 'This ID is not waiting for review.'));
+  await prisma.user.update({ where: { id: u.id }, data: { idStatus: 'VERIFIED', idReviewedAt: new Date(), idRejectReason: null } });
+  await mail.idApproved(u.email);
+  revalidatePath('/admin', 'layout');
+  redirect(withMsg(back, 'ok', `Approved ${u.name}.`));
+}
+
+export async function rejectIdAction(fd: FormData) {
+  await admin();
+  const back = backTo(fd.get('back'), '/admin/ids');
+  const reason = [String(fd.get('reason') || '').trim(), String(fd.get('note') || '').trim()].filter(Boolean).join('. ');
+  if (reason.length < 3) redirect(withMsg(back, 'error', 'Choose a reason.'));
+  const u = await prisma.user.findUnique({ where: { id: String(fd.get('id')) } });
+  if (!u || u.idStatus !== 'PENDING') redirect(withMsg(back, 'error', 'This ID is not waiting for review.'));
+  await prisma.user.update({ where: { id: u.id }, data: { idStatus: 'REJECTED', idReviewedAt: new Date(), idRejectReason: reason } });
+  await mail.idRejected(u.email, reason);
+  revalidatePath('/admin', 'layout');
+  redirect(withMsg(back, 'ok', `Rejected ${u.name}'s ID — they were told why.`));
 }
