@@ -1,0 +1,460 @@
+// Kirayo data model. All money is whole rupees (Int). Calendar dates
+// (booking start/end, blocked dates) are @db.Date and mean an IST date.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum IdStatus {
+  NONE
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum OtpPurpose {
+  LOGIN
+  SIGNUP
+}
+
+enum Category {
+  CAMERAS
+  TOOLS
+  PARTY
+  CAMPING
+  GAMING
+  PROJECTORS
+  MUSIC
+  SPORTS
+}
+
+enum ItemStatus {
+  PENDING_REVIEW
+  ACTIVE
+  REJECTED
+  PAUSED
+}
+
+enum MessageType {
+  TEXT
+  BOOKING_REQUEST
+  SYSTEM
+}
+
+enum RequestStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  COUNTERED
+  WITHDRAWN
+}
+
+enum BookingStatus {
+  PENDING_PAYMENT
+  CONFIRMED
+  PICKED_UP
+  RETURNED
+  DISPUTED
+  RETURN_CONFIRMED
+  DEPOSIT_REFUNDED
+  CANCELLED
+}
+
+enum HandoverMode {
+  PICKUP
+  DELIVERY
+}
+
+enum PaymentMode {
+  RAZORPAY
+  DEMO
+  CASH_AT_PICKUP
+}
+
+enum ConditionStage {
+  PICKUP
+  RETURN
+}
+
+enum ExtensionStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  PAID
+}
+
+enum ClaimStatus {
+  OPEN
+  ACCEPTED
+  DISPUTED
+  RESOLVED
+}
+
+enum RefundStatus {
+  PENDING
+  REFUNDED
+  FAILED
+}
+
+enum RefundKind {
+  DEPOSIT
+  CANCELLATION
+  CONFLICT
+}
+
+enum PayoutStatus {
+  PENDING
+  PAID
+}
+
+enum ComplaintStatus {
+  OPEN
+  RESOLVED
+}
+
+model User {
+  id                 String    @id @default(cuid())
+  email              String    @unique
+  name               String
+  phone              String?
+  city               String?
+  area               String?
+  address            String?
+  isAdmin            Boolean   @default(false)
+  isBlocked          Boolean   @default(false)
+  idStatus           IdStatus  @default(NONE)
+  idDocType          String?
+  idDocPath          String?
+  selfiePath         String?
+  idRejectReason     String?
+  idSubmittedAt      DateTime?
+  idReviewedAt       DateTime?
+  ownerCancellations Int       @default(0)
+  createdAt          DateTime  @default(now())
+
+  sessions         Session[]
+  items            Item[]
+  rentals          Booking[]         @relation("RenterBookings")
+  ownerBookings    Booking[]         @relation("OwnerBookings")
+  renterChats      Conversation[]    @relation("RenterChats")
+  ownerChats       Conversation[]    @relation("OwnerChats")
+  messages         Message[]
+  reviewsGiven     Review[]          @relation("ReviewFrom")
+  reviewsReceived  Review[]          @relation("ReviewTo")
+  payouts          Payout[]
+  complaints       Complaint[]
+  conditionReports ConditionReport[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model EmailOtp {
+  id         String     @id @default(cuid())
+  email      String
+  codeHash   String
+  purpose    OtpPurpose
+  name       String?
+  expiresAt  DateTime
+  attempts   Int        @default(0)
+  consumedAt DateTime?
+  createdAt  DateTime   @default(now())
+
+  @@index([email, createdAt])
+}
+
+model City {
+  id        String @id @default(cuid())
+  name      String @unique
+  sortOrder Int    @default(0)
+  areas     Area[]
+}
+
+model Area {
+  id        String @id @default(cuid())
+  cityId    String
+  name      String
+  // Areas of a city are seeded in geographic order; |a - b| is the
+  // "distance" used for "nearest area" sorting (no GPS).
+  sortOrder Int    @default(0)
+  city      City   @relation(fields: [cityId], references: [id], onDelete: Cascade)
+
+  @@unique([cityId, name])
+}
+
+model Item {
+  id                  String     @id @default(cuid())
+  ownerId             String
+  title               String
+  category            Category
+  description         String
+  photos              String[]
+  pricePerDay         Int
+  pricePerWeek        Int?
+  deposit             Int
+  minDays             Int        @default(1)
+  maxDays             Int        @default(30)
+  canPickup           Boolean    @default(true)
+  canDeliver          Boolean    @default(false)
+  acceptsCashAtPickup Boolean    @default(false)
+  pickupNote          String?
+  city                String
+  area                String
+  status              ItemStatus @default(PENDING_REVIEW)
+  rejectReason        String?
+  views               Int        @default(0)
+  deletedAt           DateTime?
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+
+  owner         User           @relation(fields: [ownerId], references: [id])
+  blockedDates  BlockedDate[]
+  conversations Conversation[]
+  bookings      Booking[]
+  reviews       Review[]
+
+  @@index([city, status])
+  @@index([ownerId])
+}
+
+model BlockedDate {
+  id     String   @id @default(cuid())
+  itemId String
+  date   DateTime @db.Date
+  item   Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([itemId, date])
+}
+
+model Conversation {
+  id           String    @id @default(cuid())
+  itemId       String
+  renterId     String
+  ownerId      String
+  renterReadAt DateTime?
+  ownerReadAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  item     Item      @relation(fields: [itemId], references: [id])
+  renter   User      @relation("RenterChats", fields: [renterId], references: [id])
+  owner    User      @relation("OwnerChats", fields: [ownerId], references: [id])
+  messages Message[]
+  bookings Booking[]
+
+  @@unique([itemId, renterId])
+  @@index([ownerId])
+}
+
+model Message {
+  id             String         @id @default(cuid())
+  conversationId String
+  senderId       String?
+  type           MessageType    @default(TEXT)
+  text           String         @default("")
+  startDate      DateTime?      @db.Date
+  endDate        DateTime?      @db.Date
+  requestStatus  RequestStatus?
+  bookingId      String?
+  readAt         DateTime?
+  createdAt      DateTime       @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User?        @relation(fields: [senderId], references: [id])
+
+  @@index([conversationId, createdAt])
+}
+
+model Booking {
+  id                String        @id @default(cuid())
+  code              String        @unique
+  itemId            String
+  renterId          String
+  ownerId           String
+  conversationId    String?
+  startDate         DateTime      @db.Date
+  endDate           DateTime      @db.Date
+  days              Int
+  pricePerDay       Int
+  pricePerWeek      Int?
+  rentAmount        Int
+  extensionAmount   Int           @default(0)
+  deposit           Int
+  deliveryFee       Int           @default(0)
+  platformFee       Int           @default(0)
+  total             Int
+  mode              HandoverMode  @default(PICKUP)
+  address           String?
+  pickupNote        String?
+  paymentMode       PaymentMode?
+  razorpayOrderId   String?
+  paymentId         String?
+  amountPaid        Int           @default(0)
+  paidAt            DateTime?
+  holdExpiresAt     DateTime?
+  status            BookingStatus @default(PENDING_PAYMENT)
+  pickupOtp         String
+  returnOtp         String
+  otpAttempts       Int           @default(0)
+  cashCollected     Boolean       @default(false)
+  ownerKeepAmount   Int           @default(0)
+  confirmedAt       DateTime?
+  pickedUpAt        DateTime?
+  returnedAt        DateTime?
+  returnConfirmedAt DateTime?
+  refundedAt        DateTime?
+  cancelledAt       DateTime?
+  cancelReason      String?
+  cancelledBy       String?
+  pickupReminderAt  DateTime?
+  returnReminderAt  DateTime?
+  overdueMailAt     DateTime?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  item             Item               @relation(fields: [itemId], references: [id])
+  renter           User               @relation("RenterBookings", fields: [renterId], references: [id])
+  owner            User               @relation("OwnerBookings", fields: [ownerId], references: [id])
+  conversation     Conversation?      @relation(fields: [conversationId], references: [id])
+  conditionReports ConditionReport[]
+  extensions       ExtensionRequest[]
+  claim            DamageClaim?
+  refunds          DepositRefund[]
+  payout           Payout?
+  reviews          Review[]
+  complaints       Complaint[]
+
+  @@index([itemId, status])
+  @@index([renterId])
+  @@index([ownerId])
+}
+
+model ConditionReport {
+  id        String         @id @default(cuid())
+  bookingId String
+  stage     ConditionStage
+  byUserId  String
+  photos    String[]
+  notes     String         @default("")
+  createdAt DateTime       @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  byUser  User    @relation(fields: [byUserId], references: [id])
+}
+
+model ExtensionRequest {
+  id              String          @id @default(cuid())
+  bookingId       String
+  newEndDate      DateTime        @db.Date
+  extraDays       Int
+  extraAmount     Int
+  status          ExtensionStatus @default(PENDING)
+  paymentId       String?
+  razorpayOrderId String?
+  createdAt       DateTime        @default(now())
+  decidedAt       DateTime?
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+}
+
+model DamageClaim {
+  id                  String      @id @default(cuid())
+  bookingId           String      @unique
+  amount              Int
+  lateFee             Int         @default(0)
+  reason              String
+  photos              String[]
+  status              ClaimStatus @default(OPEN)
+  renterNote          String?
+  adminDecisionAmount Int?
+  adminNote           String?
+  createdAt           DateTime    @default(now())
+  decidedAt           DateTime?
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+}
+
+model DepositRefund {
+  id         String       @id @default(cuid())
+  bookingId  String
+  kind       RefundKind   @default(DEPOSIT)
+  amount     Int
+  status     RefundStatus @default(PENDING)
+  refundId   String?
+  error      String?
+  createdAt  DateTime     @default(now())
+  refundedAt DateTime?
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+}
+
+model Payout {
+  id        String       @id @default(cuid())
+  bookingId String       @unique
+  ownerId   String
+  amount    Int
+  status    PayoutStatus @default(PENDING)
+  paidAt    DateTime?
+  reference String?
+  createdAt DateTime     @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  owner   User    @relation(fields: [ownerId], references: [id])
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  bookingId  String
+  fromUserId String
+  toUserId   String
+  itemId     String?
+  rating     Int
+  tags       String[]
+  text       String   @default("")
+  createdAt  DateTime @default(now())
+
+  booking  Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  fromUser User    @relation("ReviewFrom", fields: [fromUserId], references: [id])
+  toUser   User    @relation("ReviewTo", fields: [toUserId], references: [id])
+  item     Item?   @relation(fields: [itemId], references: [id])
+
+  @@unique([bookingId, fromUserId])
+}
+
+model Complaint {
+  id        String          @id @default(cuid())
+  bookingId String
+  byUserId  String
+  reason    String
+  text      String
+  photos    String[]
+  status    ComplaintStatus @default(OPEN)
+  adminNote String?
+  createdAt DateTime        @default(now())
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  byUser  User    @relation(fields: [byUserId], references: [id])
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  resolved  Boolean  @default(false)
+  adminNote String?
+  createdAt DateTime @default(now())
+}

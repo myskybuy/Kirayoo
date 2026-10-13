@@ -1,0 +1,18 @@
+/* A02-IDVerifications — page styles (exported from the Kirayo canvas). Shared tokens + fonts live in ../assets/css/kirayo.css */
+
+/* from A02-IDVerifications */
+body{margin:0;background:#F3EFE6;color:#23262A;font:400 15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif}
+a{color:#1F4D3A}a:hover{color:#163A2B}
+h1,h2,h3,h4,p{margin:0}
+.d{font-family:'Bricolage Grotesque',Georgia,serif;letter-spacing:-.025em}
+.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:999px;font:700 15px/1 'Plus Jakarta Sans',sans-serif;border:0;cursor:pointer;text-decoration:none;white-space:nowrap;box-sizing:border-box}
+.mute{color:#60666C}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}
+.qi{display:flex;gap:12px;align-items:center;padding:12px;border-radius:16px;border:0;cursor:pointer;text-align:left;font:inherit;width:100%;min-height:64px}
+.doc{border-radius:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:700;color:#2F4E40}
+.in{width:100%;box-sizing:border-box;min-height:48px;padding:0 14px;border-radius:14px;border:1.5px solid #E3DACA;background:#fff;font:500 14.5px 'Plus Jakarta Sans',sans-serif}
+.ck{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #EFE8DA;font-size:14px}
+
+/* from KAdminNav */
+body{margin:0}

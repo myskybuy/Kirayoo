@@ -1,0 +1,68 @@
+/* ==========================================================================
+   Kirayo design kit: shared CSS
+   Fonts (self-hosted, SIL OFL) + design tokens.
+   Every screen links this file first, then its own css/<SCREEN-ID>.css.
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  src: url('../fonts/BricolageGrotesque-Variable.woff') format('woff');
+  font-weight: 200 800;
+  font-stretch: 75% 100%;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('../fonts/PlusJakartaSans-Variable.woff') format('woff');
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+:root {
+  /* Brand */
+  --k-forest-700: #1F4D3A;   /* primary, headings, selected states */
+  --k-forest-800: #163A2B;   /* hover / pressed */
+  --k-sage-300:   #BFD1BD;   /* borders on green, photo tint */
+  --k-sage-200:   #DCE6DA;   /* icon circles, range fill */
+  --k-sage-100:   #EEF3EC;   /* quiet fills, selected rows */
+  --k-tangerine-600: #C9491F; /* CTA fill (white text 4.7:1) */
+  --k-tangerine-700: #A93C18; /* CTA hover */
+  --k-coral-400:  #E8643C;   /* decoration only: dots, logo mark, avatars */
+  --k-coral-100:  #FBE3D8;   /* late / owner-alert tint */
+
+  /* Neutrals */
+  --k-cream:  #F6F1E7;   /* page background */
+  --k-sand:   #EDE5D5;   /* footer, booked days */
+  --k-paper:  #FFFDF8;   /* cards, inputs */
+  --k-line:   #E3DACA;   /* dividers, outlines */
+  --k-ink:    #23262A;   /* body text, admin sidebar */
+  --k-ink-2:  #474C52;   /* secondary text */
+  --k-mute:   #60666C;   /* captions (4.9:1 on cream) */
+
+  /* Status (tint / text) */
+  --k-ok-bg: #DCEEDF;   --k-ok-fg: #1E5A37;
+  --k-warn-bg: #FBEBCF; --k-warn-fg: #7A4708;
+  --k-err-bg: #F7DCD7;  --k-err-fg: #8E2A20;  --k-err-fill: #B3372B;
+
+  /* Type */
+  --k-font-display: 'Bricolage Grotesque', Georgia, serif;
+  --k-font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+
+  /* Radius */
+  --k-r-input: 14px;
+  --k-r-image: 20px;
+  --k-r-card: 24px;
+  --k-r-panel: 32px;
+  --k-r-pill: 999px;
+
+  /* Shadow */
+  --k-shadow-1: 0 1px 2px rgba(35,38,42,.06), 0 8px 24px -10px rgba(31,77,58,.22);
+  --k-shadow-2: 0 2px 6px rgba(35,38,42,.06), 0 22px 48px -16px rgba(31,77,58,.4);
+
+  /* Spacing scale: 4 8 12 16 24 32 48 56 */
+  --k-s1: 4px; --k-s2: 8px; --k-s3: 12px; --k-s4: 16px; --k-s5: 24px; --k-s6: 32px; --k-s7: 48px; --k-s8: 56px;
+
+  /* Layout */
+  --k-container: 1240px;
+  --k-touch: 44px;   /* minimum hit target */
+}

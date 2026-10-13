@@ -1,0 +1,12 @@
+/* S02-Loading — page styles (exported from the Kirayo canvas). Shared tokens + fonts live in ../assets/css/kirayo.css */
+
+/* from S02-Loading */
+body{margin:0;background:#F6F1E7;color:#23262A;font:400 15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif}
+h1,h2,h3,h4,p{margin:0}
+.wrap{max-width:1288px;margin:0 auto;padding:0 24px;box-sizing:border-box}
+@keyframes sh{0%{background-position:-400px 0}100%{background-position:400px 0}}
+.sk{background:linear-gradient(90deg,#EDE5D5 0,#F6F1E7 50%,#EDE5D5 100%);background-size:800px 100%;animation:sh 1.4s linear infinite;border-radius:12px}
+@media (prefers-reduced-motion:reduce){.sk{animation:none}}
+
+/* from KHeader */
+body{margin:0}

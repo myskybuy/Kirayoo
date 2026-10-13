@@ -1,0 +1,28 @@
+/* R01-Home — page styles (exported from the Kirayo canvas). Shared tokens + fonts live in ../assets/css/kirayo.css */
+
+/* from R01-Home */
+body{margin:0;background:#F6F1E7;color:#23262A;font:400 15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif}
+a{color:#1F4D3A}a:hover{color:#163A2B}
+h1,h2,h3,h4,p{margin:0}
+.d{font-family:'Bricolage Grotesque',Georgia,serif;letter-spacing:-.025em}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px;box-sizing:border-box}
+.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 24px;border-radius:999px;font:700 15px/1 'Plus Jakarta Sans',sans-serif;border:0;cursor:pointer;text-decoration:none;white-space:nowrap;box-sizing:border-box}
+.btn-p{background:#C9491F;color:#fff}.btn-p:hover{background:#A93C18;color:#fff}
+.btn-g{background:#1F4D3A;color:#fff}.btn-g:hover{background:#163A2B;color:#fff}
+.btn-o{background:transparent;color:#1F4D3A;box-shadow:inset 0 0 0 1.5px #1F4D3A}.btn-o:hover{background:#EEF3EC}
+.card{background:#FFFDF8;border-radius:22px;box-shadow:0 1px 2px rgba(35,38,42,.06),0 8px 24px -10px rgba(31,77,58,.22)}
+.chip{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 16px;border-radius:999px;background:#FFFDF8;box-shadow:inset 0 0 0 1px #E3DACA;font:600 14px/1 'Plus Jakarta Sans',sans-serif;color:#23262A;text-decoration:none;border:0;cursor:pointer;white-space:nowrap}
+.chip.on{background:#1F4D3A;color:#fff;box-shadow:none}
+.mute{color:#60666C}
+.ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#2F4E40;font-size:12px;font-weight:600;text-align:center}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#C9491F}
+.cat{display:flex;flex-direction:column;align-items:center;gap:10px;text-decoration:none;color:#23262A;font-weight:600;font-size:14px;text-align:center}
+.cat span.o{width:96px;height:96px;border-radius:50%;background:#DCE6DA;display:flex;align-items:center;justify-content:center;color:#1F4D3A;position:relative;transition:transform .2s}
+.cat:hover span.o{transform:translateY(-3px);background:#BFD1BD}
+.cat span.o::after{content:"";position:absolute;right:8px;top:10px;width:16px;height:16px;border-radius:50%;background:#E8643C;opacity:.85}
+.mtab{display:none;position:sticky;bottom:0;z-index:40}
+@media (max-width:720px){.mtab{display:block}.hide-m{display:none!important}.wrap{padding:0 16px}}
+
+/* from KHeader */
+body{margin:0}

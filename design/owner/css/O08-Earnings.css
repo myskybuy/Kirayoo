@@ -1,0 +1,22 @@
+/* O08-Earnings — page styles (exported from the Kirayo canvas). Shared tokens + fonts live in ../assets/css/kirayo.css */
+
+/* from O08-Earnings */
+body{margin:0;background:#F6F1E7;color:#23262A;font:400 15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif}
+a{color:#1F4D3A}a:hover{color:#163A2B}
+h1,h2,h3,h4,p{margin:0}
+.d{font-family:'Bricolage Grotesque',Georgia,serif;letter-spacing:-.025em}
+.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 20px;border-radius:999px;font:700 14.5px/1 'Plus Jakarta Sans',sans-serif;border:0;cursor:pointer;text-decoration:none;white-space:nowrap;box-sizing:border-box}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}
+.mute{color:#60666C}
+.kpi{padding:22px;border-radius:24px;background:#FFFDF8;display:flex;flex-direction:column;gap:4px;box-shadow:0 1px 2px rgba(35,38,42,.06)}
+.kpi b.v{font:700 34px/1.1 'Bricolage Grotesque',serif;letter-spacing:-.02em}
+.tw{overflow-x:auto;border-radius:24px;background:#FFFDF8;box-shadow:0 1px 2px rgba(35,38,42,.06),0 8px 24px -10px rgba(31,77,58,.18)}
+table{width:100%;border-collapse:collapse;min-width:860px;font-size:14px}
+th{text-align:left;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#474C52;padding:14px 16px;border-bottom:1px solid #E3DACA}
+th.r,td.r{text-align:right}
+td{padding:14px 16px;border-bottom:1px solid #EFE8DA}
+tr:last-child td{border-bottom:0}
+
+/* from KOwnerNav */
+body{margin:0}

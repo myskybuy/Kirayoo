@@ -1,0 +1,22 @@
+/* R09-IDVerify — page styles (exported from the Kirayo canvas). Shared tokens + fonts live in ../assets/css/kirayo.css */
+
+/* from R09-IDVerify */
+body{margin:0;background:#F6F1E7;color:#23262A;font:400 15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif}
+a{color:#1F4D3A}a:hover{color:#163A2B}
+h1,h2,h3,h4,p{margin:0}
+.d{font-family:'Bricolage Grotesque',Georgia,serif;letter-spacing:-.025em}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px;box-sizing:border-box}
+.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:54px;padding:0 24px;border-radius:999px;font:700 15px/1 'Plus Jakarta Sans',sans-serif;border:0;cursor:pointer;text-decoration:none;white-space:nowrap;box-sizing:border-box}
+.btn-p{background:#C9491F;color:#fff}.btn-p:hover{background:#A93C18;color:#fff}
+.btn-o{background:transparent;color:#1F4D3A;box-shadow:inset 0 0 0 1.5px #1F4D3A}
+.card{background:#FFFDF8;border-radius:24px;box-shadow:0 1px 2px rgba(35,38,42,.06),0 8px 24px -10px rgba(31,77,58,.22)}
+.mute{color:#60666C}
+.cs{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:700}
+.cs span.n{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex:none}
+.idt{display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:14px;border-radius:18px;border:0;cursor:pointer;font:700 14.5px 'Plus Jakarta Sans',sans-serif;text-align:left;min-height:64px}
+.step{display:flex;gap:14px;align-items:flex-start}
+.step .n{width:34px;height:34px;border-radius:12px;background:#1F4D3A;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;flex:none}
+
+/* from KHeader */
+body{margin:0}

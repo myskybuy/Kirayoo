@@ -1,0 +1,19 @@
+/* R06-VerifyOTP — page styles (exported from the Kirayo canvas). Shared tokens + fonts live in ../assets/css/kirayo.css */
+
+/* from R06-VerifyOTP */
+body{margin:0;background:#F6F1E7;color:#23262A;font:400 15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif}
+a{color:#1F4D3A}a:hover{color:#163A2B}
+h1,h2,h3,h4,p{margin:0}
+.d{font-family:'Bricolage Grotesque',Georgia,serif;letter-spacing:-.025em}
+.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:54px;padding:0 24px;border-radius:999px;font:700 15px/1 'Plus Jakarta Sans',sans-serif;border:0;cursor:pointer;text-decoration:none;white-space:nowrap;box-sizing:border-box}
+.btn-p{background:#C9491F;color:#fff}.btn-p:hover{background:#A93C18;color:#fff}
+.lbl{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:#474C52}
+.in{width:100%;box-sizing:border-box;min-height:52px;padding:0 16px;border-radius:16px;border:1.5px solid #E3DACA;background:#fff;font:500 16px 'Plus Jakarta Sans',sans-serif;color:#23262A}
+.mute{color:#60666C}
+.otp{display:flex;gap:10px;justify-content:center}
+.otp input{width:54px;height:64px;box-sizing:border-box;border-radius:16px;border:1.5px solid #E3DACA;background:#fff;text-align:center;font:700 26px 'Bricolage Grotesque',serif;color:#1F4D3A;min-width:0}
+.otp input.f{border-color:#1F4D3A;box-shadow:0 0 0 4px rgba(31,77,58,.14)}
+
+/* from KHeader */
+body{margin:0}

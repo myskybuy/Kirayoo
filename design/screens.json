@@ -1,0 +1,257 @@
+[
+  {
+    "id": "A01-Dashboard",
+    "sec": "admin",
+    "title": "Kirayo Admin — Dashboard"
+  },
+  {
+    "id": "A02-IDVerifications",
+    "sec": "admin",
+    "title": "Kirayo Admin — ID verifications"
+  },
+  {
+    "id": "A03-ListingApprovals",
+    "sec": "admin",
+    "title": "Kirayo Admin — Listing approvals"
+  },
+  {
+    "id": "A04-Users",
+    "sec": "admin",
+    "title": "Kirayo Admin — Users"
+  },
+  {
+    "id": "A05-Bookings",
+    "sec": "admin",
+    "title": "Kirayo Admin — Bookings"
+  },
+  {
+    "id": "A06-Disputes",
+    "sec": "admin",
+    "title": "Kirayo Admin — Deposit disputes"
+  },
+  {
+    "id": "A07-Payouts",
+    "sec": "admin",
+    "title": "Kirayo Admin — Payouts"
+  },
+  {
+    "id": "O01-Dashboard",
+    "sec": "owner",
+    "title": "Kirayo Owner — Dashboard"
+  },
+  {
+    "id": "O02-ListItem",
+    "sec": "owner",
+    "title": "Kirayo Owner — List an item"
+  },
+  {
+    "id": "O03-MyListings",
+    "sec": "owner",
+    "title": "Kirayo Owner — My listings"
+  },
+  {
+    "id": "O04-Requests",
+    "sec": "owner",
+    "title": "Kirayo Owner — Booking requests"
+  },
+  {
+    "id": "O05-Calendar",
+    "sec": "owner",
+    "title": "Kirayo Owner — Calendar"
+  },
+  {
+    "id": "O06-Handover",
+    "sec": "owner",
+    "title": "Kirayo Owner — Pickup handover"
+  },
+  {
+    "id": "O07-ReturnCheck",
+    "sec": "owner",
+    "title": "Kirayo Owner — Return check"
+  },
+  {
+    "id": "O08-Earnings",
+    "sec": "owner",
+    "title": "Kirayo Owner — Earnings & payouts"
+  },
+  {
+    "id": "O09-Reviews",
+    "sec": "owner",
+    "title": "Kirayo Owner — Reviews"
+  },
+  {
+    "id": "R01-Home",
+    "sec": "renter",
+    "title": "Kirayo — Home"
+  },
+  {
+    "id": "R02-Location",
+    "sec": "renter",
+    "title": "Kirayo — Select location"
+  },
+  {
+    "id": "R03-Search",
+    "sec": "renter",
+    "title": "Kirayo — Search results"
+  },
+  {
+    "id": "R04-Item",
+    "sec": "renter",
+    "title": "Kirayo — Sony A7 III kit"
+  },
+  {
+    "id": "R05-Login",
+    "sec": "renter",
+    "title": "Kirayo — Log in"
+  },
+  {
+    "id": "R06-VerifyOTP",
+    "sec": "renter",
+    "title": "Kirayo — Verify code"
+  },
+  {
+    "id": "R07-Chat",
+    "sec": "renter",
+    "title": "Kirayo — Chat with owner"
+  },
+  {
+    "id": "R08-BookingSummary",
+    "sec": "renter",
+    "title": "Kirayo — Booking summary"
+  },
+  {
+    "id": "R09-IDVerify",
+    "sec": "renter",
+    "title": "Kirayo — Verify your ID"
+  },
+  {
+    "id": "R10-IDStatus",
+    "sec": "renter",
+    "title": "Kirayo — ID status"
+  },
+  {
+    "id": "R11-Payment",
+    "sec": "renter",
+    "title": "Kirayo — Payment"
+  },
+  {
+    "id": "R12-Confirmed",
+    "sec": "renter",
+    "title": "Kirayo — Booking confirmed"
+  },
+  {
+    "id": "R13-MyRentals",
+    "sec": "renter",
+    "title": "Kirayo — My rentals"
+  },
+  {
+    "id": "R14-RentalDetail",
+    "sec": "renter",
+    "title": "Kirayo — Rental detail"
+  },
+  {
+    "id": "R15-PickupHandover",
+    "sec": "renter",
+    "title": "Kirayo — Pickup handover"
+  },
+  {
+    "id": "R16-ActiveRental",
+    "sec": "renter",
+    "title": "Kirayo — Active rental"
+  },
+  {
+    "id": "R17-ReturnHandover",
+    "sec": "renter",
+    "title": "Kirayo — Return handover"
+  },
+  {
+    "id": "R18-DepositRefund",
+    "sec": "renter",
+    "title": "Kirayo — Deposit refund"
+  },
+  {
+    "id": "R19-Review",
+    "sec": "renter",
+    "title": "Kirayo — Leave a review"
+  },
+  {
+    "id": "R20-Profile",
+    "sec": "renter",
+    "title": "Kirayo — Profile"
+  },
+  {
+    "id": "R21-About",
+    "sec": "renter",
+    "title": "Kirayo — About"
+  },
+  {
+    "id": "R22-HowItWorks",
+    "sec": "renter",
+    "title": "Kirayo — How it works"
+  },
+  {
+    "id": "R23-Contact",
+    "sec": "renter",
+    "title": "Kirayo — Contact"
+  },
+  {
+    "id": "R24-Terms",
+    "sec": "renter",
+    "title": "Kirayo — Terms of use"
+  },
+  {
+    "id": "R25-Privacy",
+    "sec": "renter",
+    "title": "Kirayo — Privacy policy"
+  },
+  {
+    "id": "R26-DepositPolicy",
+    "sec": "renter",
+    "title": "Kirayo — Rental & deposit policy"
+  },
+  {
+    "id": "R27-404",
+    "sec": "renter",
+    "title": "Kirayo — Page not found"
+  },
+  {
+    "id": "S01-Empty",
+    "sec": "renter",
+    "title": "Kirayo — Empty states"
+  },
+  {
+    "id": "S02-Loading",
+    "sec": "renter",
+    "title": "Kirayo — Loading"
+  },
+  {
+    "id": "S03-Error",
+    "sec": "renter",
+    "title": "Kirayo — Something went wrong"
+  },
+  {
+    "id": "S04-Unavailable",
+    "sec": "renter",
+    "title": "Kirayo — Unavailable for chosen dates"
+  },
+  {
+    "id": "S05-IDRejected",
+    "sec": "renter",
+    "title": "Kirayo — ID rejected"
+  },
+  {
+    "id": "S06-PaymentFailed",
+    "sec": "renter",
+    "title": "Kirayo — Payment failed"
+  },
+  {
+    "id": "S07-LateReturn",
+    "sec": "renter",
+    "title": "Kirayo — Late return"
+  },
+  {
+    "id": "S08-DamageClaim",
+    "sec": "renter",
+    "title": "Kirayo — Damage claim"
+  }
+]
