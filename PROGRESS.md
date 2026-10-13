@@ -1,8 +1,8 @@
 # Kirayo — build progress
 
-**Current phase:** 3 — Discovery (Phase 2 done)
+**Current phase:** 4 — Chat + booking requests (Phase 3 done)
 
-**Next step:** Phase 3 — demo photos in `public/demo/` + fuller seed (owners/items per area), then home rails (R01), browse (R03), item page (R04 + S04).
+**Next step:** Phase 4 — booking state machine in `lib/bookings.ts` (transition map, `transition()`, `nextStepFor`, `progressSteps`), `lib/chat.ts`, then `/chat/new` + `/chat/[id]` (R07) with polling route, request card, owner `/owner/requests` (O04).
 
 ---
 
@@ -39,9 +39,13 @@
 - [x] **Phase 2 done** (browser flow: tools/ui/phase2.mjs)
 
 ### Phase 3 — Discovery
-- [ ] Home rails, categories
-- [ ] Browse: filters (category, dates, price, deposit, pickup/delivery), search, sort, pagination
-- [ ] Item page: gallery, prices, calendar, owner card, reviews, CTA
+- [x] Home rails, categories
+- [x] Browse: filters (category, dates, price, deposit, pickup/delivery), search, sort, pagination
+- [x] Item page: gallery, prices, calendar, owner card, reviews, CTA (+ S04 unavailable)
+- [x] Demo photos (Wikimedia Commons, local copies, `public/demo/CREDITS.md`) + full user/item seed
+- [x] Unit checks for pricing/overlap: `npm run test:unit`
+
+- [x] **Phase 3 done**
 
 ### Phase 4 — Chat + booking requests
 - [ ] Chat list + thread, 5 s polling, unread, read receipts, quick replies
@@ -142,6 +146,11 @@ The kit as delivered uses `design/renter|owner|admin/*.html` + `css/` + `png/` a
 ---
 
 ## Decisions
+- **Demo photos** were downloaded once from Wikimedia Commons (`tools/fetch-demo-photos.mjs`) and are served from `public/demo/` — never hotlinked. Credits/licences in `public/demo/CREDITS.md`.
+- **Seed safety:** `prisma/seed.ts` wipes only when every user is a `.test` demo account; with real users it only tops up cities/admin/area owners.
+- **Nearest area** = difference of the seeded area order within the city (no GPS); browse shows area names, never km.
+- **Browse:** filters are a GET form (works without JS). The design's Grid/List toggle and price-slider decoration were left out; numbered pagination instead of "Show more".
+- **Item page:** the design's "Weekend" rate and "Kirayo service fee" line are not in the brief, so not shown (renter never sees the platform fee). Pricing math lives in `lib/pricing.ts` (pure, shared by server and client).
 - **Item form:** no "Save draft" (no draft status in the brief) and no per-item delivery fee (brief: flat `DELIVERY_FEE`); added the cash-at-pickup toggle. Photos max 8 (brief) instead of the kit text "10".
 - **Delete item** = soft delete (`deletedAt`) so past bookings keep their item; blocked when any upcoming/active booking exists. Open requests on a deleted/taken-down item are declined with a SYSTEM message.
 - **Resume** of a PAUSED item goes straight back to ACTIVE (it was already approved). Admin "take down" sets REJECTED with reason "Taken down: …".

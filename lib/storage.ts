@@ -117,3 +117,13 @@ export async function wipeUploads() {
   await fs.rm(PUBLIC_DIR, { recursive: true, force: true });
   await fs.rm(PRIVATE_DIR, { recursive: true, force: true });
 }
+
+/** Stores bytes as a private (ID) file for a user (used by the seed). */
+export async function importPrivateBuffer(buf: Buffer, userId: string): Promise<string> {
+  const ext = sniff(buf) ?? 'jpg';
+  const name = `${crypto.randomBytes(12).toString('hex')}.${ext}`;
+  const dir = path.join(PRIVATE_DIR, userId);
+  await fs.mkdir(dir, { recursive: true });
+  await fs.writeFile(path.join(dir, name), buf);
+  return `/api/private/${userId}/${name}`;
+}
