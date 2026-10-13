@@ -13,9 +13,9 @@ export function ProgressBar({ steps }: { steps: Step[] }) {
 }
 
 /** "Next:" card — one sentence for this person plus one primary button. */
-export function NextCard({ step, who }: { step: NextStep; who?: string }) {
+export function NextCard({ step }: { step: NextStep; who?: string }) {
   const cls = step.tone === 'wait' || step.tone === 'done' || step.tone === 'info' ? ' wait' : step.tone === 'alert' ? ' alert' : '';
-  const label = step.tone === 'wait' ? `Waiting${who ? ` for ${who}` : ''}` : step.tone === 'done' ? 'Status' : step.tone === 'alert' ? 'Needs you now' : 'Next';
+  const label = step.tone === 'wait' ? 'Waiting' : step.tone === 'done' ? 'Status' : step.tone === 'alert' ? 'Needs you now' : 'Next';
   return (
     <div className={`k-next${cls}`} role="status">
       <div className="k-next-t"><small>{label}</small><b>{step.text}</b></div>

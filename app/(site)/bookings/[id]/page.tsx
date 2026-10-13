@@ -28,17 +28,15 @@ export default async function RentalDetailPage({ params, searchParams }: { param
         {sp.error && <p className="k-alert err" role="alert">{sp.error}</p>}
         <NextCard step={next} who={b.owner.name.split(' ')[0]} />
         <BookingStepper booking={b} />
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px', alignItems: 'flex-start' }}>
-          <div style={{ flex: '999 1 520px', minWidth: '0', display: 'flex', flexDirection: 'column', gap: '18px' }}>
-            <RenterSections b={b} />
-          </div>
-          <aside style={{ flex: '1 1 300px', minWidth: '0', display: 'flex', flexDirection: 'column', gap: '18px' }}>
+        <RenterSections b={b} />
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '18px', alignItems: 'flex-start' }}>
+          <div style={{ flex: '1 1 360px', minWidth: '0', display: 'flex', flexDirection: 'column', gap: '18px' }}>
             <section className="card" style={{ padding: '22px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <h2 className="d" style={{ fontSize: '20px', fontWeight: '700' }}>Payment</h2>
               <PriceSummary b={b} />
             </section>
             <CancelBox b={b} role="RENTER" />
-          </aside>
+          </div>
         </div>
       </div>
     </>

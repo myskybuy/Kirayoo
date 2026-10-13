@@ -193,8 +193,111 @@ async function phase6and7(u: { owner: User; renter: User; renter2: User }) {
   await phase7({ owner, renter, renter2, it });
 }
 
+const PHOTOS = ['/demo/tent-1.jpg', '/demo/tent-2.jpg'];
+
+async function phase7(u: { owner: User; renter: User; renter2: User; it: Item }) {
+  const { owner, renter, renter2 } = u;
+  const it = await item(owner.id, { title: `E2E handover ${TAG}`, pricePerDay: 400, pricePerWeek: null, deposit: 3000 });
+
+  // --- Pickup ---------------------------------------------------------------
+  console.log('\n# Pickup handover');
+  const b = await hold(it, owner, renter, d(0), d(3));
+  await demoPay(b);
+  const bk = await booking(b.id);
+  await expectError('pickup needs ≥2 owner condition photos first', () => B.recordPickup(b.id, owner.id, bk.pickupOtp, false), /at least 2 condition photos/);
+  await B.addConditionReport(b.id, owner.id, 'PICKUP', PHOTOS, 'small scuff');
+  await B.addConditionReport(b.id, renter.id, 'PICKUP', [PHOTOS[0]], '');
+  await expectError('wrong pickup OTP is rejected', () => B.recordPickup(b.id, owner.id, '0000' === bk.pickupOtp ? '1111' : '0000', false), /not right/);
+  await expectError('the renter cannot enter the code', () => B.recordPickup(b.id, renter.id, bk.pickupOtp, false), /Only the owner/);
+  await B.recordPickup(b.id, owner.id, bk.pickupOtp, false);
+  check('right pickup OTP → PICKED_UP with timestamp', (await booking(b.id)).status === 'PICKED_UP' && !!(await booking(b.id)).pickedUpAt);
+  check('return OTP differs from pickup OTP', bk.returnOtp !== bk.pickupOtp);
+
+  // --- Extension --------------------------------------------------------------
+  console.log('\n# Extension');
+  const ext = await B.requestExtension(b.id, renter.id, d(5));
+  check('extension quote: +2 days × ₹400 = ₹800', ext.extraDays === 2 && ext.extraAmount === 800 && ext.status === 'PENDING');
+  await expectError('a second open extension request is refused', () => B.requestExtension(b.id, renter.id, d(6)), /already open/);
+  await B.respondExtension(ext.id, owner.id, true);
+  check('owner accepts → ACCEPTED, waiting for online payment', (await prisma.extensionRequest.findUniqueOrThrow({ where: { id: ext.id } })).status === 'ACCEPTED' && dayOf((await booking(b.id)).endDate) === d(3));
+  const blocker = await hold(it, owner, renter2, d(6), d(7));
+  check('dates after the extension can still be booked by others', blocker.status === 'PENDING_PAYMENT');
+  await B.payExtension(ext.id, renter.id, `demo_pay_ext_${TAG}`);
+  const be = await booking(b.id);
+  check('extension paid → endDate + rentAmount updated', dayOf(be.endDate) === d(5) && be.rentAmount === 1200 + 800 && be.extensionAmount === 800 && be.days === 5);
+  await B.payExtension(ext.id, renter.id, `demo_pay_ext_${TAG}`);
+  check('paying the same extension twice is a no-op', (await booking(b.id)).rentAmount === 2000);
+  await expectError('cannot extend into booked dates', () => B.requestExtension(b.id, renter.id, d(7)), /already booked/);
+
+  // --- Return + claim + dispute + admin decision -------------------------------
+  console.log('\n# Return, claim, dispute, admin decision');
+  await expectError('return needs ≥2 return photos', () => B.recordReturn(b.id, owner.id, be.returnOtp), /at least 2 condition photos at return/);
+  await B.addConditionReport(b.id, owner.id, 'RETURN', PHOTOS, '');
+  await expectError('wrong return OTP is rejected', () => B.recordReturn(b.id, owner.id, be.pickupOtp), /not right/);
+  await B.recordReturn(b.id, owner.id, be.returnOtp);
+  check('right return OTP → RETURNED', (await booking(b.id)).status === 'RETURNED');
+  await expectError('claim above the deposit is refused', () => B.raiseClaim(b.id, owner.id, { amount: 3001, lateFee: 0, reason: 'Broken leg', photos: [] }), /at most the deposit/);
+  await B.raiseClaim(b.id, owner.id, { amount: 1000, lateFee: 0, reason: 'Damage: torn rain fly', photos: [PHOTOS[0]] });
+  check('claim OPEN, booking stays RETURNED', (await booking(b.id)).claim?.status === 'OPEN');
+  await expectError('dispute needs a note', () => B.respondClaim(b.id, renter.id, false, ''), /why you disagree/);
+  await B.respondClaim(b.id, renter.id, false, 'It was already torn at pickup — see my photo.');
+  check('renter disputes → DISPUTED', (await booking(b.id)).status === 'DISPUTED' && (await booking(b.id)).claim?.status === 'DISPUTED');
+  await expectError('admin cannot decide more than the claim', () => B.decideDispute(b.id, owner.id, 1500, ''), /between ₹0 and/);
+  await B.decideDispute(b.id, owner.id, 600, 'Partly pre-existing');
+  const done = await booking(b.id);
+  const depRefund = done.refunds.find((r) => r.kind === 'DEPOSIT');
+  check('admin decision → DEPOSIT_REFUNDED', done.status === 'DEPOSIT_REFUNDED' && done.claim?.status === 'RESOLVED');
+  check('refund = deposit − decided amount (₹3,000 − ₹600 = ₹2,400)', depRefund?.amount === 2400 && depRefund.status === 'REFUNDED');
+  check('payout = rent incl. extension − fee + claim (₹2,000 + ₹600)', done.payout?.amount === 2000 - done.platformFee + 600 && done.payout.status === 'PENDING');
+  const nsR = B.nextStepFor({ ...done, item: it, renter, owner, reviews: [] }, 'RENTER');
+  check('Next card after refund: rate the owner', /Rate/.test(nsR.buttonLabel ?? ''));
+
+  // --- Jobs: 48 h auto-OK and claim auto-accept --------------------------------
+  console.log('\n# 48 h jobs');
+  const j1 = await hold(it, owner, renter, d(10), d(10));
+  await demoPay(j1);
+  await prisma.booking.update({ where: { id: j1.id }, data: { status: 'RETURNED', returnedAt: new Date(Date.now() - 49 * 3600000), pickedUpAt: new Date() } });
+  const j2 = await hold(it, owner, renter, d(12), d(12));
+  await demoPay(j2);
+  await prisma.booking.update({ where: { id: j2.id }, data: { status: 'RETURNED', returnedAt: new Date(Date.now() - 50 * 3600000), pickedUpAt: new Date() } });
+  await prisma.damageClaim.create({ data: { bookingId: j2.id, amount: 500, reason: 'Late return', createdAt: new Date(Date.now() - 49 * 3600000) } });
+  await runDueJobs({ force: true });
+  const a1 = await booking(j1.id);
+  const a2 = await booking(j2.id);
+  check('no owner action for 48 h → auto-OK → full deposit refunded', a1.status === 'DEPOSIT_REFUNDED' && a1.refunds.find((r) => r.kind === 'DEPOSIT')?.amount === 3000);
+  check('no renter answer for 48 h → claim auto-accepted, refund = deposit − claim', a2.status === 'DEPOSIT_REFUNDED' && a2.claim?.status === 'ACCEPTED' && a2.refunds.find((r) => r.kind === 'DEPOSIT')?.amount === 2500 && a2.payout?.amount === 400 + 500);
+
+  // --- Cash at pickup, full path -----------------------------------------------
+  console.log('\n# Cash at pickup path');
+  const cashItem = await item(owner.id, { title: `E2E cash ${TAG}`, acceptsCashAtPickup: true, pricePerDay: 300, pricePerWeek: null, deposit: 2000 });
+  const c = await hold(cashItem, owner, renter, d(0), d(1));
+  await B.confirmCash(c.id, renter.id);
+  const cb = await booking(c.id);
+  await B.addConditionReport(c.id, owner.id, 'PICKUP', PHOTOS, '');
+  await expectError('cash booking: must tick “I collected ₹X”', () => B.recordPickup(c.id, owner.id, cb.pickupOtp, false), /I collected/);
+  await B.recordPickup(c.id, owner.id, cb.pickupOtp, true);
+  check('cash collected recorded at pickup', (await booking(c.id)).cashCollected && (await booking(c.id)).amountPaid === cb.total);
+  await B.addConditionReport(c.id, owner.id, 'RETURN', PHOTOS, '');
+  await B.recordReturn(c.id, owner.id, cb.returnOtp);
+  await B.confirmReturnOk(c.id, { role: 'OWNER', userId: owner.id });
+  const cDone = await booking(c.id);
+  check('cash: settled without refund API or payout', cDone.status === 'DEPOSIT_REFUNDED' && cDone.refunds.length === 0 && !cDone.payout);
+
+  // --- No-show ---------------------------------------------------------------
+  console.log('\n# No-show');
+  const ns = await hold(it, owner, renter, d(0), d(2));
+  await demoPay(ns);
+  await expectError('no-show not allowed on the pickup day itself', () => B.markNoShow(ns.id, owner.id), /You can mark a no-show from/);
+  await prisma.booking.update({ where: { id: ns.id }, data: { startDate: new Date(d(-1)) } }); // pickup was yesterday
+  await B.markNoShow(ns.id, owner.id);
+  const nsb = await booking(ns.id);
+  check('no-show → CANCELLED, 1 day kept, rest refunded', nsb.status === 'CANCELLED' && nsb.ownerKeepAmount === 400 && nsb.refunds[0]?.amount === nsb.amountPaid - 400 && nsb.payout?.amount === 400);
+
+  await phase9({ owner, renter, booking: done });
+}
+
 // Later phases plug in here.
-async function phase7(_u: { owner: User; renter: User; renter2: User; it: Item }) {}
+async function phase9(_u: { owner: User; renter: User; booking: { id: string } }) {}
 
 async function cleanup() {
   const users = await prisma.user.findMany({ where: { email: { contains: `.${TAG}@` } }, select: { id: true } });

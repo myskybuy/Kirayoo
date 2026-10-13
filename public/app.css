@@ -135,3 +135,23 @@ textarea.k-in { padding: 12px 14px; min-height: 96px; resize: vertical; }
 /* Checkout progress pill (same as R08–R11 .cs) so it also works on R12 */
 .k-cs { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: 700; }
 .k-cs .k-n { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; flex: none; }
+
+/* Handover/claim building blocks — copies of kit rules (R15–R18, S07–S08, O06–O07)
+   so booking pages work whichever screen stylesheet is loaded. */
+.stepbtn { display: flex; flex-direction: column; gap: 8px; border: 0; background: transparent; padding: 0; text-align: left; font: inherit; color: inherit; }
+.k-sn { width: 34px; height: 34px; border-radius: 12px; background: var(--k-forest-700); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; flex: none; }
+.k-dg { width: 64px; height: 76px; border-radius: 18px; background: var(--k-paper); color: var(--k-forest-700); display: flex; align-items: center; justify-content: center; font: 700 38px var(--k-font-display); }
+.k-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 8px; border-radius: 18px; background: var(--k-cream); }
+.k-pair > * { aspect-ratio: 4/3; border-radius: 12px; display: flex; align-items: flex-end; padding: 6px 8px; font-size: 11.5px; font-weight: 700; color: #2F4E40; position: relative; overflow: hidden; background: var(--k-sage-200); }
+.k-pair > * img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.k-pair > * span { position: relative; background: rgba(255,253,248,.88); padding: 1px 6px; border-radius: 999px; }
+.k-act { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; padding: 18px; border-radius: 22px; border: 0; cursor: pointer; text-align: left; font: inherit; min-height: 120px; text-decoration: none; }
+.k-pill { min-height: 42px; padding: 0 16px; border-radius: 999px; border: 0; font: 600 14px var(--k-font-body); cursor: pointer; }
+.k-choice { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 20px; border-radius: 22px; border: 0; cursor: pointer; text-align: left; font: inherit; min-height: 110px; }
+.k-tl { display: flex; gap: 14px; align-items: flex-start; }
+.k-tl .k-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; flex: none; }
+.k-otp { display: flex; gap: 12px; justify-content: center; }
+.k-otp input { width: 64px; height: 76px; border-radius: 18px; background: #fff; text-align: center; font: 700 34px var(--k-font-display); color: var(--k-forest-700); min-width: 0; border: 2px solid var(--k-line); }
+.k-otp input:focus { outline: 0; border-color: var(--k-forest-700); }
+.k-kv { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; font-size: 14.5px; }
+@media (max-width: 420px) { .k-dg, .k-otp input { width: 54px; height: 66px; font-size: 30px; } }

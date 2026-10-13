@@ -1,8 +1,8 @@
 # Kirayo — build progress
 
-**Current phase:** 7 — Handover, in use, return, claims, jobs (Phase 6 done)
+**Current phase:** 8 — Money settlement + admin money screens (Phase 7 done)
 
-**Next step:** Phase 7 — fill `components/OwnerSections.tsx` (O06 pickup handover: photos + cash tick + OTP, no-show; O07 return: photos + OTP, All OK / claim form; extension answer) and `components/RenterSections.tsx` (R15 pickup OTP + own photos, R16/S07 in use + extension + report a problem, R17 return OTP, S08 claim accept/dispute, R18 refund); server actions in `app/actions/bookings.ts`; extend e2e (OTP, extension, return, claim→dispute→decision, no-show).
+**Next step:** Phase 8 — admin `/admin/disputes` (A06: both condition reports side by side, claim, renter note → decide amount via `decideDispute`), `/admin/payouts` (A07 mark paid with reference + email), `/admin/refunds` (list + retry via `retryRefund`), `/admin/bookings` (A05 search/filter/timeline/cancel with refund), `/admin/users` (A04), `/admin/complaints`, `/admin` dashboard (A01); owner `/owner/earnings` (O08) and `/owner` dashboard (O01 "Needs your action").
 
 ---
 
@@ -74,10 +74,13 @@
 - [x] **Phase 6 done** (browser: tools/ui/phase6.mjs)
 
 ### Phase 7 — Handover + in use + return + claims + jobs
-- [ ] Pickup handover (photos, cash tick, OTP)
-- [ ] In use (days left, overdue, extension, report problem)
-- [ ] Return handover; owner confirm / claim; renter accept / dispute
-- [ ] `runDueJobs` + `/api/cron`
+- [x] Pickup handover (O06 owner: photos ≥2, cash tick, OTP, no-show; R15 renter: code + optional photos)
+- [x] In use (R16/S07: days left, overdue + late fee estimate, extension with live quote + online payment, report a problem)
+- [x] Return handover (owner photos ≥2 + return OTP; R17 renter code); O07 All OK / claim (damage, missing part, late fee ≤ deposit); S08 accept / dispute; R18 refund view
+- [x] `runDueJobs` + `/api/cron` (holds, 48 h auto-OK, 48 h claim auto-accept, stuck settlements, reminder emails)
+- [x] e2e: 66 checks pass
+
+- [x] **Phase 7 done** (browser: tools/ui/phase7.mjs)
 
 ### Phase 8 — Money settlement
 - [ ] Deposit refund; payouts; admin disputes, payouts, refunds; owner earnings
