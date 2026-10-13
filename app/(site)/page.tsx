@@ -1,6 +1,13 @@
+import { redirect } from 'next/navigation';
 import PageCss from '@/components/PageCss';
+import { getUser } from '@/lib/auth';
+import { getLocation } from '@/lib/location';
 
-export default function HomePage() {
+export default async function HomePage() {
+  const user = await getUser();
+  const loc = await getLocation(user);
+  // Location is asked once, on the first visit.
+  if (!loc) redirect('/location?next=/');
   return (
     <>
       <PageCss id="R01-Home" />

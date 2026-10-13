@@ -1,8 +1,8 @@
 # Kirayo — build progress
 
-**Current phase:** 0 — Setup
+**Current phase:** 2 — Owner listings (Phase 1 done)
 
-**Next step:** Phase 0 — write config files (.env.example, next.config, tsconfig), Prisma schema, root layout + header/footer/tab bar.
+**Next step:** Phase 2 — `lib/storage.ts` + upload route, then `/owner/start`, owner panel layout (side nav), item form (O02).
 
 ---
 
@@ -12,20 +12,22 @@
 - [x] Unpack + inventory design kit into `./design`; copy CSS/fonts/icons to `public/design/` (unchanged)
 - [x] `git init`, `BUILD_PROMPT.md`
 - [x] Next 16 + TS + Prisma 6 installed; Postgres container `kirayo-db` on port 5437
-- [ ] `.env.example`, `.gitignore`, `next.config.ts`, `tsconfig.json`
-- [ ] Full Prisma schema + `db push`
-- [ ] Seed skeleton (cities/areas, admin)
-- [ ] Root layout: header (logo, location chip, search, List an item, chat w/ unread, action badge, account menu), footer, mobile tab bar
-- [ ] README skeleton
-- [ ] typecheck + build pass → Phase 0 done
+- [x] `.env.example`, `.gitignore`, `next.config.ts`, `tsconfig.json`
+- [x] Full Prisma schema + `db push`
+- [x] Seed skeleton (cities/areas, admin)
+- [x] Root layout: header (logo, location chip, search, List an item, chat w/ unread, action badge, account menu), footer, mobile tab bar
+- [x] README skeleton
+- [x] typecheck + build pass → **Phase 0 done**
 
 ### Phase 1 — Auth, location, profile
-- [ ] Email OTP (request / verify / resend, hashed, 10 min, 5 attempts, 30 s resend)
-- [ ] Sessions (DB token + cookie, 30 d), logout
-- [ ] Sign-up (name + email)
-- [ ] Location once (city + area searchable) → user + cookie, header chip
-- [ ] Profile (name, phone, address, ID status, logout)
-- [ ] Route protection: user pages, `/owner/(dash)`, `/admin`
+- [x] Email OTP (request / verify / resend, hashed, 10 min, 5 attempts, 30 s resend)
+- [x] Sessions (DB token + cookie, 30 d), logout
+- [x] Sign-up (name + email)
+- [x] Location once (city + area searchable) → user + cookie, header chip
+- [x] Profile (name, phone, address, ID status, logout)
+- [x] Route protection: user pages, `/owner/(dash)`, `/admin`
+
+- [x] **Phase 1 done** (browser flow: tools/ui/phase1.mjs)
 
 ### Phase 2 — Owner listings
 - [ ] `/owner/start`
@@ -138,6 +140,10 @@ The kit as delivered uses `design/renter|owner|admin/*.html` + `css/` + `png/` a
 ---
 
 ## Decisions
+- **Login vs sign-up:** `/login` (R05) accepts any email; unknown emails get a SIGNUP code and the verify page (R06) asks for the name, exactly as the design shows. `/signup` is the same R05 card with a name field.
+- **First visit:** Home redirects to `/location` until a location is chosen (cookie for guests, saved on the user after login). After first login without a location, the user is sent to `/location`.
+- **Profile area** is read-only with a "Change city / area" link (location changes only via the header chip / location page).
+- **Browser checks** use `tools/shot.mjs` and `tools/ui/*.mjs` (playwright-core + installed Edge).
 - **DB:** port 5432 is Dobara's Postgres (Docker) and 5433 is already used by another local project, so Kirayo uses its own Docker container `kirayo-db` on **5437** (option B, port changed). `DATABASE_URL=postgresql://postgres:postgres@localhost:5437/kirayo?schema=public`.
 - **Design CSS loading:** `kirayo.css` + `app.css` are global; each screen's own CSS (`public/design/<sec>/css/<ID>.css`) is linked by that page only (plain `<link>`, removed on navigation) because class names (`.btn`, `.card`…) differ slightly between screens.
 - **Header:** the design header has no location chip / chat / badge; the "Where" segment of the design search pill is the location chip (links to `/location`), and a chat icon + action badge are added in the right-hand group using kit styles.

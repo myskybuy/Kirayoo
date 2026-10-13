@@ -79,7 +79,7 @@ export function fmtClock(d: Date): string {
 }
 
 export function monthYear(d: Date): string {
-  return new Intl.DateTimeFormat('en-IN', { timeZone: TZ, month: 'long', year: 'numeric' }).format(d);
+  return new Intl.DateTimeFormat('en-IN', { timeZone: TZ, month: 'short', year: 'numeric' }).format(d);
 }
 
 export function initials(name: string): string {

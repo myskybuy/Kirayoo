@@ -17,6 +17,7 @@ button, input, select, textarea { font-family: inherit; }
   .k-hide-s, .hide-m-k { display: none !important; }
   .k-hdr { padding: 10px 16px !important; }
   .k-search { order: 3; flex: 1 1 100% !important; }
+  .k-hdr-right { min-width: 0 !important; flex: 0 0 auto !important; }
 }
 
 /* Header additions */

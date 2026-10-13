@@ -74,7 +74,7 @@ export default async function SiteHeader({ compact = false, q = '' }: { compact?
           </form>
         )}
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px', flex: '1 1 0', minWidth: '200px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px', flex: '1 1 0', minWidth: '200px' }} className="k-hdr-right">
           <Link href={ownerHref(user)} style={{ fontWeight: '700', fontSize: '14.5px', color: '#1F4D3A', textDecoration: 'none', padding: '12px 14px', borderRadius: '999px', whiteSpace: 'nowrap' }} className="k-hide-s">List an item</Link>
           {user ? (
             <>
