@@ -25,4 +25,5 @@ export function relink(s) {
   }
   return out + s.slice(last);
 }
-if (process.argv[2]) process.stdout.write(relink(fs.readFileSync(process.argv[2], 'utf8')));
+// CLI only when run directly (not when imported by another tool).
+if (process.argv[1] && /relink\.mjs$/.test(process.argv[1])) process.stdout.write(relink(fs.readFileSync(process.argv[2], 'utf8')));

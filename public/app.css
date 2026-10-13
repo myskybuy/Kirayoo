@@ -155,3 +155,8 @@ textarea.k-in { padding: 12px 14px; min-height: 96px; resize: vertical; }
 .k-otp input:focus { outline: 0; border-color: var(--k-forest-700); }
 .k-kv { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; font-size: 14.5px; }
 @media (max-width: 420px) { .k-dg, .k-otp input { width: 54px; height: 66px; font-size: 30px; } }
+
+/* Loading skeleton (S02 .sk) */
+@keyframes k-sh { 0% { background-position: -400px 0; } 100% { background-position: 400px 0; } }
+.k-sk { background: linear-gradient(90deg, var(--k-sand) 0, var(--k-cream) 50%, var(--k-sand) 100%); background-size: 800px 100%; animation: k-sh 1.4s linear infinite; border-radius: 12px; }
+@media (prefers-reduced-motion: reduce) { .k-sk { animation: none; } }
