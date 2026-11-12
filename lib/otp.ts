@@ -10,10 +10,17 @@ export const MAX_ATTEMPTS = 5;
 const hash = (email: string, code: string) =>
   crypto.createHash('sha256').update(`${email.toLowerCase()}:${code}:${process.env.CRON_SECRET || 'kirayo'}`).digest('hex');
 
-/** Dev only: show the OTP on screen when SMTP is not set, or always for @*.test demo emails. */
+const isDemoEmail = (email: string) => /@[^@]+\.test$/i.test(email);
+
+/**
+ * Dev: show the OTP on screen when SMTP is not set, or always for @*.test demo emails.
+ * Production: only for @*.test demo emails, and only when DEMO_OTP_ON_SCREEN=1.
+ */
 export function showOtpOnScreen(email: string) {
-  if (process.env.NODE_ENV === 'production') return false;
-  return !smtpConfigured() || /@[^@]+\.test$/i.test(email);
+  if (process.env.NODE_ENV === 'production') {
+    return process.env.DEMO_OTP_ON_SCREEN === '1' && isDemoEmail(email);
+  }
+  return !smtpConfigured() || isDemoEmail(email);
 }
 
 export type OtpRequest = { ok: true; devCode?: string } | { ok: false; error: string; waitSeconds?: number };
@@ -31,7 +38,7 @@ export async function requestOtp(email: string, purpose: OtpPurpose, name?: stri
   });
   if (!smtpConfigured()) console.log(`[otp] ${email} -> ${code}`);
   // Demo .test addresses can't receive mail; skip sending when the code is shown on screen anyway.
-  if (!(smtpConfigured() && /@[^@]+\.test$/i.test(email))) await mail.otp(email, code);
+  if (!(smtpConfigured() && isDemoEmail(email))) await mail.otp(email, code);
   return { ok: true, devCode: showOtpOnScreen(email) ? code : undefined };
 }
 

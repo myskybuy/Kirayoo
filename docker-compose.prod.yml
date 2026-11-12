@@ -1,0 +1,46 @@
+# Kirayo on the VPS:
+#   docker compose --env-file .env.production -f docker-compose.prod.yml up -d --build
+# - Postgres is NOT published to the internet (only the app container can reach it).
+# - The app listens on 127.0.0.1:${KIRAYO_PORT:-3010}; Nginx on the host serves kirayoo.in.
+# - First start loads database-backup/kirayo.sql (120 users, 304 items, 17 bookings).
+# Values come from .env.production (copy .env.production.example and fill it in).
+name: kirayo
+
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: kirayo
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env.production}
+      POSTGRES_DB: kirayo
+    volumes:
+      - kirayo-pgdata:/var/lib/postgresql/data
+      - ./database-backup/kirayo.sql:/docker-entrypoint-initdb.d/01-kirayo.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kirayo -d kirayo"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      args:
+        NEXT_PUBLIC_RAZORPAY_KEY_ID: ${NEXT_PUBLIC_RAZORPAY_KEY_ID:-}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: .env.production
+    environment:
+      DATABASE_URL: postgresql://kirayo:${POSTGRES_PASSWORD}@db:5432/kirayo?schema=public
+    ports:
+      - "127.0.0.1:${KIRAYO_PORT:-3010}:3001"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./private-uploads:/app/private-uploads
+
+volumes:
+  kirayo-pgdata:

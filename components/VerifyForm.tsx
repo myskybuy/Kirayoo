@@ -44,7 +44,7 @@ export default function VerifyForm({ email, needName, devCode, wait }: { email: 
         <p className="mute">We sent a 6-digit code to <b style={{ color: 'var(--kf-23262a)' }}>{email}</b>. <Link href="/login">Change</Link></p>
       </div>
       {devCode && (
-        <p className="k-alert info" style={{ textAlign: 'center' }}>Dev mode — your code is <b style={{ letterSpacing: '.2em', fontSize: '17px' }}>{devCode}</b></p>
+        <p className="k-alert info" style={{ textAlign: 'center' }}>Demo account — your code is <b style={{ letterSpacing: '.2em', fontSize: '17px' }}>{devCode}</b></p>
       )}
       <fieldset style={{ border: '0', margin: '0', padding: '0' }}>
         <legend className="lbl">Enter code</legend>

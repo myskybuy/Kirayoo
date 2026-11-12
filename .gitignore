@@ -9,3 +9,6 @@ private-uploads/
 next-env.d.ts
 npm-debug.log*
 Kirayo-Logins.pdf
+.env.production
+kirayo-deploy.tar.gz
+kirayo-uploads.tar.gz

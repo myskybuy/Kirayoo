@@ -911,7 +911,6 @@ cmvqmlv8i00xkuh586cvo5ups	cmvqmlv7z00xeuh58pg8gzl21	DEPOSIT	4000	REFUNDED	demo_r
 --
 
 COPY public."EmailOtp" (id, email, "codeHash", purpose, name, "expiresAt", attempts, "consumedAt", "createdAt") FROM stdin;
-cmvqmylx60000uhjw2haqhaia	yogendrapratapsinghdas@gmail.com	aab4c75331ef118ab219e0e2e5de1786fd47a5e67bf5c6d8c73b1620f7257f21	SIGNUP	\N	2026-10-27 12:12:29.369	0	2026-10-27 12:02:47.195	2026-10-27 12:02:29.37
 \.
 
 
@@ -1406,7 +1405,6 @@ cmvqmlv8q00xquh58quwin7l0	cmvqmlv7z00xeuh58pg8gzl21	cmvqmlssz002quh580lytgi99	cm
 --
 
 COPY public."Session" (id, token, "userId", "expiresAt", "createdAt") FROM stdin;
-cmvqmyzow0003uhjwcylxroij	Twc8GgCOncVzgdgoBsxtC_isXrl1vRrgBBJCoLQhsTQ	cmvqmyzoi0001uhjwld52ac7z	2026-11-26 12:02:47.214	2026-10-27 12:02:47.216
 \.
 
 
