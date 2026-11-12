@@ -61,6 +61,9 @@ export const mail = {
     sendMail(to, `Deposit refunded · ${item}`, `${amount} was refunded for ${item}. ${link(path)}`),
   idApproved: (to: string) => sendMail(to, 'Your ID is verified', `Your ID is verified. You can now pay for rentals and list items. ${link('/profile')}`),
   idRejected: (to: string, reason: string) => sendMail(to, 'ID verification needs another try', `We could not verify your ID: ${reason}. Please resubmit: ${link('/verify-id')}`),
+  ownerApproved: (to: string, idVerified: boolean) =>
+    sendMail(to, 'You’re approved as a Kirayo owner', idVerified ? `Your owner application is approved. List your first item: ${link('/owner/new')}` : `Your owner application is approved. One last step — verify your ID: ${link('/owner/apply')}`),
+  ownerRejected: (to: string, reason: string) => sendMail(to, 'Your owner application needs changes', `We could not approve your owner application: ${reason}. Update it and send it again: ${link('/owner/apply')}`),
   payoutPaid: (to: string, amount: string, ref: string) => sendMail(to, `Payout sent · ${amount}`, `We paid ${amount} to you (reference ${ref}). ${link('/owner/earnings')}`),
   status: (to: string, subject: string, text: string, path: string) => sendMail(to, subject, `${text} ${link(path)}`),
 };

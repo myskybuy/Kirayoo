@@ -15,14 +15,14 @@ export default function MobileTabBar({ unread = 0 }: { unread?: number }) {
   const p = usePathname() || '/';
   return (
     <div className="k-mtab">
-      <nav aria-label="Main" style={{ width: '100%', boxSizing: 'border-box', height: '72px', background: '#FFFDF8', borderTop: '1px solid #E3DACA', display: 'grid', gridTemplateColumns: 'repeat(5,minmax(0,1fr))', alignItems: 'center', padding: '0 6px', fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif", boxShadow: '0 -8px 24px -16px rgba(31,77,58,.25)' }}>
+      <nav aria-label="Main" style={{ width: '100%', boxSizing: 'border-box', height: '72px', background: 'var(--kb-fffdf8)', borderTop: '1px solid var(--kl-e3daca)', display: 'grid', gridTemplateColumns: 'repeat(5,minmax(0,1fr))', alignItems: 'center', padding: '0 6px', fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif", boxShadow: '0 -8px 24px -16px rgba(31,77,58,.25)' }}>
         {TABS.map((t) => {
           const on = t.match(p);
           return (
-            <Link key={t.href} href={t.href} aria-current={on ? 'page' : undefined} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px', textDecoration: 'none', color: on ? '#1F4D3A' : '#60666C', fontSize: '11px', fontWeight: '700', minHeight: '56px', justifyContent: 'center' }}>
-              <span style={{ width: '52px', height: '30px', borderRadius: '999px', background: on ? '#DCE6DA' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+            <Link key={t.href} href={t.href} aria-current={on ? 'page' : undefined} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px', textDecoration: 'none', color: on ? 'var(--kf-1f4d3a)' : 'var(--kf-60666c)', fontSize: '11px', fontWeight: '700', minHeight: '56px', justifyContent: 'center' }}>
+              <span style={{ width: '52px', height: '30px', borderRadius: '999px', background: on ? 'var(--kb-dce6da)' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
                 <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{t.icon}</svg>
-                {t.href === '/chat' && unread > 0 && <span style={{ position: 'absolute', top: '2px', right: '10px', width: '8px', height: '8px', borderRadius: '50%', background: '#C9491F' }}></span>}
+                {t.href === '/chat' && unread > 0 && <span style={{ position: 'absolute', top: '2px', right: '10px', width: '8px', height: '8px', borderRadius: '50%', background: 'var(--kb-c9491f)' }}></span>}
               </span>
               {t.label}
             </Link>

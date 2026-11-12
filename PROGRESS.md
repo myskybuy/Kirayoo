@@ -1,19 +1,64 @@
 # Kirayo — build progress
 
-**Current phase:** All phases done (0–9).
+**Current state (27 Oct 2026):** Phases 0–9, a finishing pass (A–D) and round 3 (premium look, dark mode, "Deal pakki"). Verified by running everything, not just by ticking boxes: typecheck, build (0 warnings), unit 29/29, e2e 97/97, real-browser walk 33/33, home + motion + theme checks 54/54, 360 px crawl as five roles in light and dark with 0 problems. Details in **[AUDIT.md](AUDIT.md)**.
 
-**Next step:** None required. Optional follow-ups: test with real Razorpay test keys and real SMTP (code paths are implemented but were only exercised in demo/console mode here).
+**Honest caveats:**
+- Razorpay and SMTP were only run in demo / console mode here. The live code paths exist but haven't been run against real Razorpay or a real mail server. Do that first (README → *How to go live*).
+- No Razorpay webhook (payments are confirmed on return from Checkout).
+- 3 *high* npm advisories remain in Prisma's CLI tooling; fixing them needs Prisma 7.
+- The earlier "all phases done" note (13 Oct) was broadly accurate for the product. What it missed: no migrations, a critical Next.js advisory, and build warnings.
+
+**Next step:** a staging run with Razorpay test keys + a real SMTP inbox, then the go-live checklist in README.
 
 ---
 
-## Checklist
+## Finishing pass (26 Oct 2026)
+
+### Phase A — Verify
+- [x] install / generate / **migrate** (baseline `0_init`, there were no migrations) / seed / build / unit / e2e: all green
+- [x] `npm audit fix`: Next 16.4.0 → 16.4.3 (critical RCE advisories), nodemailer 10.2.1
+- [x] Build warnings (whole-project tracing in `lib/storage.ts`) fixed
+- [x] Real-browser walk as Riya / Arjun / admin through the whole flow (`tools/ui/walk.mjs`); core flow had no bugs
+- [x] 360 px link crawl for every role (`tools/ui/crawl.mjs`), access-control spot checks
+- [x] AUDIT.md
+
+### Phase B — Features
+- [x] Owner application `/owner/apply`; `ownerStatus` NONE → PENDING → APPROVED / REJECTED (reason, resend); `(dash)` layout gate needs approved + ID verified; emails; migration keeps existing owners approved
+- [x] Listing moderation: new + edited listings → Pending review; admin approve / reject (reason) / take down (closes open requests); logic in `lib/moderation.ts`
+- [x] Admin: KPI row (users, active listings, bookings, online revenue, open disputes), owner-approvals page + badge, listings moderation, bookings, user details drawer (listings, rentals, owner bookings, complaints), contact "Mark resolved"
+- [x] Chat: 5 s polling (thread + now the inbox list), "Booking agreed" card under accepted requests
+- [x] Browse sort (newest, price ↑↓, nearest area) + pagination (already there; now browser-tested); mobile swipe gallery + swipe in the photo viewer
+
+### Phase C — Home
+- [x] HeroCarousel: 4 SVG/gradient banners, 6 s autoplay, pauses on hover / focus / hidden tab / pause button, swipe, ←/→, arrows, dots with progress
+- [x] How it works (3 steps), categories with live counts, items-near-you rail, trust section, CountUp stats (live DB numbers), owner CTA band, testimonials (real reviews only)
+- [x] Scroll reveal (staggered), CountUp, card hover lift, page transitions (React `<ViewTransition>` in `app/(site)/template.tsx`), skeleton loaders (existing `loading.tsx`); `prefers-reduced-motion` turns all motion off. No new dependencies.
+- [x] Home banners in the brand palette (forest, cream, tangerine clay) with champagne-gold accents, grain + drifting glow; condensed Bricolage (local font); checked at 360 px
+- [x] Site-wide motion (`components/SiteMotion.tsx`): staggered entrance + scroll reveal on every page (site, owner, admin, auth), hover/press on buttons and chips, modal/alert/drawer/chat-bubble animations, side-nav and tab-bar motion, page transitions in all route groups
+
+### Round 3 (27 Oct 2026): premium, dark mode, deal clarity
+- [x] **Deal pakki ✓✓**: payment only after both agreed in chat (this was already true; now visible and enforced). Chat card with both ticks and a celebration burst; "Confirmed by both" on checkout and pay; `lib/deal.ts` guard on online + cash payment; e2e +3
+- [x] **Dark / light mode** for the whole site: role-based colour variables via `tools/theme-codemod.mjs` → `public/theme.css`; header + side-nav toggle with circular reveal; saved choice, OS default, no flash; brand gold fixed in both themes
+- [x] **Chat motion**: send-button fly, bubbles slide in, "↓ N new messages" pill (no forced scroll), typing-style dots on waiting states, pulsing request waiting for you, staggered quick replies, "Read ✓✓" pop
+- [x] **Home**: marquee, "Rent for every occasion" (real from-prices), trending rail (most viewed, ranked), owner earnings calculator, areas with live counts, FAQ accordion; word-by-word headings, 3D tilt + spotlight, glass sticky header, scroll progress bar, button shine, hero parallax
+- [x] Tests: e2e 97/97, walk 33/33, home + theme 54/54, crawl light + dark (5 roles) 0 problems
+
+### Phase D — Finish
+- [x] Seed: owner statuses + applications (Kabir pending, Neha pending, Vikram rejected); LOGINS.md regenerated
+- [x] e2e +23 moderation checks; browser walk + home checks as `npm run test:ui` / `npm run test:home`
+- [x] `.env.example` (Razorpay + SMTP explained), README "How to go live"
+- [x] Everything re-run green on a clean build
+
+---
+
+## Checklist (original build, phases 0–9)
 
 ### Phase 0 — Setup
 - [x] Unpack + inventory design kit into `./design`; copy CSS/fonts/icons to `public/design/` (unchanged)
 - [x] `git init`, `BUILD_PROMPT.md`
 - [x] Next 16 + TS + Prisma 6 installed; Postgres container `kirayo-db` on port 5437
 - [x] `.env.example`, `.gitignore`, `next.config.ts`, `tsconfig.json`
-- [x] Full Prisma schema + `db push`
+- [x] Full Prisma schema + `db push` (migrations added later: `prisma/migrations`)
 - [x] Seed skeleton (cities/areas, admin)
 - [x] Root layout: header (logo, location chip, search, List an item, chat w/ unread, action badge, account menu), footer, mobile tab bar
 - [x] README skeleton
@@ -61,7 +106,7 @@
 ### Phase 5 — ID verification
 - [x] `/verify-id` private uploads (R09), status (R10), rejected (S05), resubmit; hold +12 h on submit
 - [x] Admin ID review (A02) with Pending/Verified/Rejected tabs, search, pagination; private images 403/401 for others
-- [x] Gates: owner panel + listing approval need VERIFIED owner; browse shows only VERIFIED owners; payment gate enforced in Phase 6 before an order is created
+- [x] Gates: owner panel + listing approval need VERIFIED owner; browse shows only VERIFIED owners; payment gate enforced in Phase 6 before an order is created (since 26 Oct 2026 also an APPROVED owner application — see Finishing pass)
 
 - [x] **Phase 5 done** (browser: tools/ui/phase5.mjs)
 
@@ -160,7 +205,7 @@ The kit as delivered uses `design/renter|owner|admin/*.html` + `css/` + `png/` a
 
 ### Screens without a design (built from existing components/classes)
 - `/signup` — R05 layout with a name field.
-- `/owner/start` — become-an-owner explainer (O-panel styles + R10 status card).
+- `/owner/apply` — owner application + status (R10 status-card styles); `/owner/start` now redirects here. `/admin/owners` — A02 queue/detail layout.
 - `/owner/bookings` (tabs) — O03 tabs + list rows.
 - Extension request, Report a problem — modal/cards in R16 style.
 - Owner claim form — O07 card styles.
@@ -170,7 +215,7 @@ The kit as delivered uses `design/renter|owner|admin/*.html` + `css/` + `png/` a
 ---
 
 ## Decisions
-- **`db:reset`** is `prisma db push --skip-generate && prisma db seed`: the seed itself wipes the DB only when every user is a `@*.test` demo account (Prisma also refuses `--force-reset` from an AI agent without explicit user consent). `--skip-generate` avoids the Windows EPERM lock while `next dev` runs.
+- **`db:reset`** is `prisma migrate deploy && prisma db seed` (it was `db push` until 26 Oct 2026, when migrations were added): the seed itself wipes the DB only when every user is a `@*.test` demo account. The seed also wipes `./uploads` + `./private-uploads`, so don't seed a second DB from the same folder.
 - **Reviews:** one rating per side; the renter's rating counts for both the owner and the item (`Review.itemId`). Reviews show immediately (the O09 "after 7 days / both submit" note was not in the brief).
 - **Deposit refund timing:** the whole (deposit − claim) is refunded once the claim is settled (brief: "Refund = deposit − accepted or decided claim"); the design's "unclaimed part refunded right away" partial refund is not implemented.
 - **Owner bank details / CSV export / earnings chart:** not in the brief's data model or scope ("analytics charts" out of scope), so O01's chart and O08/A07 bank rows are replaced by a "Coming up" list and a "How payouts work" card; admin records the UTR/UPI reference when marking a payout paid.

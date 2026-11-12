@@ -1,26 +1,26 @@
 /* R04-Item — page styles (exported from the Kirayo canvas). Shared tokens + fonts live in ../assets/css/kirayo.css */
 
 /* from R04-Item */
-body{margin:0;background:#F6F1E7;color:#23262A;font:400 15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif}
-a{color:#1F4D3A}a:hover{color:#163A2B}
+body{margin:0;background:var(--kb-f6f1e7);color:var(--kf-23262a);font:400 15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif}
+a{color:var(--kf-1f4d3a)}a:hover{color:var(--kf-163a2b)}
 h1,h2,h3,h4,p{margin:0}
 .d{font-family:'Bricolage Grotesque',Georgia,serif;letter-spacing:-.025em}
 .wrap{max-width:1240px;margin:0 auto;padding:0 24px;box-sizing:border-box}
 .ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 24px;border-radius:999px;font:700 15px/1 'Plus Jakarta Sans',sans-serif;border:0;cursor:pointer;text-decoration:none;white-space:nowrap;box-sizing:border-box}
-.btn-p{background:#C9491F;color:#fff}.btn-p:hover{background:#A93C18;color:#fff}
-.btn-o{background:transparent;color:#1F4D3A;box-shadow:inset 0 0 0 1.5px #1F4D3A}.btn-o:hover{background:#EEF3EC}
-.card{background:#FFFDF8;border-radius:24px;box-shadow:0 1px 2px rgba(35,38,42,.06),0 8px 24px -10px rgba(31,77,58,.22)}
+.btn-p{background:var(--kb-c9491f);color:var(--kf-ffffff)}.btn-p:hover{background:var(--kb-a93c18);color:var(--kf-ffffff)}
+.btn-o{background:transparent;color:var(--kf-1f4d3a);box-shadow:inset 0 0 0 1.5px var(--kl-1f4d3a)}.btn-o:hover{background:var(--kb-eef3ec)}
+.card{background:var(--kb-fffdf8);border-radius:24px;box-shadow:0 1px 2px rgba(35,38,42,.06),0 8px 24px -10px rgba(31,77,58,.22)}
 .badge{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:999px;font-size:12.5px;font-weight:700;white-space:nowrap}
-.b-ok{background:#DCEEDF;color:#1E5A37}.b-n{background:#EDE5D5;color:#474C52}
-.ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#2F4E40;font-size:12px;font-weight:600;text-align:center}
-.mute{color:#60666C}
-.sec{padding:28px 0;border-bottom:1px solid #E3DACA;display:flex;flex-direction:column;gap:14px}
+.b-ok{background:var(--kb-dceedf);color:var(--kf-1e5a37)}.b-n{background:var(--kb-ede5d5);color:var(--kf-474c52)}
+.ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--kf-2f4e40);font-size:12px;font-weight:600;text-align:center}
+.mute{color:var(--kf-60666c)}
+.sec{padding:28px 0;border-bottom:1px solid var(--kl-e3daca);display:flex;flex-direction:column;gap:14px}
 .sec h2{font-family:'Bricolage Grotesque',Georgia,serif;font-size:24px;font-weight:700;letter-spacing:-.02em}
 .day{height:40px;display:flex;align-items:center;justify-content:center;font:600 14px 'Plus Jakarta Sans',sans-serif;border:0;padding:0;cursor:pointer}
 .day:disabled{cursor:default}
 .opt{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;cursor:pointer;font-size:14px}
-.opt input{width:20px;height:20px;accent-color:#1F4D3A;margin:0}
+.opt input{width:20px;height:20px;accent-color:var(--kf-1f4d3a);margin:0}
 .mtab{display:none;position:sticky;bottom:0;z-index:40}
 @media (max-width:720px){.mtab{display:block}.hide-m{display:none!important}.wrap{padding:0 16px}}
 

@@ -9,7 +9,7 @@ export default function CancelBox({ b, role }: { b: Booking; role: 'RENTER' | 'O
   const t = cancellationTerms(b, role);
   return (
     <details className="card" style={{ padding: '18px 22px' }}>
-      <summary style={{ cursor: 'pointer', fontWeight: 700, color: '#8E2A20' }}>Cancel this booking</summary>
+      <summary style={{ cursor: 'pointer', fontWeight: 700, color: 'var(--kf-8e2a20)' }}>Cancel this booking</summary>
       <form action={cancelBookingAction} style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '12px' }}>
         <input type="hidden" name="bookingId" value={b.id} />
         <p style={{ fontSize: '14px' }}>{role === 'OWNER' && b.status === 'CONFIRMED' ? `${t.text} Owner cancellations are recorded on your profile.` : t.text}</p>

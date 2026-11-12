@@ -5,6 +5,7 @@ import { prisma } from '@/lib/db';
 import { getUser } from '@/lib/auth';
 import { DELIVERY_FEE } from '@/lib/constants';
 import { confirmCash, BookingError } from '@/lib/bookings';
+import { assertDealAgreed } from '@/lib/deal';
 import type { FormState } from './auth';
 
 const schema = z.object({
@@ -46,6 +47,7 @@ export async function confirmCashAction(fd: FormData) {
   if (!user) redirect('/login');
   const id = String(fd.get('bookingId'));
   try {
+    await assertDealAgreed(prisma, id);
     await confirmCash(id, user.id);
   } catch (e) {
     if (!(e instanceof BookingError)) throw e;

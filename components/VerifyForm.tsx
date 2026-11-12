@@ -36,12 +36,12 @@ export default function VerifyForm({ email, needName, devCode, wait }: { email: 
   const firstEmpty = digits.findIndex((d) => !d);
 
   return (
-    <form action={action} style={{ background: '#FFFDF8', borderRadius: '32px', padding: '40px clamp(20px,5vw,44px)', display: 'flex', flexDirection: 'column', gap: '22px', boxShadow: '0 2px 6px rgba(35,38,42,.06),0 30px 60px -24px rgba(31,77,58,.35)' }}>
+    <form action={action} style={{ background: 'var(--kb-fffdf8)', borderRadius: '32px', padding: '40px clamp(20px,5vw,44px)', display: 'flex', flexDirection: 'column', gap: '22px', boxShadow: '0 2px 6px rgba(35,38,42,.06),0 30px 60px -24px rgba(31,77,58,.35)' }}>
       <Link href="/login" style={{ alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '14px', fontWeight: '700', textDecoration: 'none', minHeight: '44px' }}><svg className="ic" viewBox="0 0 24 24" style={{ width: '18px', height: '18px' }}><path d="M19 12H5M11 6l-6 6 6 6"></path></svg>Back</Link>
-      <span style={{ width: '60px', height: '60px', borderRadius: '20px', background: '#DCE6DA', color: '#1F4D3A', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg className="ic" viewBox="0 0 24 24" style={{ width: '28px', height: '28px' }}><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="m4 7 8 6 8-6"></path></svg></span>
+      <span style={{ width: '60px', height: '60px', borderRadius: '20px', background: 'var(--kb-dce6da)', color: 'var(--kf-1f4d3a)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg className="ic" viewBox="0 0 24 24" style={{ width: '28px', height: '28px' }}><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="m4 7 8 6 8-6"></path></svg></span>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
         <h1 className="d" style={{ fontSize: '32px', fontWeight: '700' }}>Check your inbox</h1>
-        <p className="mute">We sent a 6-digit code to <b style={{ color: '#23262A' }}>{email}</b>. <Link href="/login">Change</Link></p>
+        <p className="mute">We sent a 6-digit code to <b style={{ color: 'var(--kf-23262a)' }}>{email}</b>. <Link href="/login">Change</Link></p>
       </div>
       {devCode && (
         <p className="k-alert info" style={{ textAlign: 'center' }}>Dev mode — your code is <b style={{ letterSpacing: '.2em', fontSize: '17px' }}>{devCode}</b></p>
@@ -70,7 +70,7 @@ export default function VerifyForm({ email, needName, devCode, wait }: { email: 
         <input type="hidden" name="code" value={digits.join('')} />
       </fieldset>
       {needName && (
-        <div style={{ padding: '16px', borderRadius: '18px', background: '#EEF3EC', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+        <div style={{ padding: '16px', borderRadius: '18px', background: 'var(--kb-eef3ec)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
           <label className="lbl" htmlFor="nm" style={{ margin: '0' }}>New here? Your full name</label>
           <input className="in" id="nm" name="name" type="text" autoComplete="name" required value={name} onChange={(e) => setName(e.target.value)} />
           <span className="mute" style={{ fontSize: '12.5px' }}>Use the name on your government ID. You&apos;ll verify it before your first payment.</span>
@@ -83,9 +83,9 @@ export default function VerifyForm({ email, needName, devCode, wait }: { email: 
       <p className="mute" style={{ fontSize: '13.5px', textAlign: 'center' }}>
         Didn&apos;t get it? Check spam, or{' '}
         {left > 0 ? (
-          <b style={{ color: '#23262A' }}>resend in 0:{String(left).padStart(2, '0')}</b>
+          <b style={{ color: 'var(--kf-23262a)' }}>resend in 0:{String(left).padStart(2, '0')}</b>
         ) : (
-          <button type="submit" formAction={resend} disabled={resending} style={{ background: 'none', border: 0, padding: 0, font: 'inherit', fontWeight: 700, color: '#1F4D3A', textDecoration: 'underline', cursor: 'pointer' }}>{resending ? 'sending…' : 'resend the code'}</button>
+          <button type="submit" formAction={resend} disabled={resending} style={{ background: 'none', border: 0, padding: 0, font: 'inherit', fontWeight: 700, color: 'var(--kf-1f4d3a)', textDecoration: 'underline', cursor: 'pointer' }}>{resending ? 'sending…' : 'resend the code'}</button>
         )}
       </p>
     </form>

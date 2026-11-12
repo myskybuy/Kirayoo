@@ -17,6 +17,15 @@ enum IdStatus {
   REJECTED
 }
 
+// Owner application: NONE → PENDING → APPROVED / REJECTED (reason on the user).
+// Owners also need a VERIFIED ID; both gates guard the owner panel.
+enum OwnerStatus {
+  NONE
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum OtpPurpose {
   LOGIN
   SIGNUP
@@ -118,24 +127,26 @@ enum ComplaintStatus {
 }
 
 model User {
-  id                 String    @id @default(cuid())
-  email              String    @unique
+  id                 String      @id @default(cuid())
+  email              String      @unique
   name               String
   phone              String?
   city               String?
   area               String?
   address            String?
-  isAdmin            Boolean   @default(false)
-  isBlocked          Boolean   @default(false)
-  idStatus           IdStatus  @default(NONE)
+  isAdmin            Boolean     @default(false)
+  isBlocked          Boolean     @default(false)
+  idStatus           IdStatus    @default(NONE)
   idDocType          String?
   idDocPath          String?
   selfiePath         String?
   idRejectReason     String?
   idSubmittedAt      DateTime?
   idReviewedAt       DateTime?
-  ownerCancellations Int       @default(0)
-  createdAt          DateTime  @default(now())
+  ownerCancellations Int         @default(0)
+  ownerStatus        OwnerStatus @default(NONE)
+  ownerRejectReason  String?
+  createdAt          DateTime    @default(now())
 
   sessions         Session[]
   items            Item[]
@@ -149,6 +160,20 @@ model User {
   payouts          Payout[]
   complaints       Complaint[]
   conditionReports ConditionReport[]
+  ownerApplication OwnerApplication?
+}
+
+model OwnerApplication {
+  id          String     @id @default(cuid())
+  userId      String     @unique
+  name        String
+  phone       String
+  categories  Category[]
+  plans       String
+  termsAt     DateTime
+  submittedAt DateTime   @default(now())
+  reviewedAt  DateTime?
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Session {

@@ -77,7 +77,7 @@ export default function PayPanel(p: Props) {
         name: j.name,
         description: j.description,
         prefill: j.prefill,
-        theme: { color: '#1F4D3A' },
+        theme: { color: 'var(--kf-1f4d3a)' },
         handler: async (resp: RzpResponse) => {
           setBusy(true);
           const v = await post('/api/payments/verify', { bookingId: p.bookingId, extensionId: p.extensionId, ...resp });
@@ -95,13 +95,13 @@ export default function PayPanel(p: Props) {
     }
   }
 
-  const choice = (on: boolean) => (on ? { background: '#EEF3EC', boxShadow: 'inset 0 0 0 2px #1F4D3A', color: '#23262A' } : { background: '#fff', boxShadow: 'inset 0 0 0 1px #E3DACA', color: '#23262A' });
-  const dot = (on: boolean) => (on ? { width: '22px', height: '22px', borderRadius: '50%', background: '#1F4D3A', boxShadow: 'inset 0 0 0 5px #DCE6DA', flex: 'none' } : { width: '22px', height: '22px', borderRadius: '50%', background: '#fff', boxShadow: 'inset 0 0 0 1.5px #BFB4A0', flex: 'none' });
+  const choice = (on: boolean) => (on ? { background: 'var(--kb-eef3ec)', boxShadow: 'inset 0 0 0 2px var(--kl-1f4d3a)', color: 'var(--kf-23262a)' } : { background: 'var(--kb-ffffff)', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)', color: 'var(--kf-23262a)' });
+  const dot = (on: boolean) => (on ? { width: '22px', height: '22px', borderRadius: '50%', background: 'var(--kb-1f4d3a)', boxShadow: 'inset 0 0 0 5px var(--kl-dce6da)', flex: 'none' } : { width: '22px', height: '22px', borderRadius: '50%', background: 'var(--kb-ffffff)', boxShadow: 'inset 0 0 0 1.5px var(--kl-bfb4a0)', flex: 'none' });
 
   return (
     <>
       <div className="card" style={{ padding: '22px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <b style={{ fontSize: '14px', color: '#474C52' }}>How do you want to pay?</b>
+        <b style={{ fontSize: '14px', color: 'var(--kf-474c52)' }}>How do you want to pay?</b>
         <button className="pm" type="button" aria-pressed={opt === 'online'} onClick={() => setOpt('online')} style={choice(opt === 'online')}>
           <span style={dot(opt === 'online')}></span>
           <span style={{ flex: '1', display: 'flex', flexDirection: 'column' }}>Option 1 — Pay online now<span className="mute" style={{ fontSize: '12.5px', fontWeight: '500' }}>UPI, card or netbanking via Razorpay. Confirms your booking instantly.</span></span>
@@ -115,15 +115,15 @@ export default function PayPanel(p: Props) {
           </button>
         )}
         {opt === 'online' ? (
-          <div style={{ padding: '16px', borderRadius: '18px', background: '#EEF3EC', fontSize: '13.5px', color: '#474C52', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div style={{ padding: '16px', borderRadius: '18px', background: 'var(--kb-eef3ec)', fontSize: '13.5px', color: 'var(--kf-474c52)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
             {p.razorpay ? (
-              <><b style={{ color: '#23262A' }}>Razorpay test mode — no real money.</b><span>Use UPI <code>success@razorpay</code> or test card 4111 1111 1111 1111 (any future date, any CVV).</span></>
+              <><b style={{ color: 'var(--kf-23262a)' }}>Razorpay test mode — no real money.</b><span>Use UPI <code>success@razorpay</code> or test card 4111 1111 1111 1111 (any future date, any CVV).</span></>
             ) : (
-              <><b style={{ color: '#23262A' }}>Demo payment mode</b><span>Razorpay keys aren’t set, so this simulates the payment. Use “Simulate failed payment” to see the failure screen.</span></>
+              <><b style={{ color: 'var(--kf-23262a)' }}>Demo payment mode</b><span>Razorpay keys aren’t set, so this simulates the payment. Use “Simulate failed payment” to see the failure screen.</span></>
             )}
           </div>
         ) : (
-          <div style={{ padding: '16px', borderRadius: '18px', background: '#FBEBCF', fontSize: '13.5px', color: '#7A4708', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div style={{ padding: '16px', borderRadius: '18px', background: 'var(--kb-fbebcf)', fontSize: '13.5px', color: 'var(--kf-7a4708)', display: 'flex', flexDirection: 'column', gap: '6px' }}>
             <b>How pay-at-pickup works</b>
             <span>Your dates are confirmed right away. At pickup, pay {p.ownerFirst} the rent + deposit ({inr(p.amount)}) in cash or UPI before you take the item. At return, {p.ownerFirst} hands the {inr(p.deposit)} deposit back in cash, minus any claim you accept. Kirayo records the booking but doesn’t hold this money.</span>
           </div>
@@ -136,12 +136,12 @@ export default function PayPanel(p: Props) {
             <button className="btn btn-p" type="button" disabled={busy} onClick={payOnline} style={{ width: '100%' }}>
               <svg className="ic" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"></rect><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"></path></svg>{busy ? 'Processing…' : `Pay ${inr(p.amount)}`}
             </button>
-            {!p.razorpay && <button type="button" disabled={busy} onClick={() => demo('fail')} style={{ border: 0, background: 'none', fontSize: '13px', color: '#60666C', textDecoration: 'underline', cursor: 'pointer' }}>Simulate failed payment</button>}
+            {!p.razorpay && <button type="button" disabled={busy} onClick={() => demo('fail')} style={{ border: 0, background: 'none', fontSize: '13px', color: 'var(--kf-60666c)', textDecoration: 'underline', cursor: 'pointer' }}>Simulate failed payment</button>}
           </>
         ) : (
           <form action={confirmCashAction}>
             <input type="hidden" name="bookingId" value={p.bookingId} />
-            <button className="btn btn-g" type="submit" style={{ width: '100%', background: '#1F4D3A', color: '#fff' }}>Confirm — I’ll pay at pickup</button>
+            <button className="btn btn-g" type="submit" style={{ width: '100%', background: 'var(--kb-1f4d3a)', color: 'var(--kf-ffffff)' }}>Confirm — I’ll pay at pickup</button>
           </form>
         )}
       </div>

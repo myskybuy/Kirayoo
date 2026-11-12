@@ -1,17 +1,17 @@
 /* R24-Terms — page styles (exported from the Kirayo canvas). Shared tokens + fonts live in ../assets/css/kirayo.css */
 
 /* from R24-Terms */
-body{margin:0;background:#F6F1E7;color:#23262A;font:400 15px/1.65 'Plus Jakarta Sans',system-ui,sans-serif}
-a{color:#1F4D3A}a:hover{color:#163A2B}
+body{margin:0;background:var(--kb-f6f1e7);color:var(--kf-23262a);font:400 15px/1.65 'Plus Jakarta Sans',system-ui,sans-serif}
+a{color:var(--kf-1f4d3a)}a:hover{color:var(--kf-163a2b)}
 h1,h2,h3,h4,p{margin:0}
 .d{font-family:'Bricolage Grotesque',Georgia,serif;letter-spacing:-.025em}
 .wrap{max-width:1160px;margin:0 auto;padding:0 24px;box-sizing:border-box}
-.mute{color:#60666C}
-.toc a{display:block;padding:8px 14px;border-radius:12px;text-decoration:none;color:#474C52;font-weight:600;font-size:14px}
-.toc a:hover{background:#EEF3EC;color:#1F4D3A}
-.doc section{padding:22px 0;border-bottom:1px solid #E3DACA;display:flex;flex-direction:column;gap:10px}
+.mute{color:var(--kf-60666c)}
+.toc a{display:block;padding:8px 14px;border-radius:12px;text-decoration:none;color:var(--kf-474c52);font-weight:600;font-size:14px}
+.toc a:hover{background:var(--kb-eef3ec);color:var(--kf-1f4d3a)}
+.doc section{padding:22px 0;border-bottom:1px solid var(--kl-e3daca);display:flex;flex-direction:column;gap:10px}
 .doc h2{font-family:'Bricolage Grotesque',Georgia,serif;font-size:24px;font-weight:700;letter-spacing:-.02em}
-.doc p,.doc li{color:#474C52;max-width:720px}
+.doc p,.doc li{color:var(--kf-474c52);max-width:720px}
 .doc ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
 .mtab{display:none;position:sticky;bottom:0;z-index:40}
 @media (max-width:720px){.mtab{display:block}.wrap{padding:0 16px}}

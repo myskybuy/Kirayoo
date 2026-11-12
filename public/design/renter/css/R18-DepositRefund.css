@@ -1,16 +1,16 @@
 /* R18-DepositRefund — page styles (exported from the Kirayo canvas). Shared tokens + fonts live in ../assets/css/kirayo.css */
 
 /* from R18-DepositRefund */
-body{margin:0;background:#F6F1E7;color:#23262A;font:400 15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif}
-a{color:#1F4D3A}a:hover{color:#163A2B}
+body{margin:0;background:var(--kb-f6f1e7);color:var(--kf-23262a);font:400 15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif}
+a{color:var(--kf-1f4d3a)}a:hover{color:var(--kf-163a2b)}
 h1,h2,h3,h4,p{margin:0}
 .d{font-family:'Bricolage Grotesque',Georgia,serif;letter-spacing:-.025em}
 .ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 22px;border-radius:999px;font:700 15px/1 'Plus Jakarta Sans',sans-serif;border:0;cursor:pointer;text-decoration:none;white-space:nowrap;box-sizing:border-box}
-.card{background:#FFFDF8;border-radius:24px;box-shadow:0 1px 2px rgba(35,38,42,.06),0 8px 24px -10px rgba(31,77,58,.22)}
-.mute{color:#60666C}
+.card{background:var(--kb-fffdf8);border-radius:24px;box-shadow:0 1px 2px rgba(35,38,42,.06),0 8px 24px -10px rgba(31,77,58,.22)}
+.mute{color:var(--kf-60666c)}
 .tab{min-height:40px;padding:0 16px;border-radius:999px;border:0;font:700 13.5px 'Plus Jakarta Sans',sans-serif;cursor:pointer}
-.kv{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #EFE8DA;font-size:15px}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--kl-efe8da);font-size:15px}
 .tl{display:flex;gap:14px;align-items:flex-start}
 .tl .dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex:none}
 

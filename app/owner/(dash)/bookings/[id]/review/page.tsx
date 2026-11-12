@@ -21,9 +21,9 @@ export default async function OwnerReviewPage({ params, searchParams }: { params
       <PageCss id="O09-Reviews" />
       <h1 className="d" style={{ fontSize: 'clamp(30px,3.4vw,42px)', fontWeight: '700' }}>Rate {r}</h1>
       {sp.error && <p className="k-alert err">{sp.error}</p>}
-      <section className="card" style={{ maxWidth: '640px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', boxShadow: 'inset 0 0 0 2px #C9491F' }}>
-        <span style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '.08em', textTransform: 'uppercase', color: '#C9491F' }}>Waiting for your rating</span>
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}><span style={{ width: '48px', height: '48px', borderRadius: '50%', background: avatarColor(b.renter.id), color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800' }}>{initials(b.renter.name)}</span><span><b style={{ fontSize: '16px' }}>{b.renter.name}</b><br /><span className="mute" style={{ fontSize: '13px' }}>{b.item.title} · {fmtRange(b.startDate, b.endDate)}</span></span></div>
+      <section className="card" style={{ maxWidth: '640px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', boxShadow: 'inset 0 0 0 2px var(--kl-c9491f)' }}>
+        <span style={{ fontSize: '12px', fontWeight: '800', letterSpacing: '.08em', textTransform: 'uppercase', color: 'var(--kf-c9491f)' }}>Waiting for your rating</span>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}><span style={{ width: '48px', height: '48px', borderRadius: '50%', background: avatarColor(b.renter.id), color: 'var(--kf-ffffff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800' }}>{initials(b.renter.name)}</span><span><b style={{ fontSize: '16px' }}>{b.renter.name}</b><br /><span className="mute" style={{ fontSize: '13px' }}>{b.item.title} · {fmtRange(b.startDate, b.endDate)}</span></span></div>
         <ReviewForm compact bookingId={b.id} legend={`How was ${r} as a renter?`} tags={OWNER_REVIEW_TAGS} textLabel="A line for other owners" back="/owner/reviews" />
       </section>
     </>

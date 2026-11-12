@@ -5,6 +5,7 @@ import { initials } from '@/lib/format';
 
 const I = {
   home: '<path d="M4 11 12 4l8 7v9H4z"></path><path d="M10 20v-5h4v5"></path>',
+  owner: '<circle cx="10" cy="8" r="3.5"></circle><path d="M3.5 19.5a6.5 6.5 0 0 1 11-4.7"></path><path d="m15 18 2 2 4-4.5"></path>',
   id: '<rect x="3" y="5" width="18" height="14" rx="3"></rect><circle cx="9" cy="11" r="2.2"></circle><path d="M5.8 16.5a3.4 3.4 0 0 1 6.4 0M14.5 10h4M14.5 13.5h3"></path>',
   list: '<rect x="4" y="4" width="7" height="7" rx="2"></rect><rect x="13" y="4" width="7" height="7" rx="2"></rect><rect x="4" y="13" width="7" height="7" rx="2"></rect><path d="m14 16.5 2 2 3.5-4"></path>',
   users: '<circle cx="9" cy="8.5" r="3.5"></circle><path d="M3 19.5a6 6 0 0 1 12 0M16 5.2a3.5 3.5 0 0 1 0 6.6M18 14.2a6 6 0 0 1 3 5.3"></path>',
@@ -20,8 +21,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const c = await adminCounts();
   const items: NavItem[] = [
     { href: '/admin', label: 'Dashboard', icon: I.home, exact: true },
+    { href: '/admin/owners', label: 'Owner approvals', icon: I.owner, badge: c.owners },
     { href: '/admin/ids', label: 'ID verifications', icon: I.id, badge: c.ids },
-    { href: '/admin/listings', label: 'Listing approvals', icon: I.list, badge: c.listings },
+    { href: '/admin/listings', label: 'Listings', icon: I.list, badge: c.listings },
     { href: '/admin/users', label: 'Users', icon: I.users },
     { href: '/admin/bookings', label: 'Bookings', icon: I.cal },
     { href: '/admin/disputes', label: 'Deposit disputes', icon: I.shield, badge: c.disputes },
@@ -30,9 +32,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     { href: '/admin/refunds', label: 'Deposit refunds', icon: I.refund, badge: c.refunds },
   ];
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', minHeight: '100vh', background: '#F3EFE6' }}>
-      <div style={{ flex: '1 1 248px', maxWidth: '100%', background: '#23262A' }}>
-        <SideNav variant="admin" items={items} user={{ initials: initials(admin.name), name: admin.name, sub: admin.email, color: '#1F4D3A' }} />
+    <div style={{ display: 'flex', flexWrap: 'wrap', minHeight: '100vh', background: 'var(--kb-f3efe6)' }}>
+      <div style={{ flex: '1 1 248px', maxWidth: '100%', background: 'var(--kb-23262a)' }}>
+        <SideNav variant="admin" items={items} user={{ initials: initials(admin.name), name: admin.name, sub: admin.email, color: 'var(--kf-1f4d3a)' }} />
       </div>
       <main style={{ flex: '999 1 640px', minWidth: '0', padding: '32px clamp(16px,3vw,40px) 64px', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: '20px' }}>
         {children}

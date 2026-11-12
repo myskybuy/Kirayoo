@@ -76,7 +76,7 @@ export async function readPublic(parts: string[]): Promise<{ data: Buffer; mime:
   const full = safeJoin(PUBLIC_DIR, parts);
   if (!full) return null;
   try {
-    const data = await fs.readFile(full);
+    const data = await fs.readFile(/*turbopackIgnore: true*/ full);
     return { data, mime: MIME[path.extname(full).slice(1)] ?? 'application/octet-stream' };
   } catch {
     return null;
@@ -87,7 +87,7 @@ export async function readPrivate(parts: string[]): Promise<{ data: Buffer; mime
   const full = safeJoin(PRIVATE_DIR, parts);
   if (!full) return null;
   try {
-    const data = await fs.readFile(full);
+    const data = await fs.readFile(/*turbopackIgnore: true*/ full);
     return { data, mime: MIME[path.extname(full).slice(1)] ?? 'application/octet-stream' };
   } catch {
     return null;

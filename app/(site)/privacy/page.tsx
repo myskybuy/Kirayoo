@@ -9,17 +9,17 @@ export default function Page() {
       <PageCss id="R25-Privacy" />
       <div className="wrap" style={{ paddingTop: "48px", paddingBottom: "72px", display: "flex", flexDirection: "column", gap: "28px" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            <span style={{ fontSize: "12px", fontWeight: "800", letterSpacing: ".08em", textTransform: "uppercase", color: "#C9491F" }}>Legal</span>
-            <h1 className="d" style={{ fontSize: "clamp(36px,4.4vw,56px)", fontWeight: "700", color: "#1F4D3A", lineHeight: "1" }}>Privacy policy</h1>
+            <span style={{ fontSize: "12px", fontWeight: "800", letterSpacing: ".08em", textTransform: "uppercase", color: "var(--kf-c9491f)" }}>Legal</span>
+            <h1 className="d" style={{ fontSize: "clamp(36px,4.4vw,56px)", fontWeight: "700", color: "var(--kf-1f4d3a)", lineHeight: "1" }}>Privacy policy</h1>
             <p className="mute">Last updated 13 Oct 2026</p>
           </div>
-          <div style={{ padding: "20px 24px", borderRadius: "24px", background: "#1F4D3A", color: "#F6F1E7", display: "grid", gap: "16px", gridTemplateColumns: "repeat(auto-fit,minmax(min(220px,100%),1fr))" }}>
-            <div><b>Your ID stays private</b><p style={{ fontSize: "14px", color: "#DCE6DA" }}>Only the admin sees ID photos and selfies. Owners and renters see a tick, not the document.</p></div>
-            <div><b>No location tracking</b><p style={{ fontSize: "14px", color: "#DCE6DA" }}>We use the city and area you pick from a list. No GPS.</p></div>
-            <div><b>Contact shared only after payment</b><p style={{ fontSize: "14px", color: "#DCE6DA" }}>Phone and address go to the other person once a booking is paid.</p></div>
+          <div style={{ padding: "20px 24px", borderRadius: "24px", background: "var(--kb-1f4d3a)", color: "var(--kf-f6f1e7)", display: "grid", gap: "16px", gridTemplateColumns: "repeat(auto-fit,minmax(min(220px,100%),1fr))" }}>
+            <div><b>Your ID stays private</b><p style={{ fontSize: "14px", color: "var(--kf-dce6da)" }}>Only the admin sees ID photos and selfies. Owners and renters see a tick, not the document.</p></div>
+            <div><b>No location tracking</b><p style={{ fontSize: "14px", color: "var(--kf-dce6da)" }}>We use the city and area you pick from a list. No GPS.</p></div>
+            <div><b>Contact shared only after payment</b><p style={{ fontSize: "14px", color: "var(--kf-dce6da)" }}>Phone and address go to the other person once a booking is paid.</p></div>
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "40px", alignItems: "flex-start" }}>
-            <nav className="toc" aria-label="On this page" style={{ flex: "1 1 220px", maxWidth: "260px", position: "sticky", top: "20px", background: "#FFFDF8", borderRadius: "22px", padding: "10px" }}>
+            <nav className="toc" aria-label="On this page" style={{ flex: "1 1 220px", maxWidth: "260px", position: "sticky", top: "20px", background: "var(--kb-fffdf8)", borderRadius: "22px", padding: "10px" }}>
               <a href="#p1">1. What we collect</a><a href="#p2">2. Why we use it</a><a href="#p3">3. Who sees what</a><a href="#p4">4. How long we keep it</a><a href="#p5">5. Your rights</a><a href="#p6">6. Contact</a>
             </nav>
             <article className="doc" style={{ flex: "999 1 520px", minWidth: "0" }}>

@@ -6,8 +6,12 @@ import * as B from '../lib/bookings';
 import * as C from '../lib/chat';
 import { runDueJobs } from '../lib/jobs';
 import { payTarget } from '../lib/pay-target';
+import { agreedDeal } from '../lib/deal';
 import { submitReview } from '../lib/reviews';
 import { addDays, dayOf, todayIST } from '../lib/format';
+import * as M from '../lib/moderation';
+import { canUseOwnerPanel } from '../lib/owner-gate';
+import { visibleWhere } from '../lib/search';
 
 const prisma = new PrismaClient();
 const TAG = `e2e${Date.now().toString(36)}`;
@@ -32,8 +36,8 @@ async function expectError(name: string, fn: () => Promise<unknown>, match?: Reg
 const today = todayIST();
 const d = (n: number) => addDays(today, n);
 
-async function user(name: string, verified = true): Promise<User> {
-  return prisma.user.create({ data: { email: `${name}.${TAG}@kirayo.test`, name: `${name[0].toUpperCase()}${name.slice(1)} Tester`, city: 'Pune', area: 'Baner', idStatus: verified ? 'VERIFIED' : 'NONE' } });
+async function user(name: string, verified = true, ownerStatus: User['ownerStatus'] = 'NONE'): Promise<User> {
+  return prisma.user.create({ data: { email: `${name}.${TAG}@kirayo.test`, name: `${name[0].toUpperCase()}${name.slice(1)} Tester`, city: 'Pune', area: 'Baner', idStatus: verified ? 'VERIFIED' : 'NONE', ownerStatus } });
 }
 async function item(ownerId: string, o: Partial<Item> = {}): Promise<Item> {
   return prisma.item.create({
@@ -48,7 +52,8 @@ async function request(convId: string, renterId: string, start: string, end: str
 
 async function main() {
   console.log(`Kirayo e2e (${TAG}) — today ${today}\n`);
-  const owner = await user('owner');
+  await moderation();
+  const owner = await user('owner', true, 'APPROVED');
   const renter = await user('renter');
   const renter2 = await user('second');
   const it = await item(owner.id);
@@ -130,6 +135,17 @@ async function demoPay(b: { id: string; total: number }) {
 async function phase6and7(u: { owner: User; renter: User; renter2: User }) {
   const { owner, renter, renter2 } = u;
   const it = await item(owner.id, { title: `E2E pay ${TAG}`, acceptsCashAtPickup: true });
+
+  // --- Deal pakki: payment only after both sides agreed in chat --------------
+  console.log('\n# Deal pakki');
+  const dealIt = await item(owner.id, { title: `E2E deal ${TAG}` });
+  const agreed = await hold(dealIt, owner, renter, d(70), d(71));
+  const deal = await agreedDeal(prisma, agreed.id);
+  check('accepted request = deal agreed by both (renter proposed, owner accepted)', deal?.proposedBy === 'RENTER');
+  check('payment opens for an agreed deal', (await payTarget(renter, agreed.id)).amount === agreed.total);
+  const dealConv = await C.getOrCreateConversation(dealIt.id, renter.id);
+  const rogue = await prisma.$transaction((tx) => B.createHold(tx, { item: dealIt, renterId: renter.id, conversationId: dealConv.id, start: d(74), end: d(75) }));
+  await expectError('a booking nobody agreed to in chat can’t be paid', () => payTarget(renter, rogue.id), /both agree/);
 
   // --- ID gate --------------------------------------------------------------
   console.log('\n# Checkout & payment');
@@ -312,6 +328,58 @@ async function phase9(u: { owner: User; renter: User; booking: { id: string } })
   const b = await booking(done.id);
   const ns = B.nextStepFor({ ...b, item: it, renter, owner, reviews: await prisma.review.findMany({ where: { bookingId: done.id } }) }, 'RENTER');
   check('Next card after both reviews: all done', ns.tone === 'done');
+}
+
+async function moderation() {
+  console.log('# Owner application & listing moderation');
+  const form = { name: 'Applicant Tester', phone: '+91 98450 12345', categories: ['TOOLS', 'CAMPING'], plans: 'A Bosch drill and a 4-person tent.', terms: true };
+  const applicant = await user('applicant');
+  const renter = await user('browser');
+  const status = async (id: string) => (await prisma.user.findUniqueOrThrow({ where: { id } })).ownerStatus;
+  const visible = async (itemId: string) => (await prisma.item.count({ where: { id: itemId, ...visibleWhere(renter.id) } })) === 1;
+  const it = await item(applicant.id, { title: `E2E moderation ${TAG}`, status: 'PENDING_REVIEW' });
+
+  await expectError('application needs the owner terms', () => M.applyAsOwner(applicant.id, { ...form, terms: false }), /terms/);
+  await expectError('application needs a valid Indian mobile', () => M.applyAsOwner(applicant.id, { ...form, phone: '12345' }), /mobile/);
+  await expectError('application needs at least one category', () => M.applyAsOwner(applicant.id, { ...form, categories: [] }), /category/);
+  await M.applyAsOwner(applicant.id, form);
+  const app = await prisma.ownerApplication.findUniqueOrThrow({ where: { userId: applicant.id } });
+  check('owner NONE → PENDING, form saved', (await status(applicant.id)) === 'PENDING' && app.categories.length === 2 && app.phone === form.phone);
+  await expectError('cannot apply again while pending', () => M.applyAsOwner(applicant.id, form), /already under review/);
+  check('owner panel stays closed while pending', !canUseOwnerPanel(await prisma.user.findUniqueOrThrow({ where: { id: applicant.id } })));
+  await expectError('listing can’t go live before the owner is approved', () => M.approveListing(it.id), /not an approved/);
+  await expectError('rejecting an application needs a reason', () => M.decideOwnerApplication(applicant.id, false, ' '), /reason/);
+  const rej = await M.decideOwnerApplication(applicant.id, false, 'Tell us the brands.');
+  check('PENDING → REJECTED with the reason', rej.ownerStatus === 'REJECTED' && rej.ownerRejectReason === 'Tell us the brands.');
+  await M.applyAsOwner(applicant.id, { ...form, plans: 'A Bosch GSB 500 drill and a Quechua 4-person tent.' });
+  const again = await prisma.user.findUniqueOrThrow({ where: { id: applicant.id } });
+  check('REJECTED → resend → PENDING, reason cleared', again.ownerStatus === 'PENDING' && again.ownerRejectReason === null);
+  const ok = await M.decideOwnerApplication(applicant.id, true);
+  check('PENDING → APPROVED; panel opens (ID verified)', ok.ownerStatus === 'APPROVED' && canUseOwnerPanel(ok));
+  await expectError('an application can’t be decided twice', () => M.decideOwnerApplication(applicant.id, false, 'Changed my mind'), /not waiting/);
+  check('approved owner without a verified ID can’t use the panel', !canUseOwnerPanel({ ...ok, idStatus: 'PENDING' }));
+
+  check('pending listing is hidden from browse', !(await visible(it.id)));
+  await M.approveListing(it.id);
+  check('admin approves → ACTIVE and visible', (await prisma.item.findUniqueOrThrow({ where: { id: it.id } })).status === 'ACTIVE' && (await visible(it.id)));
+  await expectError('approving a live listing again is refused', () => M.approveListing(it.id), /not waiting/);
+  const conv = await C.getOrCreateConversation(it.id, renter.id);
+  const req = await request(conv.id, renter.id, d(20), d(22));
+  await expectError('take-down needs a reason', () => M.rejectListing(it.id, ''), /reason/);
+  const down = await M.rejectListing(it.id, 'Photos show a different drill.');
+  const after = await prisma.item.findUniqueOrThrow({ where: { id: it.id } });
+  check('take down live item → REJECTED “Taken down: …”, hidden', down.takeDown && after.status === 'REJECTED' && after.rejectReason === 'Taken down: Photos show a different drill.' && !(await visible(it.id)));
+  check('open request on the taken-down item is closed', (await prisma.message.findUniqueOrThrow({ where: { id: req.id } })).requestStatus === 'DECLINED');
+  const late = await user('latecomer');
+  await expectError('nobody can start a chat on a taken-down item', () => C.getOrCreateConversation(it.id, late.id), /not available/);
+  const it2 = await item(applicant.id, { title: `E2E reject ${TAG}`, status: 'PENDING_REVIEW' });
+  const r2 = await M.rejectListing(it2.id, 'Add photos of the charger.');
+  check('reject a pending listing → changes requested (no take-down prefix)', !r2.takeDown && (await prisma.item.findUniqueOrThrow({ where: { id: it2.id } })).rejectReason === 'Add photos of the charger.');
+  await expectError('rejecting a rejected listing is refused', () => M.rejectListing(it2.id, 'Again'), /already rejected/);
+  const outsider = await user('outsider');
+  const it3 = await item(outsider.id, { title: `E2E unapproved ${TAG}` });
+  check('ACTIVE item of an unapproved owner never shows in browse', !(await visible(it3.id)));
+  console.log('');
 }
 
 async function cleanup() {

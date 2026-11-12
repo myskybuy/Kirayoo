@@ -1,0 +1,8 @@
+node_modules
+.next
+.git
+*.tsbuildinfo
+database-backup
+uploads
+private-uploads
+*.zip

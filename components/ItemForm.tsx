@@ -41,8 +41,8 @@ export default function ItemForm({ initial, categories, cities, booked, today, d
   const [state, action, pending] = useActionState<FormState, FormData>(saveItemAction, undefined);
   const [f, setF] = useState(initial);
   const set = <K extends keyof Initial>(k: K, v: Initial[K]) => setF((s) => ({ ...s, [k]: v }));
-  const on = { background: '#EEF3EC', boxShadow: 'inset 0 0 0 2px #1F4D3A' };
-  const off = { background: '#fff', boxShadow: 'inset 0 0 0 1px #E3DACA' };
+  const on = { background: 'var(--kb-eef3ec)', boxShadow: 'inset 0 0 0 2px var(--kl-1f4d3a)' };
+  const off = { background: 'var(--kb-ffffff)', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)' };
   const [city, area] = f.location.split('|');
   const catLabel = categories.find((c) => c.key === f.category)?.label ?? '';
 
@@ -89,7 +89,7 @@ export default function ItemForm({ initial, categories, cities, booked, today, d
             <div><label className="lbl" htmlFor="mn">Minimum days</label><input className="in" id="mn" name="minDays" type="number" min="1" max="90" value={f.minDays} onChange={(e) => set('minDays', e.target.value)} /></div>
             <div><label className="lbl" htmlFor="mx">Maximum days</label><input className="in" id="mx" name="maxDays" type="number" min="1" max="90" value={f.maxDays} onChange={(e) => set('maxDays', e.target.value)} /></div>
           </div>
-          <p style={{ fontSize: '13px', color: '#1E5A37', background: '#DCEEDF', padding: '10px 14px', borderRadius: '14px' }}>Tip: a deposit near the cost of replacing the item gets approved fastest.</p>
+          <p style={{ fontSize: '13px', color: 'var(--kf-1e5a37)', background: 'var(--kb-dceedf)', padding: '10px 14px', borderRadius: '14px' }}>Tip: a deposit near the cost of replacing the item gets approved fastest.</p>
         </section>
         <section className="card sec">
           <h2><i>4</i>Availability</h2>
@@ -115,17 +115,17 @@ export default function ItemForm({ initial, categories, cities, booked, today, d
         {state?.error && <p className="k-alert err" role="alert">{state.error}</p>}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'flex-end', alignItems: 'center' }}>
           <span className="mute" style={{ fontSize: '13px' }}>{f.id ? 'Saving sends the item back for a quick review.' : 'Admin reviews new items within 24 h.'}</span>
-          <button className="btn" type="submit" disabled={pending} style={{ background: '#C9491F', color: '#fff' }}>{pending ? 'Saving…' : 'Submit for approval'}</button>
+          <button className="btn" type="submit" disabled={pending} style={{ background: 'var(--kb-c9491f)', color: 'var(--kf-ffffff)' }}>{pending ? 'Saving…' : 'Submit for approval'}</button>
         </div>
       </form>
       <aside style={{ flex: '1 1 300px', minWidth: '0', position: 'sticky', top: '20px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-        <b style={{ fontSize: '13px', color: '#474C52', letterSpacing: '.06em', textTransform: 'uppercase' }}>Preview</b>
+        <b style={{ fontSize: '13px', color: 'var(--kf-474c52)', letterSpacing: '.06em', textTransform: 'uppercase' }}>Preview</b>
         <ItemCard href="" title={f.title || 'Your item title'} photo={f.photos[0]} categoryLabel={catLabel} pricePerDay={Number(f.pricePerDay) || 0} place={`${area}, ${city}`}
           availability="Available from approval" deposit={Number(f.deposit) || 0} ownerInitials={owner.initials} ownerColor={owner.color} ownerName={owner.name} />
         <div className="card" style={{ padding: '18px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13.5px', marginTop: '18px' }}>
           <b>Before it goes live</b>
-          <span style={{ color: '#1E5A37' }}>✓ Your ID is verified</span>
-          <span style={{ color: f.photos.length ? '#1E5A37' : '#60666C' }}>{f.photos.length ? `✓ ${f.photos.length} photo${f.photos.length > 1 ? 's' : ''} added` : '○ Add at least 1 photo'}</span>
+          <span style={{ color: 'var(--kf-1e5a37)' }}>✓ Your ID is verified</span>
+          <span style={{ color: f.photos.length ? 'var(--kf-1e5a37)' : 'var(--kf-60666c)' }}>{f.photos.length ? `✓ ${f.photos.length} photo${f.photos.length > 1 ? 's' : ''} added` : '○ Add at least 1 photo'}</span>
           {f.pricePerWeek && <span className="mute">Weekly: {inr(f.pricePerWeek)} for 7 days</span>}
           <span className="mute">○ Admin reviews within 24 h</span>
         </div>

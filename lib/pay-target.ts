@@ -1,10 +1,12 @@
 import { prisma } from './db';
 import { BookingError } from './bookings';
+import { assertDealAgreed } from './deal';
 import type { User } from '@prisma/client';
 
 /**
  * What the renter is paying for: the booking itself, or an accepted extension.
- * Checks ownership, status, hold and the ID gate before any order is created.
+ * Checks ownership, status, hold, the agreed deal and the ID gate before any
+ * order is created.
  */
 export async function payTarget(user: User, bookingId: string, extensionId?: string | null) {
   const b = await prisma.booking.findUnique({ where: { id: bookingId }, include: { item: true, extensions: true } });
@@ -19,5 +21,6 @@ export async function payTarget(user: User, bookingId: string, extensionId?: str
   }
   if (b.status !== 'PENDING_PAYMENT') throw new BookingError(b.status === 'CANCELLED' ? 'This booking was cancelled.' : 'This booking is already paid.');
   if (!b.holdExpiresAt || b.holdExpiresAt < new Date()) throw new BookingError('The 12 h hold has expired. Send a new request in chat.');
+  await assertDealAgreed(prisma, b.id);
   return { kind: 'booking' as const, booking: b, ext: null, amount: b.total, receipt: b.code };
 }

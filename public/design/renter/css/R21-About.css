@@ -1,15 +1,15 @@
 /* R21-About — page styles (exported from the Kirayo canvas). Shared tokens + fonts live in ../assets/css/kirayo.css */
 
 /* from R21-About */
-body{margin:0;background:#F6F1E7;color:#23262A;font:400 15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif}
-a{color:#1F4D3A}a:hover{color:#163A2B}
+body{margin:0;background:var(--kb-f6f1e7);color:var(--kf-23262a);font:400 15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif}
+a{color:var(--kf-1f4d3a)}a:hover{color:var(--kf-163a2b)}
 h1,h2,h3,h4,p{margin:0}
 .d{font-family:'Bricolage Grotesque',Georgia,serif;letter-spacing:-.025em}
 .wrap{max-width:1160px;margin:0 auto;padding:0 24px;box-sizing:border-box}
 .ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 24px;border-radius:999px;font:700 15px/1 'Plus Jakarta Sans',sans-serif;border:0;cursor:pointer;text-decoration:none;white-space:nowrap;box-sizing:border-box}
-.mute{color:#60666C}
-.eyebrow{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#C9491F}
+.mute{color:var(--kf-60666c)}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--kf-c9491f)}
 .mtab{display:none;position:sticky;bottom:0;z-index:40}
 @media (max-width:720px){.mtab{display:block}.wrap{padding:0 16px}}
 

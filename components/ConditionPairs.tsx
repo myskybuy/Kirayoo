@@ -17,7 +17,7 @@ export default function ConditionPairs({ reports, ownerId, renterId }: { reports
               x ? (
                 <a key={j} href={x.p} target="_blank" rel="noreferrer"><img src={x.p} alt={`${x.label} photo by ${x.by}`} /><span>{x.label === 'pickup' ? 'Pickup' : 'Return'} · {x.by}</span></a>
               ) : (
-                <div key={j} style={{ background: '#EDE5D5' }}><span>{j === 0 ? 'No pickup photo' : 'No return photo'}</span></div>
+                <div key={j} style={{ background: 'var(--kb-ede5d5)' }}><span>{j === 0 ? 'No pickup photo' : 'No return photo'}</span></div>
               ),
             )}
           </div>

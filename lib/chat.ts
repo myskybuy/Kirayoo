@@ -2,6 +2,7 @@
 // (request / accept / decline / counter / withdraw).
 import type { Prisma } from '@prisma/client';
 import { prisma } from './db';
+import { isLiveOwner } from './owner-gate';
 import { mail } from './mail';
 import { dayOf, fmtRange, todayIST, toDbDate } from './format';
 import { autoDeclineOverlaps, BookingError, createHold, isRangeFree, lockItem, rangeError, type Tx } from './bookings';
@@ -20,7 +21,7 @@ export async function getOrCreateConversation(itemId: string, renterId: string) 
   if (item.ownerId === renterId) throw new BookingError('This is your own item.');
   const existing = await prisma.conversation.findUnique({ where: { itemId_renterId: { itemId, renterId } } });
   if (existing) return existing;
-  if (item.status !== 'ACTIVE' || item.owner.idStatus !== 'VERIFIED' || item.owner.isBlocked) throw new BookingError('This item is not available right now.');
+  if (item.status !== 'ACTIVE' || !isLiveOwner(item.owner)) throw new BookingError('This item is not available right now.');
   return prisma.conversation.upsert({ where: { itemId_renterId: { itemId, renterId } }, update: {}, create: { itemId, renterId, ownerId: item.ownerId } });
 }
 

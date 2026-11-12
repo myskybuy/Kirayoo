@@ -1,18 +1,18 @@
 /* O06-Handover — page styles (exported from the Kirayo canvas). Shared tokens + fonts live in ../assets/css/kirayo.css */
 
 /* from O06-Handover */
-body{margin:0;background:#F6F1E7;color:#23262A;font:400 15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif}
-a{color:#1F4D3A}a:hover{color:#163A2B}
+body{margin:0;background:var(--kb-f6f1e7);color:var(--kf-23262a);font:400 15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif}
+a{color:var(--kf-1f4d3a)}a:hover{color:var(--kf-163a2b)}
 h1,h2,h3,h4,p{margin:0}
 .d{font-family:'Bricolage Grotesque',Georgia,serif;letter-spacing:-.025em}
 .ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:52px;padding:0 22px;border-radius:999px;font:700 15px/1 'Plus Jakarta Sans',sans-serif;border:0;cursor:pointer;text-decoration:none;white-space:nowrap;box-sizing:border-box}
-.card{background:#FFFDF8;border-radius:24px;box-shadow:0 1px 2px rgba(35,38,42,.06),0 8px 24px -10px rgba(31,77,58,.18)}
-.mute{color:#60666C}
+.card{background:var(--kb-fffdf8);border-radius:24px;box-shadow:0 1px 2px rgba(35,38,42,.06),0 8px 24px -10px rgba(31,77,58,.18)}
+.mute{color:var(--kf-60666c)}
 .otp{display:flex;gap:12px;justify-content:center}
-.otp input{width:64px;height:76px;box-sizing:border-box;border-radius:18px;background:#fff;text-align:center;font:700 34px 'Bricolage Grotesque',serif;color:#1F4D3A;min-width:0}
-.sn{width:34px;height:34px;border-radius:12px;background:#1F4D3A;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;flex:none}
-.ph{aspect-ratio:4/3;border-radius:16px;display:flex;align-items:flex-end;padding:8px;box-sizing:border-box;font-size:12px;font-weight:700;color:#2F4E40}
+.otp input{width:64px;height:76px;box-sizing:border-box;border-radius:18px;background:var(--kb-ffffff);text-align:center;font:700 34px 'Bricolage Grotesque',serif;color:var(--kf-1f4d3a);min-width:0}
+.sn{width:34px;height:34px;border-radius:12px;background:var(--kb-1f4d3a);color:var(--kf-ffffff);display:flex;align-items:center;justify-content:center;font-weight:800;flex:none}
+.ph{aspect-ratio:4/3;border-radius:16px;display:flex;align-items:flex-end;padding:8px;box-sizing:border-box;font-size:12px;font-weight:700;color:var(--kf-2f4e40)}
 
 /* from KOwnerNav */
 body{margin:0}

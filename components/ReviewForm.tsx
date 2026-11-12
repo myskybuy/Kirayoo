@@ -28,7 +28,7 @@ export default function ReviewForm({ bookingId, legend, tags, textLabel, back, c
               </button>
             );
           })}
-          <b style={{ marginLeft: '10px', color: '#1F4D3A' }}>{WORDS[hover || rating]}</b>
+          <b style={{ marginLeft: '10px', color: 'var(--kf-1f4d3a)' }}>{WORDS[hover || rating]}</b>
         </div>
       </fieldset>
       <fieldset style={{ border: '0', margin: '0', padding: '0', display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -36,7 +36,7 @@ export default function ReviewForm({ bookingId, legend, tags, textLabel, back, c
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
           {tags.map((t) => {
             const on = picked.includes(t);
-            return <button key={t} className="k-pill" type="button" aria-pressed={on} onClick={() => setPicked((p) => (on ? p.filter((x) => x !== t) : [...p, t]))} style={on ? { background: '#1F4D3A', color: '#fff' } : { background: '#fff', color: '#23262A', boxShadow: 'inset 0 0 0 1px #E3DACA' }}>{t}</button>;
+            return <button key={t} className="k-pill" type="button" aria-pressed={on} onClick={() => setPicked((p) => (on ? p.filter((x) => x !== t) : [...p, t]))} style={on ? { background: 'var(--kb-1f4d3a)', color: 'var(--kf-ffffff)' } : { background: 'var(--kb-ffffff)', color: 'var(--kf-23262a)', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)' }}>{t}</button>;
           })}
         </div>
       </fieldset>

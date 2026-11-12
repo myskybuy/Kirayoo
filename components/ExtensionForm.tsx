@@ -26,12 +26,12 @@ export default function ExtensionForm({ bookingId, start, end, pricePerDay, pric
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
           {[1, 2, 4].map((n) => {
             const d = add(end, n);
-            return <button key={n} className="k-pill" type="button" aria-pressed={newEnd === d} onClick={() => setNewEnd(d)} style={newEnd === d ? { background: '#1F4D3A', color: '#fff' } : { background: '#fff', color: '#23262A', boxShadow: 'inset 0 0 0 1px #E3DACA' }}>+{n} day{n > 1 ? 's' : ''} · {nice(d)}</button>;
+            return <button key={n} className="k-pill" type="button" aria-pressed={newEnd === d} onClick={() => setNewEnd(d)} style={newEnd === d ? { background: 'var(--kb-1f4d3a)', color: 'var(--kf-ffffff)' } : { background: 'var(--kb-ffffff)', color: 'var(--kf-23262a)', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)' }}>+{n} day{n > 1 ? 's' : ''} · {nice(d)}</button>;
           })}
         </div>
         <label className="k-lbl">Or pick a date<input className="k-in" type="date" min={add(end, 1)} value={newEnd} onChange={(e) => e.target.value && setNewEnd(e.target.value)} /></label>
       </div>
-      <div style={{ flex: '1 1 280px', padding: '20px', borderRadius: '20px', background: '#EEF3EC', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+      <div style={{ flex: '1 1 280px', padding: '20px', borderRadius: '20px', background: 'var(--kb-eef3ec)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>New return</span><b>{nice(newEnd)}</b></div>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Extra days</span><b>{extraDays}</b></div>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 800, fontSize: '17px' }}><span>Extra rent</span><span>{inr(extra)}</span></div>

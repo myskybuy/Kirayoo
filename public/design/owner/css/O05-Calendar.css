@@ -1,18 +1,18 @@
 /* O05-Calendar — page styles (exported from the Kirayo canvas). Shared tokens + fonts live in ../assets/css/kirayo.css */
 
 /* from O05-Calendar */
-body{margin:0;background:#F6F1E7;color:#23262A;font:400 15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif}
-a{color:#1F4D3A}a:hover{color:#163A2B}
+body{margin:0;background:var(--kb-f6f1e7);color:var(--kf-23262a);font:400 15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif}
+a{color:var(--kf-1f4d3a)}a:hover{color:var(--kf-163a2b)}
 h1,h2,h3,h4,p{margin:0}
 .d{font-family:'Bricolage Grotesque',Georgia,serif;letter-spacing:-.025em}
 .ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
-.mute{color:#60666C}
+.mute{color:var(--kf-60666c)}
 .tl{display:grid;grid-template-columns:220px repeat(23,44px);min-width:1232px}
-.hd{height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#60666C;border-bottom:1px solid #E3DACA}
-.hd b{font-size:15px;color:#23262A}
-.rowlab{display:flex;gap:10px;align-items:center;padding:0 14px;height:72px;border-bottom:1px solid #EFE8DA;position:sticky;left:0;background:#FFFDF8;z-index:2}
+.hd{height:56px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--kf-60666c);border-bottom:1px solid var(--kl-e3daca)}
+.hd b{font-size:15px;color:var(--kf-23262a)}
+.rowlab{display:flex;gap:10px;align-items:center;padding:0 14px;height:72px;border-bottom:1px solid var(--kl-efe8da);position:sticky;left:0;background:var(--kb-fffdf8);z-index:2}
 .bar{height:44px;align-self:center;border-radius:14px;display:flex;align-items:center;gap:6px;padding:0 10px;font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;margin:0 2px;text-decoration:none;z-index:1}
-.nav{width:44px;height:44px;border-radius:50%;border:0;background:#FFFDF8;box-shadow:inset 0 0 0 1px #E3DACA;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#1F4D3A}
+.nav{width:44px;height:44px;border-radius:50%;border:0;background:var(--kb-fffdf8);box-shadow:inset 0 0 0 1px var(--kl-e3daca);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--kf-1f4d3a)}
 
 /* from KOwnerNav */
 body{margin:0}

@@ -31,7 +31,7 @@ export default async function ComplaintsPage({ searchParams }: { searchParams: P
     tab === 'contact' ? prisma.contactMessage.findMany({ where: mWhere, orderBy: { createdAt: 'asc' }, skip: (page - 1) * ADMIN_PAGE_SIZE, take: ADMIN_PAGE_SIZE }) : Promise.resolve([]),
   ]);
   const back = qs({});
-  const tabBtn = (on: boolean) => (on ? { background: '#23262A', color: '#fff' } : { background: '#FFFDF8', color: '#23262A', boxShadow: 'inset 0 0 0 1px #E3DACA' });
+  const tabBtn = (on: boolean) => (on ? { background: 'var(--kb-23262a)', color: 'var(--kf-ffffff)' } : { background: 'var(--kb-fffdf8)', color: 'var(--kf-23262a)', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)' });
   return (
     <>
       <PageCss id="A05-Bookings" />
@@ -47,9 +47,9 @@ export default async function ComplaintsPage({ searchParams }: { searchParams: P
       {tab === 'complaints' && complaints.length === 0 && <p className="k-alert info">No {showResolved ? 'resolved' : 'open'} problem reports.</p>}
       {tab === 'contact' && messages.length === 0 && <p className="k-alert info">No {showResolved ? 'resolved' : 'open'} contact messages.</p>}
       {complaints.map((c) => (
-        <section key={c.id} style={{ padding: '20px', borderRadius: '22px', background: '#FFFDF8', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <section key={c.id} style={{ padding: '20px', borderRadius: '22px', background: 'var(--kb-fffdf8)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '8px' }}><b>{c.reason} · <Link href={`/admin/bookings?id=${c.bookingId}`}>{c.booking.code}</Link> · {c.booking.item.title}</b><span className="mute" style={{ fontSize: '13px' }}>{c.byUser.name} ({c.byUser.id === c.booking.renterId ? 'renter' : 'owner'}) · {fmtTime(c.createdAt)}</span></div>
-          <p style={{ color: '#474C52' }}>{c.text}</p>
+          <p style={{ color: 'var(--kf-474c52)' }}>{c.text}</p>
           {c.photos.length > 0 && <div className="k-thumbs">{c.photos.map((p) => <a key={p} href={p} target="_blank" rel="noreferrer"><img src={p} alt="" className="k-photo" /></a>)}</div>}
           {c.status === 'OPEN' ? (
             <form action={resolveComplaintAction} style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
@@ -61,9 +61,9 @@ export default async function ComplaintsPage({ searchParams }: { searchParams: P
         </section>
       ))}
       {messages.map((m) => (
-        <section key={m.id} style={{ padding: '20px', borderRadius: '22px', background: '#FFFDF8', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <section key={m.id} style={{ padding: '20px', borderRadius: '22px', background: 'var(--kb-fffdf8)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '8px' }}><b>{m.name} · <a href={`mailto:${m.email}`}>{m.email}</a></b><span className="mute" style={{ fontSize: '13px' }}>{fmtTime(m.createdAt)}</span></div>
-          <p style={{ color: '#474C52', whiteSpace: 'pre-wrap' }}>{m.message}</p>
+          <p style={{ color: 'var(--kf-474c52)', whiteSpace: 'pre-wrap' }}>{m.message}</p>
           {!m.resolved ? (
             <form action={resolveContactAction} style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
               <input type="hidden" name="id" value={m.id} /><input type="hidden" name="back" value={back} />

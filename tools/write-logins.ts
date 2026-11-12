@@ -5,12 +5,15 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 const TRY: Record<string, string> = {
-  'admin@kirayo.test': 'Admin panel: approve Neha’s ID, approve pending listings, decide the disputed lens claim, pay the pending payout, resolve the complaint + contact message.',
+  'admin@kirayo.test': 'Admin panel: approve Kabir’s owner application, approve Neha’s ID, moderate pending listings, decide the disputed lens claim, pay the pending payout, resolve the complaint + contact message.',
   'riya@kirayo.test': 'Renter with a booking in every state: pay the held projector, show pickup OTP (tent tomorrow), cash-at-pickup drill, in-use guitar (report a problem / extend), overdue bike, answer the speaker claim, review history.',
   'arjun@kirayo.test': 'Owner with 16 live items in Bengaluru + Mumbai: answer Riya’s camera request, hand over the tent (photos + OTP), check the returned ladder (All OK or claim), see earnings and reviews.',
-  'neha@kirayo.test': 'ID PENDING: chat works, but paying and listing are blocked until the admin approves.',
-  'vikram@kirayo.test': 'ID REJECTED with a reason: see the rejected screen and re-upload.',
+  'kabir@kirayo.test': 'ID verified, owner application PENDING: /owner/apply shows “under review”; once the admin approves, they can list items.',
+  'neha@kirayo.test': 'ID PENDING + owner application PENDING: chat works, but paying and listing are blocked until the admin approves both.',
+  'vikram@kirayo.test': 'ID REJECTED and owner application REJECTED, each with a reason: re-upload the ID and resend the application.',
 };
+
+const owner = (s: string) => (s === 'NONE' ? '' : ` · owner ${s.toLowerCase()}`);
 
 async function main() {
   const users = await prisma.user.findMany({ where: { email: { endsWith: '@kirayo.test' } }, include: { _count: { select: { items: true, rentals: true } } }, orderBy: [{ city: 'asc' }, { area: 'asc' }, { email: 'asc' }] });
@@ -31,9 +34,9 @@ async function main() {
     const u = users.find((x) => x.email === e);
     if (!u) continue;
     const role = u.isAdmin ? 'Admin' : u._count.items ? 'Owner' : 'Renter';
-    lines.push(`| ${role} · ${u.name} (${u.area ?? '—'}, ${u.city ?? '—'}) · ID ${u.idStatus.toLowerCase()} | \`${e}\` | ${TRY[e]} |`);
+    lines.push(`| ${role} · ${u.name} (${u.area ?? '—'}, ${u.city ?? '—'}) · ID ${u.idStatus.toLowerCase()}${owner(u.ownerStatus)} | \`${e}\` | ${TRY[e]} |`);
   }
-  lines.push('', '## Every account by city → area', '', 'Area owners are ID-verified with 2–3 live items each, so every location shows results. Any of them can also rent.', '');
+  lines.push('', '## Every account by city → area', '', 'Area owners are approved, ID-verified owners with 2–3 live items each, so every location shows results. Any of them can also rent.', '');
   for (const c of cities) {
     lines.push(`### ${c.name}`, '');
     for (const a of c.areas) {
@@ -42,7 +45,7 @@ async function main() {
       lines.push(`**${a.name}**`, '');
       for (const u of here) {
         const role = u.isAdmin ? 'admin' : u._count.items ? `owner (${u._count.items} item${u._count.items > 1 ? 's' : ''})` : 'renter';
-        lines.push(`- \`${u.email}\` — ${u.name}, ${role}, ID ${u.idStatus.toLowerCase()}${TRY[u.email] ? ` — ${TRY[u.email]}` : ''}`);
+        lines.push(`- \`${u.email}\` — ${u.name}, ${role}, ID ${u.idStatus.toLowerCase()}${owner(u.ownerStatus)}${TRY[u.email] ? ` — ${TRY[u.email]}` : ''}`);
       }
       lines.push('');
     }

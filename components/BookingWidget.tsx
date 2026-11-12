@@ -35,9 +35,9 @@ export default function BookingWidget({ item, ownerFirst, today, unavailable, de
         <span><span className="d" style={{ fontSize: '30px', fontWeight: '700' }}>{inr(item.pricePerDay)}</span><span className="mute"> / day</span></span>
         <span className="mute" style={{ fontSize: '13px' }}>Deposit {inr(item.deposit)}</span>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', borderRadius: '18px', boxShadow: 'inset 0 0 0 1.5px #E3DACA', overflow: 'hidden' }}>
-        <div style={{ padding: '10px 14px', borderRight: '1.5px solid #E3DACA' }}><span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '.06em', color: '#1F4D3A' }}>PICKUP</span><p style={{ fontWeight: '700', fontSize: '14.5px' }}>{nice(range.start)}</p></div>
-        <div style={{ padding: '10px 14px' }}><span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '.06em', color: '#1F4D3A' }}>RETURN</span><p style={{ fontWeight: '700', fontSize: '14.5px' }}>{nice(range.end)}</p></div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', borderRadius: '18px', boxShadow: 'inset 0 0 0 1.5px var(--kl-e3daca)', overflow: 'hidden' }}>
+        <div style={{ padding: '10px 14px', borderRight: '1.5px solid var(--kl-e3daca)' }}><span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '.06em', color: 'var(--kf-1f4d3a)' }}>PICKUP</span><p style={{ fontWeight: '700', fontSize: '14.5px' }}>{nice(range.start)}</p></div>
+        <div style={{ padding: '10px 14px' }}><span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '.06em', color: 'var(--kf-1f4d3a)' }}>RETURN</span><p style={{ fontWeight: '700', fontSize: '14.5px' }}>{nice(range.end)}</p></div>
       </div>
       <div>
         <RangeCalendar small today={today} unavailable={unavailable} value={range} onChange={(r) => { setMsg(''); setRange(r); }} onBlocked={setMsg} />
@@ -45,15 +45,15 @@ export default function BookingWidget({ item, ownerFirst, today, unavailable, de
       </div>
       {(msg || err) && <p className="k-alert warn" role="alert">{msg || err}</p>}
       <fieldset style={{ border: '0', margin: '0', padding: '0', display: 'flex', flexDirection: 'column', gap: '6px' }}>
-        <legend style={{ fontSize: '13px', fontWeight: '700', color: '#474C52', marginBottom: '6px' }}>Handover</legend>
+        <legend style={{ fontSize: '13px', fontWeight: '700', color: 'var(--kf-474c52)', marginBottom: '6px' }}>Handover</legend>
         {item.canPickup && (
-          <label className="opt" style={mode === 'PICKUP' ? { background: '#EEF3EC', boxShadow: 'inset 0 0 0 2px #1F4D3A' } : { background: '#fff', boxShadow: 'inset 0 0 0 1px #E3DACA' }}>
+          <label className="opt" style={mode === 'PICKUP' ? { background: 'var(--kb-eef3ec)', boxShadow: 'inset 0 0 0 2px var(--kl-1f4d3a)' } : { background: 'var(--kb-ffffff)', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)' }}>
             <input type="radio" name="ho" checked={mode === 'PICKUP'} onChange={() => setMode('PICKUP')} />
             <span style={{ flex: '1' }}><b>Self pickup</b><br /><span className="mute" style={{ fontSize: '12.5px' }}>{item.pickupNote || item.area}</span></span><b>Free</b>
           </label>
         )}
         {item.canDeliver && (
-          <label className="opt" style={mode === 'DELIVERY' ? { background: '#EEF3EC', boxShadow: 'inset 0 0 0 2px #1F4D3A' } : { background: '#fff', boxShadow: 'inset 0 0 0 1px #E3DACA' }}>
+          <label className="opt" style={mode === 'DELIVERY' ? { background: 'var(--kb-eef3ec)', boxShadow: 'inset 0 0 0 2px var(--kl-1f4d3a)' } : { background: 'var(--kb-ffffff)', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)' }}>
             <input type="radio" name="ho" checked={mode === 'DELIVERY'} onChange={() => setMode('DELIVERY')} />
             <span style={{ flex: '1' }}><b>Owner delivers</b><br /><span className="mute" style={{ fontSize: '12.5px' }}>{item.area} &amp; nearby · drop-off + collection</span></span><b>{inr(deliveryFee)}</b>
           </label>
@@ -61,11 +61,11 @@ export default function BookingWidget({ item, ownerFirst, today, unavailable, de
       </fieldset>
       {q && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '14.5px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ textDecoration: 'underline dotted #BFB4A0' }}>{inr(item.pricePerDay)} × {q.days} day{q.days > 1 ? 's' : ''}</span><span>{inr(q.dailyTotal)}</span></div>
-          {q.weeklyDiscount > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', color: '#1E5A37' }}><span>Weekly price discount</span><span>−{inr(q.weeklyDiscount)}</span></div>}
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ textDecoration: 'underline dotted var(--kf-bfb4a0)' }}>{inr(item.pricePerDay)} × {q.days} day{q.days > 1 ? 's' : ''}</span><span>{inr(q.dailyTotal)}</span></div>
+          {q.weeklyDiscount > 0 && <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--kf-1e5a37)' }}><span>Weekly price discount</span><span>−{inr(q.weeklyDiscount)}</span></div>}
           {q.deliveryFee > 0 && <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Delivery fee</span><span>{inr(q.deliveryFee)}</span></div>}
-          <div style={{ display: 'flex', justifyContent: 'space-between', color: '#1E5A37', fontWeight: '600' }}><span>Refundable deposit</span><span>{inr(q.deposit)}</span></div>
-          <div style={{ height: '1px', background: '#E3DACA', margin: '6px 0' }}></div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--kf-1e5a37)', fontWeight: '600' }}><span>Refundable deposit</span><span>{inr(q.deposit)}</span></div>
+          <div style={{ height: '1px', background: 'var(--kb-e3daca)', margin: '6px 0' }}></div>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: '800', fontSize: '17px' }}><span>Total</span><span>{inr(q.total)}</span></div>
         </div>
       )}

@@ -12,7 +12,7 @@ import { setBlockedAction } from '@/app/actions/admin';
 
 export const metadata = { title: 'Users · admin' };
 
-const ID_BADGE = { NONE: ['#EDE5D5', '#474C52', 'None'], PENDING: ['#FBEBCF', '#7A4708', 'Pending'], VERIFIED: ['#DCEEDF', '#1E5A37', 'Verified'], REJECTED: ['#F7DCD7', '#8E2A20', 'Rejected'] } as const;
+const ID_BADGE = { NONE: ['var(--kb-ede5d5)', 'var(--kf-474c52)', 'None'], PENDING: ['var(--kb-fbebcf)', 'var(--kf-7a4708)', 'Pending'], VERIFIED: ['var(--kb-dceedf)', 'var(--kf-1e5a37)', 'Verified'], REJECTED: ['var(--kb-f7dcd7)', 'var(--kf-8e2a20)', 'Rejected'] } as const;
 
 export default async function AdminUsersPage({ searchParams }: { searchParams: Promise<{ q?: string; page?: string; u?: string; ok?: string; error?: string }> }) {
   const sp = await searchParams;
@@ -50,23 +50,27 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
       {sp.ok && <p className="k-alert ok">{sp.ok}</p>}
       {sp.error && <p className="k-alert err">{sp.error}</p>}
       {sel && (
-        <section aria-label="User details" style={{ padding: '22px', borderRadius: '24px', background: '#FFFDF8', display: 'flex', flexDirection: 'column', gap: '14px', boxShadow: '0 1px 2px rgba(35,38,42,.06)' }}>
+        <>
+        <Link href={qs({ u: undefined })} aria-label="Close user details" className="k-drawer-bg"></Link>
+        <section role="dialog" aria-modal="true" aria-label={`User details: ${sel.name}`} className="k-drawer">
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', alignItems: 'center' }}>
-            <span style={{ width: '52px', height: '52px', borderRadius: '50%', background: avatarColor(sel.id), color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>{initials(sel.name)}</span>
+            <span style={{ width: '52px', height: '52px', borderRadius: '50%', background: avatarColor(sel.id), color: 'var(--kf-ffffff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>{initials(sel.name)}</span>
             <div style={{ flex: '1 1 240px' }}><b className="d" style={{ fontSize: '22px' }}>{sel.name}</b><p className="mute" style={{ fontSize: '13.5px' }}>{sel.email}{sel.phone ? ` · ${sel.phone}` : ''} · {sel.area ? `${sel.area}, ${sel.city}` : 'no area'} · member since {monthYear(sel.createdAt)}</p></div>
             <span className="badge" style={{ background: ID_BADGE[sel.idStatus][0], color: ID_BADGE[sel.idStatus][1] }}>ID {ID_BADGE[sel.idStatus][2]}</span>
-            {sel.ownerCancellations > 0 && <span className="badge" style={{ background: '#F7DCD7', color: '#8E2A20' }}>{sel.ownerCancellations} owner cancellation{sel.ownerCancellations > 1 ? 's' : ''}</span>}
+            {sel.ownerStatus !== 'NONE' && <Link href={`/admin/owners?tab=${sel.ownerStatus.toLowerCase()}&u=${sel.id}`} className="badge" style={{ background: sel.ownerStatus === 'APPROVED' ? 'var(--kb-dceedf)' : sel.ownerStatus === 'PENDING' ? 'var(--kb-fbebcf)' : 'var(--kb-f7dcd7)', color: 'var(--kf-23262a)', textDecoration: 'none' }}>Owner {sel.ownerStatus.toLowerCase()}</Link>}
+            {sel.ownerCancellations > 0 && <span className="badge" style={{ background: 'var(--kb-f7dcd7)', color: 'var(--kf-8e2a20)' }}>{sel.ownerCancellations} owner cancellation{sel.ownerCancellations > 1 ? 's' : ''}</span>}
             {sel.idStatus === 'PENDING' && <Link href={`/admin/ids?u=${sel.id}`} style={{ fontWeight: 700, fontSize: '13px' }}>Review ID →</Link>}
             <Link href={qs({ u: undefined })} style={{ fontWeight: 700, fontSize: '13px' }}>Close ✕</Link>
           </div>
           {sel.idRejectReason && sel.idStatus === 'REJECTED' && <p className="mute" style={{ fontSize: '13px' }}>ID rejected: {sel.idRejectReason}</p>}
-          <div style={{ display: 'grid', gap: '16px', gridTemplateColumns: 'repeat(auto-fit,minmax(min(280px,100%),1fr))', fontSize: '13.5px' }}>
-            <div><b>Items ({sel.items.length})</b>{sel.items.length === 0 ? <p className="mute">None</p> : <ul style={{ margin: '6px 0 0', paddingLeft: '18px' }}>{sel.items.map((i) => <li key={i.id}><Link href={`/items/${i.id}`}>{i.title}</Link> · {i.status.toLowerCase().replace('_', ' ')}</li>)}</ul>}</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', fontSize: '13.5px' }}>
+            <div><b>Listings ({sel.items.length})</b>{sel.items.length === 0 ? <p className="mute">None</p> : <ul style={{ margin: '6px 0 0', paddingLeft: '18px' }}>{sel.items.map((i) => <li key={i.id}><Link href={`/items/${i.id}`}>{i.title}</Link> · {i.status.toLowerCase().replace('_', ' ')}</li>)}</ul>}</div>
             <div><b>Rentals ({sel.rentals.length})</b>{sel.rentals.length === 0 ? <p className="mute">None</p> : <ul style={{ margin: '6px 0 0', paddingLeft: '18px' }}>{sel.rentals.map((b) => <li key={b.id}><Link href={`/admin/bookings?id=${b.id}`}>{b.code}</Link> · {b.item.title} · {fmtRange(b.startDate, b.endDate)} · {STATUS_LABEL[b.status]}{b.claim ? ` · claim ${inr(b.claim.amount)} ${b.claim.status.toLowerCase()}` : ''}</li>)}</ul>}</div>
             <div><b>As owner ({sel.ownerBookings.length})</b>{sel.ownerBookings.length === 0 ? <p className="mute">None</p> : <ul style={{ margin: '6px 0 0', paddingLeft: '18px' }}>{sel.ownerBookings.map((b) => <li key={b.id}><Link href={`/admin/bookings?id=${b.id}`}>{b.code}</Link> · {b.item.title} · {STATUS_LABEL[b.status]}{b.claim ? ` · claim ${inr(b.claim.amount)} ${b.claim.status.toLowerCase()}` : ''}</li>)}</ul>}</div>
-            {sel.complaints.length > 0 && <div><b>Problems reported</b><ul style={{ margin: '6px 0 0', paddingLeft: '18px' }}>{sel.complaints.map((c) => <li key={c.id}>{fmtTime(c.createdAt)} · {c.reason} · {c.status.toLowerCase()}</li>)}</ul></div>}
+            <div><b>Complaints ({sel.complaints.length})</b>{sel.complaints.length === 0 ? <p className="mute">None</p> : <ul style={{ margin: '6px 0 0', paddingLeft: '18px' }}>{sel.complaints.map((c) => <li key={c.id}>{fmtTime(c.createdAt)} · {c.reason} · {c.status.toLowerCase()}</li>)}</ul>}</div>
           </div>
         </section>
+        </>
       )}
       <div className="tw"><table>
         <thead><tr><th>User</th><th>Role</th><th>ID</th><th>Rentals</th><th>Listings</th><th>Rating</th><th>Status</th><th></th></tr></thead>
@@ -77,18 +81,18 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
             const role = u.isAdmin ? 'Admin' : u._count.items && u._count.rentals ? 'Both' : u._count.items ? 'Owner' : 'Renter';
             return (
               <tr key={u.id} style={{ opacity: u.isBlocked ? 0.6 : 1 }}>
-                <td><Link href={qs({ u: u.id })} style={{ display: 'flex', gap: '10px', alignItems: 'center', color: '#23262A', textDecoration: 'none' }}><span style={{ width: '36px', height: '36px', borderRadius: '50%', background: avatarColor(u.id), color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '12px', flex: 'none' }}>{initials(u.name)}</span><span><b>{u.name}</b><br /><span className="mute" style={{ fontSize: '12.5px' }}>{u.email}</span></span></Link></td>
+                <td><Link href={qs({ u: u.id })} style={{ display: 'flex', gap: '10px', alignItems: 'center', color: 'var(--kf-23262a)', textDecoration: 'none' }}><span style={{ width: '36px', height: '36px', borderRadius: '50%', background: avatarColor(u.id), color: 'var(--kf-ffffff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '12px', flex: 'none' }}>{initials(u.name)}</span><span><b>{u.name}</b><br /><span className="mute" style={{ fontSize: '12.5px' }}>{u.email}</span></span></Link></td>
                 <td>{role}</td>
                 <td><span className="badge" style={{ background: ID_BADGE[u.idStatus][0], color: ID_BADGE[u.idStatus][1] }}>{ID_BADGE[u.idStatus][2]}</span></td>
                 <td>{u._count.rentals}</td><td>{u._count.items}</td><td>{r ? r.toFixed(1) : '—'}</td>
-                <td><span className="badge" style={u.isBlocked ? { background: '#F7DCD7', color: '#8E2A20' } : { background: '#EEF3EC', color: '#1F4D3A' }}>{u.isBlocked ? 'Blocked' : 'Active'}</span></td>
+                <td><span className="badge" style={u.isBlocked ? { background: 'var(--kb-f7dcd7)', color: 'var(--kf-8e2a20)' } : { background: 'var(--kb-eef3ec)', color: 'var(--kf-1f4d3a)' }}>{u.isBlocked ? 'Blocked' : 'Active'}</span></td>
                 <td>
                   {!u.isAdmin && (
                     <form action={setBlockedAction}>
                       <input type="hidden" name="id" value={u.id} /><input type="hidden" name="back" value={qs({ u: sp.u })} /><input type="hidden" name="block" value={u.isBlocked ? '0' : '1'} />
                       {u.isBlocked
-                        ? <button className="sb" type="submit" style={{ background: 'transparent', color: '#1F4D3A', boxShadow: 'inset 0 0 0 1.5px #1F4D3A' }}>Unblock</button>
-                        : <ConfirmButton message={`Block ${u.name}? They are logged out and their items are hidden.`} className="sb" style={{ background: 'transparent', color: '#8E2A20', boxShadow: 'inset 0 0 0 1.5px #B3372B' }}>Block</ConfirmButton>}
+                        ? <button className="sb" type="submit" style={{ background: 'transparent', color: 'var(--kf-1f4d3a)', boxShadow: 'inset 0 0 0 1.5px var(--kl-1f4d3a)' }}>Unblock</button>
+                        : <ConfirmButton message={`Block ${u.name}? They are logged out and their items are hidden.`} className="sb" style={{ background: 'transparent', color: 'var(--kf-8e2a20)', boxShadow: 'inset 0 0 0 1.5px var(--kl-b3372b)' }}>Block</ConfirmButton>}
                     </form>
                   )}
                 </td>

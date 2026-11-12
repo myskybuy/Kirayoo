@@ -11,6 +11,7 @@ import { CATEGORIES, categoryLabel, DELIVERY_FEE } from '@/lib/constants';
 import { addDays, avatarColor, fmtDay, fmtRange, initials, inr, isDay, monthYear, shortName, todayIST } from '@/lib/format';
 import { countDays, freeItemIds, occupiedDays, quote, rangeError } from '@/lib/bookings';
 import { toCards, visibleWhere } from '@/lib/search';
+import { isLiveOwner } from '@/lib/owner-gate';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -25,7 +26,7 @@ export default async function ItemPage({ params, searchParams }: { params: Promi
   const item = await prisma.item.findUnique({ where: { id }, include: { owner: true } });
   if (!item || item.deletedAt) notFound();
   const isOwner = user?.id === item.ownerId;
-  const live = item.status === 'ACTIVE' && item.owner.idStatus === 'VERIFIED' && !item.owner.isBlocked;
+  const live = item.status === 'ACTIVE' && isLiveOwner(item.owner);
   // Non-live items are visible only to their owner (and the admin).
   if (!live && !isOwner && !user?.isAdmin) notFound();
   if (!isOwner) await prisma.item.update({ where: { id }, data: { views: { increment: 1 } } });
@@ -82,21 +83,21 @@ export default async function ItemPage({ params, searchParams }: { params: Promi
             ) : <p className="mute">No similar items are free for those dates right now.</p>}
           </main>
           <aside style={{ flex: '1 1 360px', minWidth: '0' }}>
-            <div style={{ background: '#FFFDF8', borderRadius: '24px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '14px', boxShadow: '0 2px 6px rgba(35,38,42,.06),0 26px 56px -20px rgba(31,77,58,.42)' }}>
+            <div style={{ background: 'var(--kb-fffdf8)', borderRadius: '24px', padding: '24px', display: 'flex', flexDirection: 'column', gap: '14px', boxShadow: '0 2px 6px rgba(35,38,42,.06),0 26px 56px -20px rgba(31,77,58,.42)' }}>
               <div><span className="d" style={{ fontSize: '28px', fontWeight: '700' }}>{inr(item.pricePerDay)}</span><span className="mute"> / day</span></div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', borderRadius: '18px', boxShadow: 'inset 0 0 0 2px #B3372B', overflow: 'hidden' }}>
-                <div style={{ padding: '10px 14px', borderRight: '1.5px solid #E3DACA' }}><span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '.06em', color: '#8E2A20' }}>PICKUP</span><p style={{ fontWeight: '700' }}>{fmtDay(want.start)}</p></div>
-                <div style={{ padding: '10px 14px' }}><span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '.06em', color: '#8E2A20' }}>RETURN</span><p style={{ fontWeight: '700' }}>{fmtDay(want.end)}</p></div>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', borderRadius: '18px', boxShadow: 'inset 0 0 0 2px var(--kl-b3372b)', overflow: 'hidden' }}>
+                <div style={{ padding: '10px 14px', borderRight: '1.5px solid var(--kl-e3daca)' }}><span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '.06em', color: 'var(--kf-8e2a20)' }}>PICKUP</span><p style={{ fontWeight: '700' }}>{fmtDay(want.start)}</p></div>
+                <div style={{ padding: '10px 14px' }}><span style={{ fontSize: '11px', fontWeight: '800', letterSpacing: '.06em', color: 'var(--kf-8e2a20)' }}>RETURN</span><p style={{ fontWeight: '700' }}>{fmtDay(want.end)}</p></div>
               </div>
               <RangeCalendar small readOnly today={today} unavailable={unavailable} value={want} />
-              <p role="alert" style={{ padding: '12px 14px', borderRadius: '14px', background: '#F7DCD7', color: '#8E2A20', fontWeight: '700', fontSize: '14px' }}>{clash.length === 1 ? `${fmtDay(clash[0])} is unavailable.` : `${fmtDay(clash[0])} – ${fmtDay(clash[clash.length - 1])}: ${clash.length} days unavailable.`}</p>
-              {alts.length > 0 && <b style={{ fontSize: '13px', color: '#474C52' }}>Closest free dates</b>}
+              <p role="alert" style={{ padding: '12px 14px', borderRadius: '14px', background: 'var(--kb-f7dcd7)', color: 'var(--kf-8e2a20)', fontWeight: '700', fontSize: '14px' }}>{clash.length === 1 ? `${fmtDay(clash[0])} is unavailable.` : `${fmtDay(clash[0])} – ${fmtDay(clash[clash.length - 1])}: ${clash.length} days unavailable.`}</p>
+              {alts.length > 0 && <b style={{ fontSize: '13px', color: 'var(--kf-474c52)' }}>Closest free dates</b>}
               {alts.map((s) => {
                 const e = addDays(s, len);
                 const qq = quote(item, s, e, 'PICKUP', DELIVERY_FEE);
                 return <Link key={s} className="alt" href={`/items/${item.id}?start=${s}&end=${e}`}><span><b>{fmtRange(s, e)}</b> · {qq.days} day{qq.days > 1 ? 's' : ''}</span><b>{inr(qq.rent)}</b></Link>;
               })}
-              <button className="btn" type="button" disabled style={{ background: '#E3DACA', color: '#60666C', cursor: 'not-allowed' }}>Request to book</button>
+              <button className="btn" type="button" disabled style={{ background: 'var(--kb-e3daca)', color: 'var(--kf-60666c)', cursor: 'not-allowed' }}>Request to book</button>
               <Link href={user ? `/chat/new?item=${item.id}` : `/login?next=/items/${item.id}`} style={{ textAlign: 'center', fontWeight: '700', fontSize: '14px' }}>Ask {ownerFirst} if dates can change</Link>
             </div>
           </aside>
@@ -109,7 +110,7 @@ export default async function ItemPage({ params, searchParams }: { params: Promi
     <>
       <PageCss id="R04-Item" />
       <div className="wrap" style={{ paddingTop: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <nav aria-label="Breadcrumb" className="mute" style={{ fontSize: '13px' }}><Link href="/browse" style={{ color: '#60666C' }}>← Back to results</Link> · {categoryLabel(item.category)} · {item.area}</nav>
+        <nav aria-label="Breadcrumb" className="mute" style={{ fontSize: '13px' }}><Link href="/browse" style={{ color: 'var(--kf-60666c)' }}>← Back to results</Link> · {categoryLabel(item.category)} · {item.area}</nav>
         {!live && <p className="k-alert warn">{isOwner ? `Only you can see this page — the item is ${item.status === 'PENDING_REVIEW' ? 'waiting for admin review' : item.status.toLowerCase()}.` : `Not live (${item.status.toLowerCase()}).`}</p>}
         {wantErr && <p className="k-alert warn">{wantErr}</p>}
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: '12px' }}>
@@ -130,8 +131,8 @@ export default async function ItemPage({ params, searchParams }: { params: Promi
         <main style={{ flex: '999 1 560px', minWidth: '0' }}>
           <div className="sec" style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: '16px' }}>
             <span style={{ position: 'relative', flex: 'none' }}>
-              <span style={{ width: '60px', height: '60px', borderRadius: '50%', background: avatarColor(item.owner.id), color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '19px' }}>{initials(item.owner.name)}</span>
-              <span style={{ position: 'absolute', right: '-2px', bottom: '-2px', width: '22px', height: '22px', borderRadius: '50%', background: '#1F4D3A', boxShadow: '0 0 0 3px #F6F1E7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"></path></svg></span>
+              <span style={{ width: '60px', height: '60px', borderRadius: '50%', background: avatarColor(item.owner.id), color: 'var(--kf-ffffff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '19px' }}>{initials(item.owner.name)}</span>
+              <span style={{ position: 'absolute', right: '-2px', bottom: '-2px', width: '22px', height: '22px', borderRadius: '50%', background: 'var(--kb-1f4d3a)', boxShadow: '0 0 0 3px var(--kl-f6f1e7)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"></path></svg></span>
             </span>
             <div style={{ flex: '1 1 220px', display: 'flex', flexDirection: 'column' }}>
               <b style={{ fontSize: '17px' }}>Lent by {item.owner.name}</b>
@@ -141,16 +142,16 @@ export default async function ItemPage({ params, searchParams }: { params: Promi
           </div>
           <div className="sec">
             <h2>About this item</h2>
-            <p style={{ color: '#474C52', maxWidth: '680px', whiteSpace: 'pre-wrap' }}>{item.description}</p>
+            <p style={{ color: 'var(--kf-474c52)', maxWidth: '680px', whiteSpace: 'pre-wrap' }}>{item.description}</p>
           </div>
           <div className="sec">
             <h2>Rates &amp; deposit</h2>
             <div style={{ display: 'grid', gap: '12px', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))' }}>
-              <div style={{ padding: '18px', borderRadius: '20px', background: '#FFFDF8', boxShadow: 'inset 0 0 0 1px #E3DACA' }}><span className="mute" style={{ fontSize: '13px' }}>Per day</span><p className="d" style={{ fontSize: '28px', fontWeight: '700' }}>{inr(item.pricePerDay)}</p></div>
-              {item.pricePerWeek && <div style={{ padding: '18px', borderRadius: '20px', background: '#FFFDF8', boxShadow: 'inset 0 0 0 1px #E3DACA' }}><span className="mute" style={{ fontSize: '13px' }}>Week · 7 days</span><p className="d" style={{ fontSize: '28px', fontWeight: '700' }}>{inr(item.pricePerWeek)}</p></div>}
-              <div style={{ padding: '18px', borderRadius: '20px', background: '#1F4D3A', color: '#F6F1E7' }}><span style={{ fontSize: '13px', color: '#DCE6DA' }}>Refundable deposit</span><p className="d" style={{ fontSize: '28px', fontWeight: '700' }}>{inr(item.deposit)}</p></div>
+              <div style={{ padding: '18px', borderRadius: '20px', background: 'var(--kb-fffdf8)', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)' }}><span className="mute" style={{ fontSize: '13px' }}>Per day</span><p className="d" style={{ fontSize: '28px', fontWeight: '700' }}>{inr(item.pricePerDay)}</p></div>
+              {item.pricePerWeek && <div style={{ padding: '18px', borderRadius: '20px', background: 'var(--kb-fffdf8)', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)' }}><span className="mute" style={{ fontSize: '13px' }}>Week · 7 days</span><p className="d" style={{ fontSize: '28px', fontWeight: '700' }}>{inr(item.pricePerWeek)}</p></div>}
+              <div style={{ padding: '18px', borderRadius: '20px', background: 'var(--kb-1f4d3a)', color: 'var(--kf-f6f1e7)' }}><span style={{ fontSize: '13px', color: 'var(--kf-dce6da)' }}>Refundable deposit</span><p className="d" style={{ fontSize: '28px', fontWeight: '700' }}>{inr(item.deposit)}</p></div>
             </div>
-            <ul style={{ margin: '0', paddingLeft: '18px', color: '#474C52', fontSize: '14px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <ul style={{ margin: '0', paddingLeft: '18px', color: 'var(--kf-474c52)', fontSize: '14px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
               <li>Minimum {item.minDays} day{item.minDays > 1 ? 's' : ''}, maximum {item.maxDays} days. Days are counted from pickup day to return day.</li>
               <li>{item.canPickup && `Self pickup${item.pickupNote ? ` — ${item.pickupNote}` : ` in ${item.area}`} (exact address shared after payment)`}{item.canPickup && item.canDeliver ? ', or ' : ''}{item.canDeliver && `delivery in ${item.area} & nearby areas for a flat ${inr(DELIVERY_FEE)} (drop-off + collection)`}.</li>
               {item.acceptsCashAtPickup && <li>You can pay online now, or pay {ownerFirst} in cash / UPI at pickup.</li>}
@@ -160,10 +161,10 @@ export default async function ItemPage({ params, searchParams }: { params: Promi
           <div className="sec">
             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'baseline', gap: '8px' }}><h2>Availability</h2><span className="mute" style={{ fontSize: '13px' }}>Pick dates in the booking box</span></div>
             <RangeCalendar readOnly months={2} today={today} unavailable={unavailable} value={initial} />
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', fontSize: '12.5px', color: '#474C52' }}>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><span style={{ width: '14px', height: '14px', borderRadius: '5px', background: '#1F4D3A' }}></span>Your dates</span>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><span style={{ width: '14px', height: '14px', borderRadius: '5px', background: '#EDE5D5' }}></span>Booked / blocked</span>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><span style={{ width: '14px', height: '14px', borderRadius: '5px', boxShadow: 'inset 0 0 0 1.5px #C9491F' }}></span>Today</span>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', fontSize: '12.5px', color: 'var(--kf-474c52)' }}>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><span style={{ width: '14px', height: '14px', borderRadius: '5px', background: 'var(--kb-1f4d3a)' }}></span>Your dates</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><span style={{ width: '14px', height: '14px', borderRadius: '5px', background: 'var(--kb-ede5d5)' }}></span>Booked / blocked</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}><span style={{ width: '14px', height: '14px', borderRadius: '5px', boxShadow: 'inset 0 0 0 1.5px var(--kl-c9491f)' }}></span>Today</span>
             </div>
           </div>
           <div className="sec" id="reviews" style={{ borderBottom: '0' }}>
@@ -173,11 +174,11 @@ export default async function ItemPage({ params, searchParams }: { params: Promi
               {itemReviews.map((r) => (
                 <div key={r.id} className="card" style={{ padding: '18px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                    <span style={{ width: '36px', height: '36px', borderRadius: '50%', background: avatarColor(r.fromUser.id), color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '13px' }}>{initials(r.fromUser.name)}</span>
-                    <span style={{ display: 'flex', flexDirection: 'column' }}><b style={{ fontSize: '14px' }}>{shortName(r.fromUser.name)} <span style={{ color: '#C9491F' }}>{'★'.repeat(r.rating)}</span></b><span className="mute" style={{ fontSize: '12px' }}>{monthYear(r.createdAt)} · {r.booking.days} day{r.booking.days > 1 ? 's' : ''}</span></span>
+                    <span style={{ width: '36px', height: '36px', borderRadius: '50%', background: avatarColor(r.fromUser.id), color: 'var(--kf-ffffff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '13px' }}>{initials(r.fromUser.name)}</span>
+                    <span style={{ display: 'flex', flexDirection: 'column' }}><b style={{ fontSize: '14px' }}>{shortName(r.fromUser.name)} <span style={{ color: 'var(--kf-c9491f)' }}>{'★'.repeat(r.rating)}</span></b><span className="mute" style={{ fontSize: '12px' }}>{monthYear(r.createdAt)} · {r.booking.days} day{r.booking.days > 1 ? 's' : ''}</span></span>
                   </div>
                   {r.tags.length > 0 && <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>{r.tags.map((t) => <span key={t} className="badge b-n">{t}</span>)}</div>}
-                  {r.text && <p style={{ fontSize: '14px', color: '#474C52' }}>{r.text}</p>}
+                  {r.text && <p style={{ fontSize: '14px', color: 'var(--kf-474c52)' }}>{r.text}</p>}
                 </div>
               ))}
             </div>

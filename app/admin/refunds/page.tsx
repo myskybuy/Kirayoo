@@ -40,7 +40,7 @@ export default async function RefundsPage({ searchParams }: { searchParams: Prom
       {sp.ok && <p className="k-alert ok">{sp.ok}</p>}
       {sp.error && <p className="k-alert err">{sp.error}</p>}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
-        {TABS.map((t, i) => <Link key={t.key} href={`/admin/refunds?tab=${t.key}`} className="k-btn sm" style={t.key === tab.key ? { background: '#23262A', color: '#fff' } : { background: '#FFFDF8', color: '#23262A', boxShadow: 'inset 0 0 0 1px #E3DACA' }}>{t.label} · {counts[i]}</Link>)}
+        {TABS.map((t, i) => <Link key={t.key} href={`/admin/refunds?tab=${t.key}`} className="k-btn sm" style={t.key === tab.key ? { background: 'var(--kb-23262a)', color: 'var(--kf-ffffff)' } : { background: 'var(--kb-fffdf8)', color: 'var(--kf-23262a)', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)' }}>{t.label} · {counts[i]}</Link>)}
         <AdminSearch action="/admin/refunds" q={q} hidden={{ tab: tab.key }} placeholder="Booking code, renter, refund id" />
       </div>
       <div className="tw"><table>
@@ -54,9 +54,9 @@ export default async function RefundsPage({ searchParams }: { searchParams: Prom
               <td>{KIND[r.kind]}</td>
               <td className="r"><b>{inr(r.amount)}</b></td>
               <td>
-                {r.status === 'REFUNDED' ? <span className="badge" style={{ background: '#DCEEDF', color: '#1E5A37' }}>Refunded {r.refundedAt ? fmtTime(r.refundedAt) : ''} · {r.refundId}</span>
-                  : r.status === 'FAILED' ? <span className="badge" style={{ background: '#F7DCD7', color: '#8E2A20' }} title={r.error ?? ''}>Failed: {(r.error ?? '').slice(0, 60)}</span>
-                  : <span className="badge" style={{ background: '#FBEBCF', color: '#7A4708' }}>Pending</span>}
+                {r.status === 'REFUNDED' ? <span className="badge" style={{ background: 'var(--kb-dceedf)', color: 'var(--kf-1e5a37)' }}>Refunded {r.refundedAt ? fmtTime(r.refundedAt) : ''} · {r.refundId}</span>
+                  : r.status === 'FAILED' ? <span className="badge" style={{ background: 'var(--kb-f7dcd7)', color: 'var(--kf-8e2a20)' }} title={r.error ?? ''}>Failed: {(r.error ?? '').slice(0, 60)}</span>
+                  : <span className="badge" style={{ background: 'var(--kb-fbebcf)', color: 'var(--kf-7a4708)' }}>Pending</span>}
               </td>
               <td>{r.status !== 'REFUNDED' && <form action={retryRefundAction}><input type="hidden" name="id" value={r.id} /><input type="hidden" name="back" value={qs({})} /><button className="k-btn g sm" type="submit">Retry refund</button></form>}</td>
             </tr>

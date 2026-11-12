@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { canUseOwnerPanel } from '@/lib/owner-gate';
+import ThemeToggle from './ThemeToggle';
 import { getUser } from '@/lib/auth';
 import { getLocation } from '@/lib/location';
 import { actionBadge, unreadCount } from '@/lib/header';
@@ -15,13 +17,13 @@ export function Logo({ size = 34 }: { size?: number }) {
   );
 }
 
-const label: React.CSSProperties = { fontSize: '11px', fontWeight: '800', letterSpacing: '.07em', textTransform: 'uppercase', color: '#1F4D3A' };
-const seg: React.CSSProperties = { display: 'flex', flexDirection: 'column', padding: '2px 18px', minWidth: '0', textDecoration: 'none', color: '#23262A' };
+const label: React.CSSProperties = { fontSize: '11px', fontWeight: '800', letterSpacing: '.07em', textTransform: 'uppercase', color: 'var(--kf-1f4d3a)' };
+const seg: React.CSSProperties = { display: 'flex', flexDirection: 'column', padding: '2px 18px', minWidth: '0', textDecoration: 'none', color: 'var(--kf-23262a)' };
 const ell: React.CSSProperties = { fontSize: '14px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' };
-const divider = <span style={{ width: '1px', height: '30px', background: '#E3DACA', flex: 'none' }}></span>;
+const divider = <span style={{ width: '1px', height: '30px', background: 'var(--kb-e3daca)', flex: 'none' }}></span>;
 
-export function ownerHref(u: { idStatus: string } | null, verifiedPath = '/owner/new') {
-  return u?.idStatus === 'VERIFIED' ? verifiedPath : '/owner/start';
+export function ownerHref(u: { idStatus: string; ownerStatus: string } | null, verifiedPath = '/owner/new') {
+  return u && canUseOwnerPanel(u) ? verifiedPath : '/owner/apply';
 }
 
 /**
@@ -36,24 +38,24 @@ export default async function SiteHeader({ compact = false, q = '' }: { compact?
   const where = loc ? `${loc.area}, ${loc.city}` : 'Choose your area';
 
   return (
-    <header style={{ width: '100%', boxSizing: 'border-box', background: '#FFFDF8', borderBottom: '1px solid #E3DACA', fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif", color: '#23262A', position: 'relative', zIndex: '30' }}>
+    <header className="k-site-hdr" style={{ width: '100%', boxSizing: 'border-box', background: 'var(--kb-fffdf8)', borderBottom: '1px solid var(--kl-e3daca)', fontFamily: "'Plus Jakarta Sans',system-ui,sans-serif", color: 'var(--kf-23262a)', position: 'relative', zIndex: '30' }}>
       <div style={{ maxWidth: '1288px', margin: '0 auto', boxSizing: 'border-box', padding: compact ? '10px 24px' : '14px 24px', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '10px 20px' }} className="k-hdr">
-        <Link href="/" aria-label="Kirayo home" style={{ display: 'flex', alignItems: 'center', gap: '9px', textDecoration: 'none', color: '#1F4D3A', flex: '1 1 0', minWidth: '130px' }}>
+        <Link href="/" aria-label="Kirayo home" style={{ display: 'flex', alignItems: 'center', gap: '9px', textDecoration: 'none', color: 'var(--kf-1f4d3a)', flex: '1 1 0', minWidth: '130px' }}>
           <Logo />
           <span style={{ fontFamily: "'Bricolage Grotesque',Georgia,serif", fontWeight: '800', fontSize: '25px', letterSpacing: '-.035em' }}>kirayo</span>
         </Link>
 
         {compact ? (
-          <form action="/browse" style={{ display: 'flex', alignItems: 'center', gap: '12px', background: '#fff', borderRadius: '999px', boxShadow: '0 1px 2px rgba(35,38,42,.06),0 8px 22px -12px rgba(31,77,58,.3),inset 0 0 0 1px #E3DACA', padding: '5px 5px 5px 20px', color: '#23262A', flex: '0 1 460px', minWidth: '0', fontSize: '14px', fontWeight: '600' }} className="k-search">
+          <form action="/browse" style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'var(--kb-ffffff)', borderRadius: '999px', boxShadow: '0 1px 2px rgba(35,38,42,.06),0 8px 22px -12px rgba(31,77,58,.3),inset 0 0 0 1px var(--kl-e3daca)', padding: '5px 5px 5px 20px', color: 'var(--kf-23262a)', flex: '0 1 460px', minWidth: '0', fontSize: '14px', fontWeight: '600' }} className="k-search">
             <input name="q" defaultValue={q} placeholder="Search items" aria-label="Search items" className="k-bare" style={{ flex: '1 1 80px', minWidth: '0', fontWeight: 600 }} />
-            <span style={{ width: '1px', height: '20px', background: '#E3DACA', flex: 'none' }}></span>
-            <Link href="/location" title="Change location" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: '#23262A', textDecoration: 'none', flex: '0 1 auto', maxWidth: '45%' }}>{loc ? loc.area : 'Choose area'}</Link>
-            <button type="submit" style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#C9491F', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', flex: 'none', border: 0, cursor: 'pointer' }} aria-label="Search">
+            <span style={{ width: '1px', height: '20px', background: 'var(--kb-e3daca)', flex: 'none' }}></span>
+            <Link href="/location" title="Change location" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: 'var(--kf-23262a)', textDecoration: 'none', flex: '0 1 auto', maxWidth: '45%' }}>{loc ? loc.area : 'Choose area'}</Link>
+            <button type="submit" style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'var(--kb-c9491f)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--kf-ffffff)', flex: 'none', border: 0, cursor: 'pointer' }} aria-label="Search">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m20 20-4-4"></path></svg>
             </button>
           </form>
         ) : (
-          <form action="/browse" style={{ display: 'flex', alignItems: 'center', background: '#fff', borderRadius: '999px', boxShadow: '0 1px 2px rgba(35,38,42,.06),0 10px 28px -12px rgba(31,77,58,.32),inset 0 0 0 1px #E3DACA', padding: '6px', color: '#23262A', flex: '0 1 660px', minWidth: '0' }} className="k-search">
+          <form action="/browse" style={{ display: 'flex', alignItems: 'center', background: 'var(--kb-ffffff)', borderRadius: '999px', boxShadow: '0 1px 2px rgba(35,38,42,.06),0 10px 28px -12px rgba(31,77,58,.32),inset 0 0 0 1px var(--kl-e3daca)', padding: '6px', color: 'var(--kf-23262a)', flex: '0 1 660px', minWidth: '0' }} className="k-search">
             <label style={{ ...seg, padding: '2px 18px 2px 20px', flex: '1.1 1 0' }}>
               <span style={label}>What</span>
               <input name="q" defaultValue={q} placeholder="Camera, drill, tent…" className="k-bare" style={{ ...ell }} />
@@ -66,16 +68,17 @@ export default async function SiteHeader({ compact = false, q = '' }: { compact?
             {divider}
             <Link href="/browse#dates" style={{ ...seg, flex: '1 1 0' }} className="hide-m-k">
               <span style={label}>When</span>
-              <span style={{ ...ell, color: '#60666C' }}>Add dates</span>
+              <span style={{ ...ell, color: 'var(--kf-60666c)' }}>Add dates</span>
             </Link>
-            <button type="submit" style={{ width: '46px', height: '46px', borderRadius: '50%', background: '#C9491F', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', flex: 'none', border: 0, cursor: 'pointer' }} aria-label="Search">
+            <button type="submit" style={{ width: '46px', height: '46px', borderRadius: '50%', background: 'var(--kb-c9491f)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--kf-ffffff)', flex: 'none', border: 0, cursor: 'pointer' }} aria-label="Search">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m20 20-4-4"></path></svg>
             </button>
           </form>
         )}
 
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px', flex: '1 1 0', minWidth: '200px' }} className="k-hdr-right">
-          <Link href={ownerHref(user)} style={{ fontWeight: '700', fontSize: '14.5px', color: '#1F4D3A', textDecoration: 'none', padding: '12px 14px', borderRadius: '999px', whiteSpace: 'nowrap' }} className="k-hide-s">List an item</Link>
+          <ThemeToggle />
+          <Link href={ownerHref(user)} style={{ fontWeight: '700', fontSize: '14.5px', color: 'var(--kf-1f4d3a)', textDecoration: 'none', padding: '12px 14px', borderRadius: '999px', whiteSpace: 'nowrap' }} className="k-hide-s">List an item</Link>
           {user ? (
             <>
               {badge && (
@@ -89,18 +92,18 @@ export default async function SiteHeader({ compact = false, q = '' }: { compact?
                 {unread > 0 && <span className="k-count">{unread > 99 ? '99+' : unread}</span>}
               </Link>
               <details className="k-menu">
-                <summary aria-label="Account menu" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '4px 4px 4px 14px', borderRadius: '999px', boxShadow: 'inset 0 0 0 1px #E3DACA', background: '#fff', color: '#23262A', minHeight: '44px', boxSizing: 'border-box', cursor: 'pointer' }}>
+                <summary aria-label="Account menu" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '4px 4px 4px 14px', borderRadius: '999px', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)', background: 'var(--kb-ffffff)', color: 'var(--kf-23262a)', minHeight: '44px', boxSizing: 'border-box', cursor: 'pointer' }}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
-                  <span style={{ width: '36px', height: '36px', borderRadius: '50%', background: avatarColor(user.id), color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '13px' }}>{initials(user.name)}</span>
+                  <span style={{ width: '36px', height: '36px', borderRadius: '50%', background: avatarColor(user.id), color: 'var(--kf-ffffff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '13px' }}>{initials(user.name)}</span>
                 </summary>
                 <div className="k-menu-pop">
-                  <div style={{ padding: '6px 12px 10px', borderBottom: '1px solid #E3DACA', marginBottom: '6px' }}>
+                  <div style={{ padding: '6px 12px 10px', borderBottom: '1px solid var(--kl-e3daca)', marginBottom: '6px' }}>
                     <b style={{ display: 'block' }}>{user.name}</b>
-                    <span style={{ fontSize: '12.5px', color: '#60666C' }}>{user.email}</span>
+                    <span style={{ fontSize: '12.5px', color: 'var(--kf-60666c)' }}>{user.email}</span>
                   </div>
                   <Link href="/bookings">My rentals</Link>
                   <Link href="/chat">Messages{unread > 0 ? ` (${unread})` : ''}</Link>
-                  <Link href={ownerHref(user, '/owner')}>{user.idStatus === 'VERIFIED' ? 'Owner dashboard' : 'Become an owner'}</Link>
+                  <Link href={ownerHref(user, '/owner')}>{canUseOwnerPanel(user) ? 'Owner dashboard' : 'Become an owner'}</Link>
                   <Link href="/profile">Profile</Link>
                   {user.isAdmin && <Link href="/admin">Admin panel</Link>}
                   <form action={logoutAction}>
@@ -110,7 +113,7 @@ export default async function SiteHeader({ compact = false, q = '' }: { compact?
               </details>
             </>
           ) : (
-            <Link href="/login" style={{ display: 'inline-flex', alignItems: 'center', minHeight: '44px', padding: '0 20px', borderRadius: '999px', background: '#1F4D3A', color: '#fff', fontWeight: '700', fontSize: '14.5px', textDecoration: 'none' }}>Log in</Link>
+            <Link href="/login" style={{ display: 'inline-flex', alignItems: 'center', minHeight: '44px', padding: '0 20px', borderRadius: '999px', background: 'var(--kb-1f4d3a)', color: 'var(--kf-ffffff)', fontWeight: '700', fontSize: '14.5px', textDecoration: 'none' }}>Log in</Link>
           )}
         </div>
       </div>

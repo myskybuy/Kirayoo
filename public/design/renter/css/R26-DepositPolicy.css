@@ -1,17 +1,17 @@
 /* R26-DepositPolicy — page styles (exported from the Kirayo canvas). Shared tokens + fonts live in ../assets/css/kirayo.css */
 
 /* from R26-DepositPolicy */
-body{margin:0;background:#F6F1E7;color:#23262A;font:400 15px/1.6 'Plus Jakarta Sans',system-ui,sans-serif}
-a{color:#1F4D3A}a:hover{color:#163A2B}
+body{margin:0;background:var(--kb-f6f1e7);color:var(--kf-23262a);font:400 15px/1.6 'Plus Jakarta Sans',system-ui,sans-serif}
+a{color:var(--kf-1f4d3a)}a:hover{color:var(--kf-163a2b)}
 h1,h2,h3,h4,p{margin:0}
 .d{font-family:'Bricolage Grotesque',Georgia,serif;letter-spacing:-.025em}
 .wrap{max-width:1160px;margin:0 auto;padding:0 24px;box-sizing:border-box}
-.mute{color:#60666C}
+.mute{color:var(--kf-60666c)}
 h2.s{font-family:'Bricolage Grotesque',Georgia,serif;font-size:30px;font-weight:700;letter-spacing:-.02em}
-.tw{overflow-x:auto;border-radius:22px;background:#FFFDF8;box-shadow:0 1px 2px rgba(35,38,42,.06)}
+.tw{overflow-x:auto;border-radius:22px;background:var(--kb-fffdf8);box-shadow:0 1px 2px rgba(35,38,42,.06)}
 table{width:100%;border-collapse:collapse;min-width:640px;font-size:14.5px}
-th{text-align:left;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#474C52;padding:14px 18px;background:#EDE5D5}
-td{padding:14px 18px;border-top:1px solid #EFE8DA;vertical-align:top}
+th{text-align:left;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--kf-474c52);padding:14px 18px;background:var(--kb-ede5d5)}
+td{padding:14px 18px;border-top:1px solid var(--kl-efe8da);vertical-align:top}
 .mtab{display:none;position:sticky;bottom:0;z-index:40}
 @media (max-width:720px){.mtab{display:block}.wrap{padding:0 16px}}
 

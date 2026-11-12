@@ -1,16 +1,16 @@
 /* R19-Review — page styles (exported from the Kirayo canvas). Shared tokens + fonts live in ../assets/css/kirayo.css */
 
 /* from R19-Review */
-body{margin:0;background:#F6F1E7;color:#23262A;font:400 15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif}
-a{color:#1F4D3A}a:hover{color:#163A2B}
+body{margin:0;background:var(--kb-f6f1e7);color:var(--kf-23262a);font:400 15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif}
+a{color:var(--kf-1f4d3a)}a:hover{color:var(--kf-163a2b)}
 h1,h2,h3,h4,p{margin:0}
 .d{font-family:'Bricolage Grotesque',Georgia,serif;letter-spacing:-.025em}
 .ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:54px;padding:0 24px;border-radius:999px;font:700 15px/1 'Plus Jakarta Sans',sans-serif;border:0;cursor:pointer;text-decoration:none;white-space:nowrap;box-sizing:border-box}
-.mute{color:#60666C}
+.mute{color:var(--kf-60666c)}
 .star{width:48px;height:48px;border:0;background:transparent;padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .tag{min-height:42px;padding:0 16px;border-radius:999px;border:0;font:600 14px 'Plus Jakarta Sans',sans-serif;cursor:pointer}
-.in{width:100%;box-sizing:border-box;padding:14px 16px;min-height:120px;border-radius:16px;border:1.5px solid #E3DACA;background:#fff;font:500 15px/1.5 'Plus Jakarta Sans',sans-serif;color:#23262A;resize:vertical}
+.in{width:100%;box-sizing:border-box;padding:14px 16px;min-height:120px;border-radius:16px;border:1.5px solid var(--kl-e3daca);background:var(--kb-ffffff);font:500 15px/1.5 'Plus Jakarta Sans',sans-serif;color:var(--kf-23262a);resize:vertical}
 
 /* from KHeader */
 body{margin:0}

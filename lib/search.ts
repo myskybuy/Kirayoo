@@ -1,5 +1,6 @@
 import type { Category, Item, Prisma, User } from '@prisma/client';
 import { prisma } from './db';
+import { LIVE_OWNER } from './owner-gate';
 import { addDays, avatarColor, dayOf, fmtDay, fmtRange, initials, todayIST, toDbDate } from './format';
 import { CATEGORIES, categoryLabel, PAGE_SIZE } from './constants';
 import { freeItemIds, occupyingWhere } from './bookings';
@@ -20,12 +21,12 @@ export type BrowseFilters = {
   page?: number;
 };
 
-/** Items anyone may see: ACTIVE, not deleted, from VERIFIED non-blocked owners, never the viewer's own. */
+/** Items anyone may see: ACTIVE, not deleted, from live owners (approved + ID verified + not blocked), never the viewer's own. */
 export function visibleWhere(viewerId?: string | null): Prisma.ItemWhereInput {
   return {
     status: 'ACTIVE',
     deletedAt: null,
-    owner: { idStatus: 'VERIFIED', isBlocked: false },
+    owner: LIVE_OWNER,
     ...(viewerId ? { ownerId: { not: viewerId } } : {}),
   };
 }

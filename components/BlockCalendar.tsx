@@ -64,7 +64,7 @@ export default function BlockCalendar({ today, booked, initialBlocked, name = 'b
         <span className="mute" style={{ fontSize: '13px', marginLeft: 'auto' }}>{blockedThisMonth} day{blockedThisMonth === 1 ? '' : 's'} blocked</span>
         <button type="button" onClick={() => step(1)} aria-label="Next month" className="k-btn o sm" style={{ minWidth: '38px', padding: 0 }}>›</button>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,minmax(0,1fr))', textAlign: 'center', fontSize: '12px', fontWeight: '700', color: '#60666C', marginBottom: '4px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,minmax(0,1fr))', textAlign: 'center', fontSize: '12px', fontWeight: '700', color: 'var(--kf-60666c)', marginBottom: '4px' }}>
         {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => <span key={i}>{d}</span>)}
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,minmax(0,1fr))', gap: '4px' }}>
@@ -72,19 +72,19 @@ export default function BlockCalendar({ today, booked, initialBlocked, name = 'b
           if (!d) return <button key={i} className="day" type="button" disabled aria-hidden="true" style={{ background: 'transparent' }}></button>;
           const n = Number(d.slice(8));
           const label = `${MONTHS[ym.m]} ${n}`;
-          if (d < today) return <button key={d} className="day" type="button" disabled aria-label={`${label}, past`} style={{ background: 'transparent', color: '#B5B1A8' }}>{n}</button>;
-          if (bookedSet.has(d)) return <button key={d} className="day" type="button" disabled aria-label={`${label}, booked`} style={{ background: '#EDE5D5', color: '#7C7466', textDecoration: 'line-through' }}>{n}</button>;
+          if (d < today) return <button key={d} className="day" type="button" disabled aria-label={`${label}, past`} style={{ background: 'transparent', color: 'var(--kf-b5b1a8)' }}>{n}</button>;
+          if (bookedSet.has(d)) return <button key={d} className="day" type="button" disabled aria-label={`${label}, booked`} style={{ background: 'var(--kb-ede5d5)', color: 'var(--kf-7c7466)', textDecoration: 'line-through' }}>{n}</button>;
           const on = blocked.has(d);
           return (
             <button key={d} className="day" type="button" aria-pressed={on} aria-label={on ? `${label}, blocked` : label} onClick={() => toggle(d)} disabled={busy === d}
-              style={on ? { background: '#474C52', color: '#fff' } : { background: '#EEF3EC', color: '#1F4D3A' }}>{n}</button>
+              style={on ? { background: 'var(--kb-474c52)', color: 'var(--kf-ffffff)' } : { background: 'var(--kb-eef3ec)', color: 'var(--kf-1f4d3a)' }}>{n}</button>
           );
         })}
       </div>
-      <div style={{ display: 'flex', gap: '14px', marginTop: '10px', fontSize: '12px', color: '#474C52', flexWrap: 'wrap' }}>
-        <span style={{ display: 'inline-flex', gap: '6px', alignItems: 'center' }}><span style={{ width: '14px', height: '14px', borderRadius: '5px', background: '#EEF3EC', boxShadow: 'inset 0 0 0 1px #BFD1BD' }}></span>Available</span>
-        <span style={{ display: 'inline-flex', gap: '6px', alignItems: 'center' }}><span style={{ width: '14px', height: '14px', borderRadius: '5px', background: '#474C52' }}></span>Blocked by you</span>
-        <span style={{ display: 'inline-flex', gap: '6px', alignItems: 'center' }}><span style={{ width: '14px', height: '14px', borderRadius: '5px', background: '#EDE5D5' }}></span>Booked</span>
+      <div style={{ display: 'flex', gap: '14px', marginTop: '10px', fontSize: '12px', color: 'var(--kf-474c52)', flexWrap: 'wrap' }}>
+        <span style={{ display: 'inline-flex', gap: '6px', alignItems: 'center' }}><span style={{ width: '14px', height: '14px', borderRadius: '5px', background: 'var(--kb-eef3ec)', boxShadow: 'inset 0 0 0 1px var(--kl-bfd1bd)' }}></span>Available</span>
+        <span style={{ display: 'inline-flex', gap: '6px', alignItems: 'center' }}><span style={{ width: '14px', height: '14px', borderRadius: '5px', background: 'var(--kb-474c52)' }}></span>Blocked by you</span>
+        <span style={{ display: 'inline-flex', gap: '6px', alignItems: 'center' }}><span style={{ width: '14px', height: '14px', borderRadius: '5px', background: 'var(--kb-ede5d5)' }}></span>Booked</span>
       </div>
     </div>
   );

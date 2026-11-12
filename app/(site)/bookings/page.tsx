@@ -53,12 +53,12 @@ export default async function MyRentalsPage({ searchParams }: { searchParams: Pr
           <h1 className="d" style={{ fontSize: 'clamp(32px,3.6vw,48px)', fontWeight: '700' }}>My rentals</h1>
           <Link href={ownerHref(user, '/owner')} style={{ fontWeight: '700', fontSize: '14px' }}>Items you lend out → Owner panel</Link>
         </div>
-        <div role="tablist" aria-label="Rental status" style={{ display: 'flex', gap: '6px', padding: '5px', borderRadius: '28px', background: '#FFFDF8', boxShadow: 'inset 0 0 0 1px #E3DACA', alignSelf: 'flex-start', flexWrap: 'wrap' }}>
+        <div role="tablist" aria-label="Rental status" style={{ display: 'flex', gap: '6px', padding: '5px', borderRadius: '28px', background: 'var(--kb-fffdf8)', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)', alignSelf: 'flex-start', flexWrap: 'wrap' }}>
           {TABS.map((t) => {
             const on = t.key === tab.key;
             const n = count(t);
             return (
-              <Link key={t.key} className="tab" role="tab" aria-selected={on} href={`/bookings?tab=${t.key}`} style={{ background: on ? '#1F4D3A' : 'transparent', color: on ? '#fff' : '#474C52', textDecoration: 'none' }}>
+              <Link key={t.key} className="tab" role="tab" aria-selected={on} href={`/bookings?tab=${t.key}`} style={{ background: on ? 'var(--kb-1f4d3a)' : 'transparent', color: on ? 'var(--kf-ffffff)' : 'var(--kf-474c52)', textDecoration: 'none' }}>
                 {t.label}<span style={{ minWidth: '22px', height: '22px', padding: '0 6px', boxSizing: 'border-box', borderRadius: '999px', background: on ? 'rgba(255,255,255,.2)' : t.key === 'action' && n ? '#FBE3D8' : '#EDE5D5', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{n}</span>
               </Link>
             );

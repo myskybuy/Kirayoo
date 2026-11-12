@@ -23,8 +23,8 @@ const TABS: { key: string; label: string; where: Prisma.BookingWhereInput }[] = 
   { key: 'cancelled', label: 'Cancelled', where: { status: 'CANCELLED' } },
 ];
 const BADGE: Record<BookingStatus | 'LATE', [string, string]> = {
-  PENDING_PAYMENT: ['#EDE5D5', '#474C52'], CONFIRMED: ['#1F4D3A', '#fff'], PICKED_UP: ['#DCE6DA', '#1F4D3A'], LATE: ['#FBE3D8', '#9A3412'], RETURNED: ['#FBEBCF', '#7A4708'],
-  DISPUTED: ['#F7DCD7', '#8E2A20'], RETURN_CONFIRMED: ['#DCEEDF', '#1E5A37'], DEPOSIT_REFUNDED: ['#DCEEDF', '#1E5A37'], CANCELLED: ['#EDE5D5', '#474C52'],
+  PENDING_PAYMENT: ['var(--kb-ede5d5)', 'var(--kf-474c52)'], CONFIRMED: ['var(--kb-1f4d3a)', 'var(--kf-ffffff)'], PICKED_UP: ['var(--kb-dce6da)', 'var(--kf-1f4d3a)'], LATE: ['var(--kb-fbe3d8)', 'var(--kf-9a3412)'], RETURNED: ['var(--kb-fbebcf)', 'var(--kf-7a4708)'],
+  DISPUTED: ['var(--kb-f7dcd7)', 'var(--kf-8e2a20)'], RETURN_CONFIRMED: ['var(--kb-dceedf)', 'var(--kf-1e5a37)'], DEPOSIT_REFUNDED: ['var(--kb-dceedf)', 'var(--kf-1e5a37)'], CANCELLED: ['var(--kb-ede5d5)', 'var(--kf-474c52)'],
 };
 
 export default async function AdminBookingsPage({ searchParams }: { searchParams: Promise<{ tab?: string; q?: string; page?: string; id?: string; ok?: string; error?: string }> }) {
@@ -57,12 +57,12 @@ export default async function AdminBookingsPage({ searchParams }: { searchParams
       {sp.error && <p className="k-alert err">{sp.error}</p>}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
         <div role="tablist" aria-label="Status" style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '4px', maxWidth: '100%' }}>
-          {TABS.map((t, i) => <Link key={t.key} className="chip" role="tab" aria-selected={t.key === tab.key} href={`/admin/bookings?tab=${t.key}${q ? `&q=${encodeURIComponent(q)}` : ''}`} style={t.key === tab.key ? { background: '#23262A', color: '#fff', boxShadow: 'none', textDecoration: 'none' } : { background: '#FFFDF8', color: '#23262A', boxShadow: 'inset 0 0 0 1px #E3DACA', textDecoration: 'none' }}>{t.label} · {counts[i]}</Link>)}
+          {TABS.map((t, i) => <Link key={t.key} className="chip" role="tab" aria-selected={t.key === tab.key} href={`/admin/bookings?tab=${t.key}${q ? `&q=${encodeURIComponent(q)}` : ''}`} style={t.key === tab.key ? { background: 'var(--kb-23262a)', color: 'var(--kf-ffffff)', boxShadow: 'none', textDecoration: 'none' } : { background: 'var(--kb-fffdf8)', color: 'var(--kf-23262a)', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)', textDecoration: 'none' }}>{t.label} · {counts[i]}</Link>)}
         </div>
         <AdminSearch action="/admin/bookings" q={q} hidden={{ tab: tab.key }} placeholder="Code (KR-…), name or item" />
       </div>
       {sel && (
-        <section className="card" style={{ padding: '22px', display: 'flex', flexDirection: 'column', gap: '12px', background: '#FFFDF8', borderRadius: '24px' }} aria-label="Booking details">
+        <section className="card" style={{ padding: '22px', display: 'flex', flexDirection: 'column', gap: '12px', background: 'var(--kb-fffdf8)', borderRadius: '24px' }} aria-label="Booking details">
           <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '10px', alignItems: 'baseline' }}>
             <div><b className="d" style={{ fontSize: '22px' }}>{sel.code} · {sel.item.title}</b><p className="mute" style={{ fontSize: '13.5px' }}>{sel.renter.name} ({sel.renter.email}) → {sel.owner.name} ({sel.owner.email}) · {fmtRange(sel.startDate, sel.endDate)} · {sel.days} days · {sel.mode === 'DELIVERY' ? `delivery to ${sel.address}` : 'pickup'}</p></div>
             <Link href={qs({ id: undefined })} style={{ fontWeight: 700, fontSize: '13px' }}>Close ✕</Link>
@@ -77,14 +77,14 @@ export default async function AdminBookingsPage({ searchParams }: { searchParams
           </div>
           {sel.refunds.length > 0 && <div style={{ fontSize: '14px' }}><span className="mute">Refunds: </span>{sel.refunds.map((r) => `${r.kind.toLowerCase()} ${inr(r.amount)} ${r.status.toLowerCase()}${r.refundId ? ` (${r.refundId})` : ''}`).join(' · ')}</div>}
           <b style={{ marginTop: '6px' }}>Timeline</b>
-          <ol style={{ margin: 0, paddingLeft: '18px', fontSize: '13.5px', color: '#474C52', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <ol style={{ margin: 0, paddingLeft: '18px', fontSize: '13.5px', color: 'var(--kf-474c52)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <li><b>{fmtTime(sel.createdAt)}</b> — dates accepted, hold created</li>
             {(sel.conversation?.messages ?? []).filter((m) => m.bookingId === sel.id || !m.bookingId).filter((m) => m.createdAt >= sel.createdAt).map((m) => <li key={m.id}><b>{fmtTime(m.createdAt)}</b> — {m.text}</li>)}
           </ol>
           {(sel.status === 'PENDING_PAYMENT' || sel.status === 'CONFIRMED') && (
-            <form action={adminCancelBookingAction} style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', padding: '14px', borderRadius: '16px', background: '#F7DCD7' }}>
+            <form action={adminCancelBookingAction} style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center', padding: '14px', borderRadius: '16px', background: 'var(--kb-f7dcd7)' }}>
               <input type="hidden" name="bookingId" value={sel.id} /><input type="hidden" name="back" value={qs({ id: sel.id })} />
-              <b style={{ color: '#8E2A20' }}>Cancel as admin:</b>
+              <b style={{ color: 'var(--kf-8e2a20)' }}>Cancel as admin:</b>
               <input name="reason" className="k-in" required minLength={3} placeholder="Reason (shown to both)" style={{ flex: '1 1 220px', minHeight: '40px' }} />
               <span className="mute" style={{ fontSize: '12.5px' }}>{cancellationTerms(sel, 'ADMIN').text}</span>
               <ConfirmButton message={`Cancel ${sel.code}? Any online payment is refunded in full.`} className="k-btn r sm">Cancel booking</ConfirmButton>
@@ -100,7 +100,7 @@ export default async function AdminBookingsPage({ searchParams }: { searchParams
             const late = isOverdue(b);
             const [bg, fg] = BADGE[late ? 'LATE' : b.status];
             return (
-              <tr key={b.id} style={sel?.id === b.id ? { background: '#EEF3EC' } : undefined}>
+              <tr key={b.id} style={sel?.id === b.id ? { background: 'var(--kb-eef3ec)' } : undefined}>
                 <td><Link href={qs({ id: b.id })} className="mute">{b.code}</Link></td>
                 <td><b>{b.item.title}</b></td>
                 <td>{shortName(b.renter.name)}</td>

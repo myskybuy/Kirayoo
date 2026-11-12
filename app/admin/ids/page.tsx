@@ -51,38 +51,38 @@ export default async function AdminIdsPage({ searchParams }: { searchParams: Pro
       {sp.ok && <p className="k-alert ok">{sp.ok}</p>}
       {sp.error && <p className="k-alert err">{sp.error}</p>}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
-        {TABS.map((t, i) => <Link key={t.key} href={`/admin/ids?tab=${t.key}${q ? `&q=${encodeURIComponent(q)}` : ''}`} className="k-btn sm" style={t.key === tab.key ? { background: '#23262A', color: '#fff' } : { background: '#FFFDF8', color: '#23262A', boxShadow: 'inset 0 0 0 1px #E3DACA' }}>{t.label} · {counts[i]}</Link>)}
+        {TABS.map((t, i) => <Link key={t.key} href={`/admin/ids?tab=${t.key}${q ? `&q=${encodeURIComponent(q)}` : ''}`} className="k-btn sm" style={t.key === tab.key ? { background: 'var(--kb-23262a)', color: 'var(--kf-ffffff)' } : { background: 'var(--kb-fffdf8)', color: 'var(--kf-23262a)', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)' }}>{t.label} · {counts[i]}</Link>)}
         <AdminSearch action="/admin/ids" q={q} hidden={{ tab: tab.key }} placeholder="Search name or email" />
       </div>
       {users.length === 0 ? (
         <p className="k-alert info">{q ? `Nobody matches “${q}”.` : tab.key === 'pending' ? 'No IDs waiting — all caught up.' : 'Nothing here.'}</p>
       ) : (
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', alignItems: 'flex-start' }}>
-          <aside aria-label="Queue" style={{ flex: '1 1 260px', maxWidth: '100%', padding: '10px', borderRadius: '22px', background: '#FFFDF8', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <aside aria-label="Queue" style={{ flex: '1 1 260px', maxWidth: '100%', padding: '10px', borderRadius: '22px', background: 'var(--kb-fffdf8)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <span className="mute" style={{ fontSize: '12px', fontWeight: '700', padding: '6px 8px', letterSpacing: '.06em' }}>{tab.label.toUpperCase()}{tab.key === 'pending' ? ' · OLDEST FIRST' : ''}</span>
             {users.map((u) => {
               const on = u.id === sel?.id;
               return (
-                <Link key={u.id} className="qi" href={qs({ u: u.id })} aria-current={on} style={{ background: on ? '#EEF3EC' : 'transparent', boxShadow: on ? 'inset 0 0 0 1.5px #1F4D3A' : 'none', color: '#23262A', textDecoration: 'none' }}>
-                  <span style={{ width: '40px', height: '40px', borderRadius: '50%', background: avatarColor(u.id), color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '13px', flex: 'none' }}>{initials(u.name)}</span>
+                <Link key={u.id} className="qi" href={qs({ u: u.id })} aria-current={on} style={{ background: on ? 'var(--kb-eef3ec)' : 'transparent', boxShadow: on ? 'inset 0 0 0 1.5px #1F4D3A' : 'none', color: 'var(--kf-23262a)', textDecoration: 'none' }}>
+                  <span style={{ width: '40px', height: '40px', borderRadius: '50%', background: avatarColor(u.id), color: 'var(--kf-ffffff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '13px', flex: 'none' }}>{initials(u.name)}</span>
                   <span style={{ flex: '1', display: 'flex', flexDirection: 'column', minWidth: '0' }}><b style={{ fontSize: '14px' }}>{u.name}</b><span className="mute" style={{ fontSize: '12px' }}>{u._count.items ? 'Owner' : 'Renter'} · {ago(tab.key === 'pending' ? u.idSubmittedAt : u.idReviewedAt)}</span></span>
-                  <span className="badge" style={tab.key === 'pending' ? { background: '#FBEBCF', color: '#7A4708' } : tab.key === 'verified' ? { background: '#DCEEDF', color: '#1E5A37' } : { background: '#F7DCD7', color: '#8E2A20' }}>{tab.label}</span>
+                  <span className="badge" style={tab.key === 'pending' ? { background: 'var(--kb-fbebcf)', color: 'var(--kf-7a4708)' } : tab.key === 'verified' ? { background: 'var(--kb-dceedf)', color: 'var(--kf-1e5a37)' } : { background: 'var(--kb-f7dcd7)', color: 'var(--kf-8e2a20)' }}>{tab.label}</span>
                 </Link>
               );
             })}
             <Pager page={page} total={total} size={ADMIN_PAGE_SIZE} href={(p) => qs({ page: p })} />
           </aside>
           {sel && (
-            <section style={{ flex: '999 1 520px', minWidth: '0', padding: '24px', borderRadius: '24px', background: '#FFFDF8', display: 'flex', flexDirection: 'column', gap: '18px' }}>
+            <section style={{ flex: '999 1 520px', minWidth: '0', padding: '24px', borderRadius: '24px', background: 'var(--kb-fffdf8)', display: 'flex', flexDirection: 'column', gap: '18px' }}>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div><h2 className="d" style={{ fontSize: '26px', fontWeight: '700' }}>{sel.name}</h2><span className="mute" style={{ fontSize: '13.5px' }}>{sel.email} · {sel.area ? `${sel.area}, ${sel.city}` : 'no area'} · {sel._count.items ? `Owner (${sel._count.items} items)` : 'Renter'}</span></div>
-                <span className="badge" style={{ background: '#EDE5D5', color: '#474C52' }}>{sel.idDocType ?? 'ID'}</span>
+                <span className="badge" style={{ background: 'var(--kb-ede5d5)', color: 'var(--kf-474c52)' }}>{sel.idDocType ?? 'ID'}</span>
               </div>
               <div style={{ display: 'grid', gap: '12px', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))' }}>
                 {[['ID document', sel.idDocPath], ['Selfie', sel.selfiePath]].map(([label, path]) => (
-                  <a key={label} className="doc" href={path ?? undefined} target="_blank" rel="noreferrer" style={{ height: '220px', background: label === 'Selfie' ? '#23262A' : '#E4E9DF', color: label === 'Selfie' ? '#F6F1E7' : '#2F4E40', overflow: 'hidden', position: 'relative', textDecoration: 'none' }}>
+                  <a key={label} className="doc" href={path ?? undefined} target="_blank" rel="noreferrer" style={{ height: '220px', background: label === 'Selfie' ? 'var(--kb-23262a)' : 'var(--kb-e4e9df)', color: label === 'Selfie' ? 'var(--kf-f6f1e7)' : 'var(--kf-2f4e40)', overflow: 'hidden', position: 'relative', textDecoration: 'none' }}>
                     {path ? <img src={path} alt={label!} style={{ width: '100%', height: '100%', objectFit: 'contain' }} /> : 'Not uploaded'}
-                    <span style={{ position: 'absolute', left: '8px', bottom: '8px', background: 'rgba(255,253,248,.9)', color: '#23262A', padding: '2px 8px', borderRadius: '999px' }}>{label} · open full size</span>
+                    <span style={{ position: 'absolute', left: '8px', bottom: '8px', background: 'rgba(255,253,248,.9)', color: 'var(--kf-23262a)', padding: '2px 8px', borderRadius: '999px' }}>{label} · open full size</span>
                   </a>
                 ))}
               </div>
@@ -94,15 +94,15 @@ export default async function AdminIdsPage({ searchParams }: { searchParams: Pro
                 {sel.idRejectReason && <div className="ck" style={{ border: '0' }}><span className="mute">Reject reason</span><b>{sel.idRejectReason}</b></div>}
               </div>
               {sel.idStatus === 'PENDING' && (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '18px', borderRadius: '20px', background: '#F6F1E7' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', padding: '18px', borderRadius: '20px', background: 'var(--kb-f6f1e7)' }}>
                   <form action={rejectIdAction} style={{ display: 'grid', gap: '12px', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', alignItems: 'end' }}>
                     <input type="hidden" name="id" value={sel.id} /><input type="hidden" name="back" value={back} />
-                    <div><label htmlFor="rr" style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#474C52', marginBottom: '6px' }}>Reject reason (shown to user)</label><select className="in" id="rr" name="reason">{REASONS.map((r) => <option key={r}>{r}</option>)}</select></div>
-                    <div><label htmlFor="rn" style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: '#474C52', marginBottom: '6px' }}>Extra note (optional)</label><input className="in" id="rn" name="note" type="text" maxLength={200} placeholder="Retake in daylight, all 4 corners visible" /></div>
-                    <button className="btn" type="submit" style={{ background: 'transparent', color: '#8E2A20', boxShadow: 'inset 0 0 0 1.5px #B3372B' }}>Reject</button>
+                    <div><label htmlFor="rr" style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: 'var(--kf-474c52)', marginBottom: '6px' }}>Reject reason (shown to user)</label><select className="in" id="rr" name="reason">{REASONS.map((r) => <option key={r}>{r}</option>)}</select></div>
+                    <div><label htmlFor="rn" style={{ display: 'block', fontSize: '13px', fontWeight: '700', color: 'var(--kf-474c52)', marginBottom: '6px' }}>Extra note (optional)</label><input className="in" id="rn" name="note" type="text" maxLength={200} placeholder="Retake in daylight, all 4 corners visible" /></div>
+                    <button className="btn" type="submit" style={{ background: 'transparent', color: 'var(--kf-8e2a20)', boxShadow: 'inset 0 0 0 1.5px var(--kl-b3372b)' }}>Reject</button>
                   </form>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'flex-end' }}>
-                    <form action={approveIdAction}><input type="hidden" name="id" value={sel.id} /><input type="hidden" name="back" value={back} /><button className="btn" type="submit" style={{ background: '#1F4D3A', color: '#fff' }}>Approve ID</button></form>
+                    <form action={approveIdAction}><input type="hidden" name="id" value={sel.id} /><input type="hidden" name="back" value={back} /><button className="btn" type="submit" style={{ background: 'var(--kb-1f4d3a)', color: 'var(--kf-ffffff)' }}>Approve ID</button></form>
                   </div>
                 </div>
               )}

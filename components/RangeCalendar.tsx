@@ -64,14 +64,14 @@ export default function RangeCalendar({ today, unavailable, value, onChange, mon
           <div key={`${y}-${m}`}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: small ? '6px' : '10px', gap: '6px' }}>
               {idx === 0 ? (
-                <button type="button" onClick={() => step(-1)} disabled={!canPrev} aria-label="Previous month" style={{ border: 0, background: 'none', cursor: canPrev ? 'pointer' : 'default', opacity: canPrev ? 1 : 0.3, fontSize: '20px', color: '#1F4D3A', width: '28px' }}>‹</button>
+                <button type="button" onClick={() => step(-1)} disabled={!canPrev} aria-label="Previous month" style={{ border: 0, background: 'none', cursor: canPrev ? 'pointer' : 'default', opacity: canPrev ? 1 : 0.3, fontSize: '20px', color: 'var(--kf-1f4d3a)', width: '28px' }}>‹</button>
               ) : <span style={{ width: '28px' }}></span>}
               <b className="d" style={{ fontSize: small ? '15px' : '17px' }}>{MONTHS[m]} {y}</b>
               {idx === list.length - 1 ? (
-                <button type="button" onClick={() => step(1)} aria-label="Next month" style={{ border: 0, background: 'none', cursor: 'pointer', fontSize: '20px', color: '#1F4D3A', width: '28px' }}>›</button>
+                <button type="button" onClick={() => step(1)} aria-label="Next month" style={{ border: 0, background: 'none', cursor: 'pointer', fontSize: '20px', color: 'var(--kf-1f4d3a)', width: '28px' }}>›</button>
               ) : <span style={{ width: '28px' }}></span>}
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,minmax(0,1fr))', textAlign: 'center', fontSize: small ? '11px' : '12px', fontWeight: '700', color: '#60666C', marginBottom: '4px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,minmax(0,1fr))', textAlign: 'center', fontSize: small ? '11px' : '12px', fontWeight: '700', color: 'var(--kf-60666c)', marginBottom: '4px' }}>
               {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => <span key={i}>{d}</span>)}
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,minmax(0,1fr))', rowGap: small ? '3px' : '4px' }}>
@@ -80,15 +80,15 @@ export default function RangeCalendar({ today, unavailable, value, onChange, mon
                 const n = Number(d.slice(8));
                 const label = `${MONTHS[m]} ${n}`;
                 const s = value.start, e = value.end;
-                if (d < today) return <button key={d} className="day" type="button" disabled aria-label={`${label}, past`} style={{ ...sz, background: 'transparent', color: '#A3A6A1', borderRadius: '12px', fontWeight: '500' }}>{n}</button>;
-                if (busy.has(d)) return <button key={d} className="day" type="button" disabled aria-label={`${label}, unavailable`} style={{ ...sz, background: '#EDE5D5', color: '#7C7466', borderRadius: '12px', textDecoration: 'line-through', fontWeight: '600' }}>{n}</button>;
+                if (d < today) return <button key={d} className="day" type="button" disabled aria-label={`${label}, past`} style={{ ...sz, background: 'transparent', color: 'var(--kf-a3a6a1)', borderRadius: '12px', fontWeight: '500' }}>{n}</button>;
+                if (busy.has(d)) return <button key={d} className="day" type="button" disabled aria-label={`${label}, unavailable`} style={{ ...sz, background: 'var(--kb-ede5d5)', color: 'var(--kf-7c7466)', borderRadius: '12px', textDecoration: 'line-through', fontWeight: '600' }}>{n}</button>;
                 const isS = d === s, isE = d === e, inR = !!(s && e && d > s && d < e);
                 const style: React.CSSProperties =
                   isS || isE
-                    ? { background: '#1F4D3A', color: '#fff', borderRadius: s && e && s !== e ? (isS ? '12px 0 0 12px' : '0 12px 12px 0') : '12px', fontWeight: '800' }
+                    ? { background: 'var(--kb-1f4d3a)', color: 'var(--kf-ffffff)', borderRadius: s && e && s !== e ? (isS ? '12px 0 0 12px' : '0 12px 12px 0') : '12px', fontWeight: '800' }
                     : inR
-                      ? { background: '#DCE6DA', color: '#1F4D3A', borderRadius: '0', fontWeight: '600' }
-                      : { background: 'transparent', color: '#23262A', borderRadius: '12px', fontWeight: '600', boxShadow: d === today ? 'inset 0 0 0 1.5px #C9491F' : 'none' };
+                      ? { background: 'var(--kb-dce6da)', color: 'var(--kf-1f4d3a)', borderRadius: '0', fontWeight: '600' }
+                      : { background: 'transparent', color: 'var(--kf-23262a)', borderRadius: '12px', fontWeight: '600', boxShadow: d === today ? 'inset 0 0 0 1.5px #C9491F' : 'none' };
                 return <button key={d} className="day" type="button" aria-label={label} aria-pressed={isS || isE || inR} onClick={() => pick(d)} disabled={readOnly} style={{ ...sz, ...style, cursor: readOnly ? 'default' : 'pointer' }}>{n}</button>;
               })}
             </div>

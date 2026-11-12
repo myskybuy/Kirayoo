@@ -18,10 +18,10 @@ const TABS: { key: string; label: string; status: ItemStatus }[] = [
   { key: 'rejected', label: 'Rejected', status: 'REJECTED' },
 ];
 const BADGE: Record<ItemStatus, [string, string, string]> = {
-  ACTIVE: ['Live', '#DCEEDF', '#1E5A37'],
-  PENDING_REVIEW: ['Pending approval', '#FBEBCF', '#7A4708'],
-  PAUSED: ['Paused', '#EDE5D5', '#474C52'],
-  REJECTED: ['Needs changes', '#F7DCD7', '#8E2A20'],
+  ACTIVE: ['Live', 'var(--kb-dceedf)', 'var(--kf-1e5a37)'],
+  PENDING_REVIEW: ['Pending approval', 'var(--kb-fbebcf)', 'var(--kf-7a4708)'],
+  PAUSED: ['Paused', 'var(--kb-ede5d5)', 'var(--kf-474c52)'],
+  REJECTED: ['Needs changes', 'var(--kb-f7dcd7)', 'var(--kf-8e2a20)'],
 };
 
 export default async function MyListingsPage({ searchParams }: { searchParams: Promise<{ tab?: string; saved?: string; error?: string; deleted?: string }> }) {
@@ -46,21 +46,21 @@ export default async function MyListingsPage({ searchParams }: { searchParams: P
       <PageCss id="O03-MyListings" />
       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: '14px' }}>
         <h1 className="d" style={{ fontSize: 'clamp(30px,3.4vw,42px)', fontWeight: '700' }}>My listings</h1>
-        <Link className="btn" href="/owner/new" style={{ background: '#C9491F', color: '#fff' }}><svg className="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg>List an item</Link>
+        <Link className="btn" href="/owner/new" style={{ background: 'var(--kb-c9491f)', color: 'var(--kf-ffffff)' }}><svg className="ic" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"></path></svg>List an item</Link>
       </div>
       {sp.saved && <p className="k-alert ok">Saved. Your item is waiting for admin review — usually within 24 h.</p>}
       {sp.deleted && <p className="k-alert ok">Item deleted.</p>}
       {sp.error && <p className="k-alert err">{sp.error}</p>}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
         {TABS.map((t) => (
-          <Link key={t.key} href={`/owner/listings?tab=${t.key}`} className={`chip${t.key === tab.key ? ' on' : ''}`} style={{ textDecoration: 'none', color: t.key === tab.key ? '#fff' : '#23262A' }}>{t.label} · {count(t.status)}</Link>
+          <Link key={t.key} href={`/owner/listings?tab=${t.key}`} className={`chip${t.key === tab.key ? ' on' : ''}`} style={{ textDecoration: 'none', color: t.key === tab.key ? 'var(--kf-ffffff)' : 'var(--kf-23262a)' }}>{t.label} · {count(t.status)}</Link>
         ))}
       </div>
       {items.length === 0 ? (
         <div className="tw" style={{ padding: '32px', textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
           <b className="d" style={{ fontSize: '20px' }}>Nothing here yet</b>
           <p className="mute">{tab.key === 'active' ? 'Approved items show up here. New items wait in “Pending review” first.' : `No ${tab.label.toLowerCase()} items.`}</p>
-          {tab.key === 'active' && <Link className="btn" href="/owner/new" style={{ background: '#1F4D3A', color: '#fff' }}>List an item</Link>}
+          {tab.key === 'active' && <Link className="btn" href="/owner/new" style={{ background: 'var(--kb-1f4d3a)', color: 'var(--kf-ffffff)' }}>List an item</Link>}
         </div>
       ) : (
         <div className="tw"><table>
@@ -75,10 +75,10 @@ export default async function MyListingsPage({ searchParams }: { searchParams: P
                 <tr key={it.id}>
                   <td>
                     <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                      <div style={{ width: '56px', height: '44px', borderRadius: '12px', background: '#BFD1BD', flex: 'none', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#2F4E40' }}><ItemThumb photo={it.photos[0]} icon={cat?.icon} size={20} /></div>
+                      <div style={{ width: '56px', height: '44px', borderRadius: '12px', background: 'var(--kb-bfd1bd)', flex: 'none', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--kf-2f4e40)' }}><ItemThumb photo={it.photos[0]} icon={cat?.icon} size={20} /></div>
                       <div style={{ display: 'flex', flexDirection: 'column' }}>
-                        <Link href={it.status === 'ACTIVE' ? `/items/${it.id}` : `/owner/items/${it.id}/edit`} style={{ fontWeight: 700, color: '#23262A', textDecoration: 'none' }}>{it.title}</Link>
-                        <span style={{ fontSize: '12.5px', color: it.status === 'REJECTED' ? '#8E2A20' : '#60666C' }}>
+                        <Link href={it.status === 'ACTIVE' ? `/items/${it.id}` : `/owner/items/${it.id}/edit`} style={{ fontWeight: 700, color: 'var(--kf-23262a)', textDecoration: 'none' }}>{it.title}</Link>
+                        <span style={{ fontSize: '12.5px', color: it.status === 'REJECTED' ? 'var(--kf-8e2a20)' : 'var(--kf-60666c)' }}>
                           {it.status === 'REJECTED' ? `Needs changes: ${it.rejectReason ?? ''}` : it.status === 'PENDING_REVIEW' ? 'Admin reviews within 24 h' : r ? `${(r._avg.rating ?? 0).toFixed(1)} · ${r._count} reviews` : `${it.area}, ${it.city}`}
                         </span>
                       </div>
@@ -93,10 +93,10 @@ export default async function MyListingsPage({ searchParams }: { searchParams: P
                       <form action={it.status === 'ACTIVE' ? pauseItemAction : resumeItemAction}>
                         <input type="hidden" name="id" value={it.id} />
                         <button className="sw" type="submit" role="switch" aria-checked={it.status === 'ACTIVE'} aria-label={it.status === 'ACTIVE' ? 'Visible to renters — pause' : 'Paused — resume'} title={it.status === 'ACTIVE' ? 'Pause' : 'Resume'}
-                          style={{ background: it.status === 'ACTIVE' ? '#1F4D3A' : '#D9CEB8', justifyContent: it.status === 'ACTIVE' ? 'flex-end' : 'flex-start' }}><span></span></button>
+                          style={{ background: it.status === 'ACTIVE' ? 'var(--kb-1f4d3a)' : 'var(--kb-d9ceb8)', justifyContent: it.status === 'ACTIVE' ? 'flex-end' : 'flex-start' }}><span></span></button>
                       </form>
                     ) : (
-                      <button className="sw" type="button" role="switch" aria-checked="false" aria-label="Visible to renters" disabled style={{ background: '#D9CEB8', justifyContent: 'flex-start' }}><span></span></button>
+                      <button className="sw" type="button" role="switch" aria-checked="false" aria-label="Visible to renters" disabled style={{ background: 'var(--kb-d9ceb8)', justifyContent: 'flex-start' }}><span></span></button>
                     )}
                   </td>
                   <td>
@@ -104,7 +104,7 @@ export default async function MyListingsPage({ searchParams }: { searchParams: P
                       <Link href={`/owner/items/${it.id}/edit`} style={{ fontWeight: '700', fontSize: '14px' }}>Edit</Link>
                       <form action={deleteItemAction}>
                         <input type="hidden" name="id" value={it.id} />
-                        <ConfirmButton message={up ? 'This item has bookings — it can only be paused.' : `Delete “${it.title}”? This can’t be undone.`} style={{ fontWeight: 700, fontSize: '14px', color: '#8E2A20', background: 'none', border: 0, cursor: 'pointer', padding: 0 }}>Delete</ConfirmButton>
+                        <ConfirmButton message={up ? 'This item has bookings — it can only be paused.' : `Delete “${it.title}”? This can’t be undone.`} style={{ fontWeight: 700, fontSize: '14px', color: 'var(--kf-8e2a20)', background: 'none', border: 0, cursor: 'pointer', padding: 0 }}>Delete</ConfirmButton>
                       </form>
                     </div>
                   </td>

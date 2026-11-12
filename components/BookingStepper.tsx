@@ -31,11 +31,11 @@ export default function BookingStepper({ booking }: { booking: Booking }) {
           <li key={s.label}>
             <div className="stepbtn" aria-current={s.state === 'now' ? 'step' : undefined} style={{ width: '100%' }}>
               <span style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                <span style={{ width: '36px', height: '36px', borderRadius: '50%', background: s.state === 'done' ? '#1F4D3A' : s.state === 'now' ? '#C9491F' : '#FFFDF8', color: s.state === 'todo' ? '#60666C' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '14px', boxShadow: s.state === 'now' ? '0 0 0 6px #FBE3D8' : s.state === 'todo' ? 'inset 0 0 0 2px #D9CEB8' : 'none', flex: 'none' }}>{s.state === 'done' ? '✓' : i + 1}</span>
-                <span style={{ flex: '1', height: '3px', background: i === steps.length - 1 ? 'transparent' : s.state === 'done' ? '#1F4D3A' : '#E3DACA', margin: '0 8px', borderRadius: '2px' }}></span>
+                <span style={{ width: '36px', height: '36px', borderRadius: '50%', background: s.state === 'done' ? 'var(--kb-1f4d3a)' : s.state === 'now' ? 'var(--kb-c9491f)' : 'var(--kb-fffdf8)', color: s.state === 'todo' ? 'var(--kf-60666c)' : 'var(--kf-ffffff)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800', fontSize: '14px', boxShadow: s.state === 'now' ? '0 0 0 6px #FBE3D8' : s.state === 'todo' ? 'inset 0 0 0 2px #D9CEB8' : 'none', flex: 'none' }}>{s.state === 'done' ? '✓' : i + 1}</span>
+                <span style={{ flex: '1', height: '3px', background: i === steps.length - 1 ? 'transparent' : s.state === 'done' ? 'var(--kb-1f4d3a)' : 'var(--kb-e3daca)', margin: '0 8px', borderRadius: '2px' }}></span>
               </span>
-              <b style={{ fontSize: '14px', color: s.state === 'todo' ? '#60666C' : '#23262A' }}>{s.label}</b>
-              <span style={{ fontSize: '12px', color: '#60666C' }}>{s.sub}</span>
+              <b style={{ fontSize: '14px', color: s.state === 'todo' ? 'var(--kf-60666c)' : 'var(--kf-23262a)' }}>{s.label}</b>
+              <span style={{ fontSize: '12px', color: 'var(--kf-60666c)' }}>{s.sub}</span>
             </div>
           </li>
         ))}

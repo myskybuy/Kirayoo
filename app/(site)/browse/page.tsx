@@ -54,7 +54,7 @@ export default async function BrowsePage({ searchParams }: { searchParams: Promi
     <>
       <PageCss id="R03-Search" />
       <div className="wrap" style={{ paddingTop: '24px', paddingBottom: '16px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        <nav aria-label="Breadcrumb" style={{ fontSize: '13px' }} className="mute"><Link href="/" style={{ color: '#60666C' }}>Home</Link> / {loc.city} / {loc.area}{cat ? ` / ${cat.label}` : ''}</nav>
+        <nav aria-label="Breadcrumb" style={{ fontSize: '13px' }} className="mute"><Link href="/" style={{ color: 'var(--kf-60666c)' }}>Home</Link> / {loc.city} / {loc.area}{cat ? ` / ${cat.label}` : ''}</nav>
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: '16px' }}>
           <div>
             <h1 className="d" style={{ fontSize: 'clamp(28px,3vw,40px)', fontWeight: '700', lineHeight: '1.1' }}>{heading}</h1>
@@ -78,7 +78,7 @@ export default async function BrowsePage({ searchParams }: { searchParams: Promi
         </div>
       </div>
       <div className="wrap" style={{ display: 'flex', flexWrap: 'wrap', gap: '32px', alignItems: 'flex-start', paddingBottom: '72px' }}>
-        <aside aria-label="Filters" style={{ flex: '1 1 260px', minWidth: '0', maxWidth: '100%', background: '#FFFDF8', borderRadius: '24px', padding: '4px 22px 20px', boxShadow: '0 1px 2px rgba(35,38,42,.06)' }}>
+        <aside aria-label="Filters" style={{ flex: '1 1 260px', minWidth: '0', maxWidth: '100%', background: 'var(--kb-fffdf8)', borderRadius: '24px', padding: '4px 22px 20px', boxShadow: '0 1px 2px rgba(35,38,42,.06)' }}>
           <form id="filters" action="/browse" method="get">
             {cat && <input type="hidden" name="category" value={cat.slug} />}
             {f.q && <input type="hidden" name="q" value={f.q} />}

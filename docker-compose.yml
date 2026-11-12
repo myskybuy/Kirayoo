@@ -1,0 +1,39 @@
+# One command setup:  docker compose up -d --build
+# App:  http://localhost:3001
+# First start loads database-backup/kirayo.sql (all users, items, bookings).
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: kirayo
+    ports:
+      - "5438:5432"
+    volumes:
+      - kirayo-pgdata:/var/lib/postgresql/data
+      - ./database-backup/kirayo.sql:/docker-entrypoint-initdb.d/01-kirayo.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d kirayo"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/kirayo?schema=public
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./private-uploads:/app/private-uploads
+
+volumes:
+  kirayo-pgdata:

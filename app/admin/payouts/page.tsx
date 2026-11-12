@@ -35,15 +35,15 @@ export default async function PayoutsPage({ searchParams }: { searchParams: Prom
       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: '14px' }}>
         <div><p className="mute" style={{ fontSize: '14px' }}>Online bookings only · created when the deposit is settled</p><h1 className="d" style={{ fontSize: 'clamp(30px,3.4vw,40px)', fontWeight: '700' }}>Payouts</h1></div>
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-          <span className="badge" style={{ background: '#FBEBCF', color: '#7A4708', padding: '8px 14px' }}>To pay: {inr(pendingAgg._sum.amount ?? 0)} · {pendingAgg._count}</span>
-          <span className="badge" style={{ background: '#DCEEDF', color: '#1E5A37', padding: '8px 14px' }}>Paid: {inr(paidAgg._sum.amount ?? 0)} · {paidAgg._count}</span>
+          <span className="badge" style={{ background: 'var(--kb-fbebcf)', color: 'var(--kf-7a4708)', padding: '8px 14px' }}>To pay: {inr(pendingAgg._sum.amount ?? 0)} · {pendingAgg._count}</span>
+          <span className="badge" style={{ background: 'var(--kb-dceedf)', color: 'var(--kf-1e5a37)', padding: '8px 14px' }}>Paid: {inr(paidAgg._sum.amount ?? 0)} · {paidAgg._count}</span>
         </div>
       </div>
       {sp.ok && <p className="k-alert ok">{sp.ok}</p>}
       {sp.error && <p className="k-alert err">{sp.error}</p>}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
-        <Link href="/admin/payouts?tab=pending" className="k-btn sm" style={tab === 'pending' ? { background: '#23262A', color: '#fff' } : { background: '#FFFDF8', color: '#23262A', boxShadow: 'inset 0 0 0 1px #E3DACA' }}>To pay · {pendingAgg._count}</Link>
-        <Link href="/admin/payouts?tab=paid" className="k-btn sm" style={tab === 'paid' ? { background: '#23262A', color: '#fff' } : { background: '#FFFDF8', color: '#23262A', boxShadow: 'inset 0 0 0 1px #E3DACA' }}>Paid · {paidAgg._count}</Link>
+        <Link href="/admin/payouts?tab=pending" className="k-btn sm" style={tab === 'pending' ? { background: 'var(--kb-23262a)', color: 'var(--kf-ffffff)' } : { background: 'var(--kb-fffdf8)', color: 'var(--kf-23262a)', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)' }}>To pay · {pendingAgg._count}</Link>
+        <Link href="/admin/payouts?tab=paid" className="k-btn sm" style={tab === 'paid' ? { background: 'var(--kb-23262a)', color: 'var(--kf-ffffff)' } : { background: 'var(--kb-fffdf8)', color: 'var(--kf-23262a)', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)' }}>Paid · {paidAgg._count}</Link>
         <AdminSearch action="/admin/payouts" q={q} hidden={{ tab }} placeholder="Owner, booking code, reference" />
       </div>
       <div className="tw"><table>
@@ -63,7 +63,7 @@ export default async function PayoutsPage({ searchParams }: { searchParams: Prom
                 <td className="r"><b>{inr(p.amount)}</b></td>
                 <td>
                   {p.status === 'PAID' ? (
-                    <span className="badge" style={{ background: '#DCEEDF', color: '#1E5A37' }}>Paid {p.paidAt ? fmtTime(p.paidAt) : ''} · {p.reference}</span>
+                    <span className="badge" style={{ background: 'var(--kb-dceedf)', color: 'var(--kf-1e5a37)' }}>Paid {p.paidAt ? fmtTime(p.paidAt) : ''} · {p.reference}</span>
                   ) : (
                     <form action={markPayoutPaidAction} style={{ display: 'flex', gap: '6px' }}>
                       <input type="hidden" name="id" value={p.id} /><input type="hidden" name="back" value={qs({})} />

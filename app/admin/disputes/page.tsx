@@ -41,13 +41,13 @@ export default async function DisputesPage({ searchParams }: { searchParams: Pro
       {sp.ok && <p className="k-alert ok">{sp.ok}</p>}
       {sp.error && <p className="k-alert err">{sp.error}</p>}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
-        <Link className="badge" href={`/admin/disputes?tab=open`} style={tab === 'open' ? { background: '#23262A', color: '#fff', padding: '8px 14px', textDecoration: 'none' } : { background: '#FFFDF8', color: '#474C52', padding: '8px 14px', boxShadow: 'inset 0 0 0 1px #E3DACA', textDecoration: 'none' }}>Open · {openN}</Link>
-        <Link className="badge" href={`/admin/disputes?tab=decided`} style={tab === 'decided' ? { background: '#23262A', color: '#fff', padding: '8px 14px', textDecoration: 'none' } : { background: '#FFFDF8', color: '#474C52', padding: '8px 14px', boxShadow: 'inset 0 0 0 1px #E3DACA', textDecoration: 'none' }}>Decided · {decidedN}</Link>
+        <Link className="badge" href={`/admin/disputes?tab=open`} style={tab === 'open' ? { background: 'var(--kb-23262a)', color: 'var(--kf-ffffff)', padding: '8px 14px', textDecoration: 'none' } : { background: 'var(--kb-fffdf8)', color: 'var(--kf-474c52)', padding: '8px 14px', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)', textDecoration: 'none' }}>Open · {openN}</Link>
+        <Link className="badge" href={`/admin/disputes?tab=decided`} style={tab === 'decided' ? { background: 'var(--kb-23262a)', color: 'var(--kf-ffffff)', padding: '8px 14px', textDecoration: 'none' } : { background: 'var(--kb-fffdf8)', color: 'var(--kf-474c52)', padding: '8px 14px', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)', textDecoration: 'none' }}>Decided · {decidedN}</Link>
         <AdminSearch action="/admin/disputes" q={q} hidden={{ tab }} placeholder="Booking code or name" />
       </div>
       {claims.length > 1 && (
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-          {claims.map((c) => <Link key={c.id} className="badge" href={qs({ id: c.bookingId })} style={c.id === sel?.id ? { background: '#23262A', color: '#fff', padding: '8px 14px', textDecoration: 'none' } : { background: '#FFFDF8', color: '#474C52', padding: '8px 14px', boxShadow: 'inset 0 0 0 1px #E3DACA', textDecoration: 'none' }}>{c.booking.code} · {c.booking.item.title.slice(0, 24)}</Link>)}
+          {claims.map((c) => <Link key={c.id} className="badge" href={qs({ id: c.bookingId })} style={c.id === sel?.id ? { background: 'var(--kb-23262a)', color: 'var(--kf-ffffff)', padding: '8px 14px', textDecoration: 'none' } : { background: 'var(--kb-fffdf8)', color: 'var(--kf-474c52)', padding: '8px 14px', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)', textDecoration: 'none' }}>{c.booking.code} · {c.booking.item.title.slice(0, 24)}</Link>)}
         </div>
       )}
       {!sel || !b ? (
@@ -55,20 +55,20 @@ export default async function DisputesPage({ searchParams }: { searchParams: Pro
       ) : (
         <>
           <section className="card" style={{ padding: '22px', display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center' }}>
-            <div style={{ width: '72px', height: '56px', borderRadius: '14px', background: '#F1E3D3', overflow: 'hidden' }}>{b.item.photos[0] && <img src={b.item.photos[0]} alt="" className="k-photo" />}</div>
+            <div style={{ width: '72px', height: '56px', borderRadius: '14px', background: 'var(--kb-f1e3d3)', overflow: 'hidden' }}>{b.item.photos[0] && <img src={b.item.photos[0]} alt="" className="k-photo" />}</div>
             <div style={{ flex: '1 1 300px' }}><b style={{ fontSize: '17px' }}>{b.item.title} · {b.code}</b><p className="mute" style={{ fontSize: '13.5px' }}>{shortName(b.renter.name)} (renter) ↔ {shortName(b.owner.name)} (owner) · {fmtRange(b.startDate, b.endDate)} · {lateDays(b, b.returnedAt ?? new Date()) ? `${lateDays(b, b.returnedAt ?? new Date())} day(s) late` : 'returned on time'} · deposit {inr(b.deposit)} · {b.paymentMode === 'CASH_AT_PICKUP' ? 'cash booking' : 'paid online'}</p></div>
-            <span className="badge" style={{ background: '#FBEBCF', color: '#7A4708' }}>{inr(sel.amount)} claimed{sel.status === 'RESOLVED' ? ` · decided ${inr(sel.adminDecisionAmount ?? 0)}` : ''}</span>
+            <span className="badge" style={{ background: 'var(--kb-fbebcf)', color: 'var(--kf-7a4708)' }}>{inr(sel.amount)} claimed{sel.status === 'RESOLVED' ? ` · decided ${inr(sel.adminDecisionAmount ?? 0)}` : ''}</span>
             <Link href={`/admin/bookings?q=${b.code}`} style={{ fontSize: '13px', fontWeight: 700 }}>Booking timeline</Link>
           </section>
           <div style={{ display: 'grid', gap: '16px', gridTemplateColumns: 'repeat(auto-fit,minmax(min(320px,100%),1fr))' }}>
-            <section className="card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '8px', background: '#FBF0EC' }}>
-              <span className="badge" style={{ alignSelf: 'flex-start', background: '#F7DCD7', color: '#8E2A20' }}>Owner claim · {inr(sel.amount)}{sel.lateFee ? ` (incl. late fee ${inr(sel.lateFee)})` : ''}</span>
+            <section className="card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '8px', background: 'var(--kb-fbf0ec)' }}>
+              <span className="badge" style={{ alignSelf: 'flex-start', background: 'var(--kb-f7dcd7)', color: 'var(--kf-8e2a20)' }}>Owner claim · {inr(sel.amount)}{sel.lateFee ? ` (incl. late fee ${inr(sel.lateFee)})` : ''}</span>
               <p style={{ fontSize: '14.5px' }}>“{sel.reason}”</p>
               {sel.photos.length > 0 && <div className="k-thumbs">{sel.photos.map((p) => <a key={p} href={p} target="_blank" rel="noreferrer"><img src={p} alt="Owner evidence" className="k-photo" /></a>)}</div>}
               <span className="mute" style={{ fontSize: '12.5px' }}>{b.owner.name} · {fmtTime(sel.createdAt)} · {sel.photos.length} photo{sel.photos.length === 1 ? '' : 's'}</span>
             </section>
-            <section className="card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '8px', background: '#EEF3EC' }}>
-              <span className="badge" style={{ alignSelf: 'flex-start', background: '#DCE6DA', color: '#1F4D3A' }}>Renter response · disputes</span>
+            <section className="card" style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '8px', background: 'var(--kb-eef3ec)' }}>
+              <span className="badge" style={{ alignSelf: 'flex-start', background: 'var(--kb-dce6da)', color: 'var(--kf-1f4d3a)' }}>Renter response · disputes</span>
               <p style={{ fontSize: '14.5px' }}>“{sel.renterNote ?? '—'}”</p>
               <span className="mute" style={{ fontSize: '12.5px' }}>{b.renter.name}</span>
             </section>

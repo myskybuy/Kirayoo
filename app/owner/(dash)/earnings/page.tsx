@@ -30,13 +30,13 @@ export default async function EarningsPage({ searchParams }: { searchParams: Pro
       <PageCss id="O08-Earnings" />
       <h1 className="d" style={{ fontSize: 'clamp(30px,3.4vw,42px)', fontWeight: '700' }}>Earnings &amp; payouts</h1>
       <div style={{ display: 'grid', gap: '14px', gridTemplateColumns: 'repeat(auto-fit,minmax(min(200px,100%),1fr))' }}>
-        <div className="kpi" style={{ background: '#1F4D3A', color: '#F6F1E7' }}><span style={{ fontSize: '13px', color: '#DCE6DA' }}>Next payout</span><b className="v">{inr(pending._sum.amount ?? 0)}</b><span style={{ fontSize: '12.5px', color: '#BFD1BD' }}>{pending._count} rental{pending._count === 1 ? '' : 's'} settled, waiting for transfer</span></div>
-        <div className="kpi"><span className="mute" style={{ fontSize: '13px' }}>On hold</span><b className="v" style={{ color: '#7A4708' }}>{inr(holdAmount)}</b><span className="mute" style={{ fontSize: '12.5px' }}>{onHold.length} online rental{onHold.length === 1 ? '' : 's'} not settled yet</span></div>
+        <div className="kpi" style={{ background: 'var(--kb-1f4d3a)', color: 'var(--kf-f6f1e7)' }}><span style={{ fontSize: '13px', color: 'var(--kf-dce6da)' }}>Next payout</span><b className="v">{inr(pending._sum.amount ?? 0)}</b><span style={{ fontSize: '12.5px', color: 'var(--kf-bfd1bd)' }}>{pending._count} rental{pending._count === 1 ? '' : 's'} settled, waiting for transfer</span></div>
+        <div className="kpi"><span className="mute" style={{ fontSize: '13px' }}>On hold</span><b className="v" style={{ color: 'var(--kf-7a4708)' }}>{inr(holdAmount)}</b><span className="mute" style={{ fontSize: '12.5px' }}>{onHold.length} online rental{onHold.length === 1 ? '' : 's'} not settled yet</span></div>
         <div className="kpi"><span className="mute" style={{ fontSize: '13px' }}>Paid in {monthYear(new Date()).split(' ')[0]}</span><b className="v">{inr(paidMonth._sum.amount ?? 0)}</b><span className="mute" style={{ fontSize: '12.5px' }}>{PLATFORM_FEE_PERCENT ? `after ${PLATFORM_FEE_PERCENT}% Kirayo fee` : 'no Kirayo fee'}</span></div>
         <div className="kpi"><span className="mute" style={{ fontSize: '13px' }}>Since you joined</span><b className="v">{inr(paidAll._sum.amount ?? 0)}</b><span className="mute" style={{ fontSize: '12.5px' }}>{monthYear(user.createdAt)} – today</span></div>
       </div>
-      <section style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center', padding: '20px 22px', borderRadius: '24px', background: '#FFFDF8', boxShadow: 'inset 0 0 0 1px #E3DACA' }}>
-        <span style={{ width: '48px', height: '48px', borderRadius: '16px', background: '#DCE6DA', color: '#1F4D3A', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg className="ic" viewBox="0 0 24 24"><path d="M3 10 12 4l9 6M5 10v8M9 10v8M15 10v8M19 10v8M3 20h18"></path></svg></span>
+      <section style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center', padding: '20px 22px', borderRadius: '24px', background: 'var(--kb-fffdf8)', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)' }}>
+        <span style={{ width: '48px', height: '48px', borderRadius: '16px', background: 'var(--kb-dce6da)', color: 'var(--kf-1f4d3a)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg className="ic" viewBox="0 0 24 24"><path d="M3 10 12 4l9 6M5 10v8M9 10v8M15 10v8M19 10v8M3 20h18"></path></svg></span>
         <div style={{ flex: '1 1 260px' }}><b>How payouts work</b><p className="mute" style={{ fontSize: '13.5px' }}>For online bookings Kirayo pays you rent{PLATFORM_FEE_PERCENT ? ` minus a ${PLATFORM_FEE_PERCENT}% fee` : ''} plus any approved claim, once the deposit is settled. The transfer reference appears here. Cash bookings you collect yourself.</p></div>
       </section>
       <h2 className="d" style={{ fontSize: '22px', fontWeight: '700' }}>Transactions</h2>
@@ -57,7 +57,7 @@ export default async function EarningsPage({ searchParams }: { searchParams: Pro
                 <td className="r mute">− {inr(cancelled ? rent - p.amount : b.platformFee)}</td>
                 <td className="r">{!cancelled && claimAmountFor(b.claim) ? `+ ${inr(claimAmountFor(b.claim))}` : '—'}</td>
                 <td className="r"><b>{inr(p.amount)}</b></td>
-                <td>{p.status === 'PAID' ? <span className="badge" style={{ background: '#DCEEDF', color: '#1E5A37' }}>Paid {p.paidAt ? fmtTime(p.paidAt) : ''} · {p.reference}</span> : <span className="badge" style={{ background: '#FBEBCF', color: '#7A4708' }}>Scheduled</span>}</td>
+                <td>{p.status === 'PAID' ? <span className="badge" style={{ background: 'var(--kb-dceedf)', color: 'var(--kf-1e5a37)' }}>Paid {p.paidAt ? fmtTime(p.paidAt) : ''} · {p.reference}</span> : <span className="badge" style={{ background: 'var(--kb-fbebcf)', color: 'var(--kf-7a4708)' }}>Scheduled</span>}</td>
               </tr>
             );
           })}

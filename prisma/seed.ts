@@ -28,6 +28,7 @@ async function wipe() {
     prisma.session.deleteMany(),
     prisma.emailOtp.deleteMany(),
     prisma.contactMessage.deleteMany(),
+    prisma.ownerApplication.deleteMany(),
     prisma.user.deleteMany(),
     prisma.area.deleteMany(),
     prisma.city.deleteMany(),
@@ -52,17 +53,34 @@ async function main() {
     data: { email: 'riya@kirayo.test', name: 'Riya Sharma', phone: '+91 98450 12345', city: 'Bengaluru', area: 'Indiranagar', address: 'Flat 4B, Lakshmi Residency, 12th Main, HAL 2nd Stage, Indiranagar, Bengaluru 560008', idStatus: 'VERIFIED', idDocType: 'Aadhaar', idSubmittedAt: daysAgo(90), idReviewedAt: daysAgo(90), createdAt: daysAgo(95) },
   });
   const arjun = await prisma.user.create({
-    data: { email: 'arjun@kirayo.test', name: 'Arjun Mehta', phone: '+91 99000 11223', city: 'Bengaluru', area: 'Indiranagar', address: '22, 100 Feet Road, Indiranagar, Bengaluru 560038', idStatus: 'VERIFIED', idDocType: 'Driving licence', idSubmittedAt: daysAgo(300), idReviewedAt: daysAgo(300), createdAt: daysAgo(310) },
+    data: { email: 'arjun@kirayo.test', name: 'Arjun Mehta', phone: '+91 99000 11223', city: 'Bengaluru', area: 'Indiranagar', address: '22, 100 Feet Road, Indiranagar, Bengaluru 560038', idStatus: 'VERIFIED', ownerStatus: 'APPROVED', idDocType: 'Driving licence', idSubmittedAt: daysAgo(300), idReviewedAt: daysAgo(300), createdAt: daysAgo(310) },
+  });
+  await prisma.ownerApplication.create({
+    data: { userId: arjun.id, name: arjun.name, phone: arjun.phone!, categories: ['CAMERAS', 'TOOLS', 'CAMPING', 'GAMING', 'MUSIC'], plans: 'Camera kit, power tools, camping gear, a PS5 and a guitar I rarely use.', termsAt: daysAgo(305), submittedAt: daysAgo(305), reviewedAt: daysAgo(304) },
   });
   const neha = await prisma.user.create({
-    data: { email: 'neha@kirayo.test', name: 'Neha Kulkarni', city: 'Bengaluru', area: 'Koramangala', idStatus: 'PENDING', idDocType: 'Aadhaar', idSubmittedAt: new Date(Date.now() - 3 * 3600000), createdAt: daysAgo(2) },
+    data: { email: 'neha@kirayo.test', name: 'Neha Kulkarni', city: 'Bengaluru', area: 'Koramangala', idStatus: 'PENDING', ownerStatus: 'PENDING', idDocType: 'Aadhaar', idSubmittedAt: new Date(Date.now() - 3 * 3600000), createdAt: daysAgo(2) },
+  });
+  await prisma.ownerApplication.create({
+    data: { userId: neha.id, name: neha.name, phone: '+91 98861 44120', categories: ['PARTY', 'MUSIC'], plans: 'A party speaker with two mics and fairy lights for house parties.', termsAt: new Date(Date.now() - 2 * 3600000), submittedAt: new Date(Date.now() - 2 * 3600000) },
   });
   await prisma.user.update({
     where: { id: neha.id },
     data: { idDocPath: await importPrivateBuffer(readSeedAsset('sample-id.jpg'), neha.id), selfiePath: await importPrivateBuffer(readSeedAsset('sample-selfie.jpg'), neha.id) },
   });
   const vikram = await prisma.user.create({
-    data: { email: 'vikram@kirayo.test', name: 'Vikram Singh', city: 'Mumbai', area: 'Bandra West', idStatus: 'REJECTED', idDocType: 'PAN', idRejectReason: 'The photo is blurry — the name and ID number are not readable. Please upload a sharp photo in good light.', idSubmittedAt: daysAgo(3), idReviewedAt: daysAgo(2), createdAt: daysAgo(4) },
+    data: { email: 'vikram@kirayo.test', name: 'Vikram Singh', city: 'Mumbai', area: 'Bandra West', idStatus: 'REJECTED', idDocType: 'PAN', idRejectReason: 'The photo is blurry — the name and ID number are not readable. Please upload a sharp photo in good light.', idSubmittedAt: daysAgo(3), idReviewedAt: daysAgo(2), createdAt: daysAgo(4),
+      ownerStatus: 'REJECTED', ownerRejectReason: 'Please list the actual items you will rent (brand / model), not just “electronics”.' },
+  });
+  await prisma.ownerApplication.create({
+    data: { userId: vikram.id, name: vikram.name, phone: '+91 90040 55671', categories: ['GAMING'], plans: 'Various electronics.', termsAt: daysAgo(3), submittedAt: daysAgo(3), reviewedAt: daysAgo(2) },
+  });
+  // ID verified, owner application waiting: the admin approves him, then he can list.
+  const kabir = await prisma.user.create({
+    data: { email: 'kabir@kirayo.test', name: 'Kabir Malhotra', phone: '+91 97400 31882', city: 'Bengaluru', area: 'HSR Layout', idStatus: 'VERIFIED', idDocType: 'Passport', idSubmittedAt: daysAgo(6), idReviewedAt: daysAgo(6), ownerStatus: 'PENDING', createdAt: daysAgo(7) },
+  });
+  await prisma.ownerApplication.create({
+    data: { userId: kabir.id, name: kabir.name, phone: kabir.phone!, categories: ['CAMPING', 'SPORTS'], plans: 'A 4-person Quechua tent, two sleeping bags and a Btwin hybrid cycle.', termsAt: new Date(Date.now() - 20 * 3600000), submittedAt: new Date(Date.now() - 20 * 3600000) },
   });
   await prisma.user.update({
     where: { id: vikram.id },

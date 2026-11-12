@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import SideNav, { type NavItem } from '@/components/SideNav';
 import { requireUser } from '@/lib/auth';
 import { currentPath } from '@/lib/path';
+import { canUseOwnerPanel } from '@/lib/owner-gate';
 import { actionCounts } from '@/lib/header';
 import { avatarColor, initials } from '@/lib/format';
 
@@ -18,11 +19,11 @@ const I = {
   star: '<path d="m12 3.5 2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z"></path>',
 };
 
-// Owner panel requires a VERIFIED ID. /owner/start lives outside this group,
-// so unverified users can always reach it (no redirect loop).
+// Owner panel requires an APPROVED owner application and a VERIFIED ID.
+// /owner/apply lives outside this group, so it is always reachable (no loop).
 export default async function OwnerDashLayout({ children }: { children: React.ReactNode }) {
   const user = await requireUser(await currentPath());
-  if (user.idStatus !== 'VERIFIED') redirect('/owner/start');
+  if (!canUseOwnerPanel(user)) redirect('/owner/apply');
   const c = await actionCounts(user);
   const items: NavItem[] = [
     { href: '/owner', label: 'Dashboard', icon: I.home, exact: true },
@@ -36,13 +37,13 @@ export default async function OwnerDashLayout({ children }: { children: React.Re
   ];
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', minHeight: '100vh' }}>
-      <div style={{ flex: '1 1 248px', maxWidth: '100%', background: '#1F4D3A' }}>
+      <div style={{ flex: '1 1 248px', maxWidth: '100%', background: 'var(--kb-1f4d3a)' }}>
         <SideNav
           variant="owner"
           items={items}
           user={{ initials: initials(user.name), name: user.name, sub: `${user.area ?? ''} · ID verified`, color: avatarColor(user.id) }}
           footer={
-            <Link href="/" style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', gap: '10px', minHeight: '44px', padding: '0 12px', borderRadius: '14px', color: '#F6F1E7', textDecoration: 'none', fontSize: '14px', fontWeight: '600', boxShadow: 'inset 0 0 0 1px rgba(246,241,231,.24)' }}>
+            <Link href="/" style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', gap: '10px', minHeight: '44px', padding: '0 12px', borderRadius: '14px', color: 'var(--kf-f6f1e7)', textDecoration: 'none', fontSize: '14px', fontWeight: '600', boxShadow: 'inset 0 0 0 1px rgba(246,241,231,.24)' }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg>Switch to renting
             </Link>
           }

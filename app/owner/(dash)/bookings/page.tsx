@@ -39,12 +39,12 @@ export default async function OwnerBookingsPage({ searchParams }: { searchParams
         <div><h1 className="d" style={{ fontSize: 'clamp(30px,3.4vw,42px)', fontWeight: '700' }}>Bookings</h1><p className="mute">Handover at pickup and return happens on each booking’s page.</p></div>
         <Link href="/owner/requests" style={{ fontWeight: 700, fontSize: '14px' }}>Booking requests →</Link>
       </div>
-      <div role="tablist" aria-label="Booking status" style={{ display: 'flex', gap: '6px', padding: '5px', borderRadius: '24px', background: '#FFFDF8', boxShadow: 'inset 0 0 0 1px #E3DACA', alignSelf: 'flex-start', flexWrap: 'wrap' }}>
+      <div role="tablist" aria-label="Booking status" style={{ display: 'flex', gap: '6px', padding: '5px', borderRadius: '24px', background: 'var(--kb-fffdf8)', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)', alignSelf: 'flex-start', flexWrap: 'wrap' }}>
         {TABS.map((t) => {
           const on = t.key === tab.key;
           const n = bookings.filter((b) => t.statuses.includes(b.status)).length;
           return (
-            <Link key={t.key} className="tab" role="tab" aria-selected={on} href={`/owner/bookings?tab=${t.key}`} style={{ background: on ? '#1F4D3A' : 'transparent', color: on ? '#fff' : '#474C52', textDecoration: 'none', minHeight: '42px', fontSize: '14px', padding: '0 16px' }}>
+            <Link key={t.key} className="tab" role="tab" aria-selected={on} href={`/owner/bookings?tab=${t.key}`} style={{ background: on ? 'var(--kb-1f4d3a)' : 'transparent', color: on ? 'var(--kf-ffffff)' : 'var(--kf-474c52)', textDecoration: 'none', minHeight: '42px', fontSize: '14px', padding: '0 16px' }}>
               {t.label}<span style={{ minWidth: '22px', height: '22px', padding: '0 6px', boxSizing: 'border-box', borderRadius: '999px', background: on ? 'rgba(255,255,255,.2)' : '#EDE5D5', fontSize: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{n}</span>
             </Link>
           );
@@ -52,7 +52,7 @@ export default async function OwnerBookingsPage({ searchParams }: { searchParams
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
         {rows.map((b) => (
-          <BookingRow key={b.id} photo={b.item.photos[0]} badge={isOverdue(b) ? BADGES.OVERDUE : b.status === 'PENDING_PAYMENT' ? { text: 'Awaiting payment', bg: '#FBEBCF', fg: '#7A4708' } : BADGES[b.status]} code={b.code} title={b.item.title}
+          <BookingRow key={b.id} photo={b.item.photos[0]} badge={isOverdue(b) ? BADGES.OVERDUE : b.status === 'PENDING_PAYMENT' ? { text: 'Awaiting payment', bg: 'var(--kb-fbebcf)', fg: 'var(--kf-7a4708)' } : BADGES[b.status]} code={b.code} title={b.item.title}
             sub={`${fmtRange(b.startDate, b.endDate)} · ${b.days} day${b.days > 1 ? 's' : ''} · ${b.renter.name}${b.paymentMode === 'CASH_AT_PICKUP' ? ' · cash at pickup' : ''}`}
             next={nextStepFor(b, 'OWNER')} detailsHref={`/owner/bookings/${b.id}`} />
         ))}

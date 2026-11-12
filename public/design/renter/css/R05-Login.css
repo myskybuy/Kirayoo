@@ -1,17 +1,17 @@
 /* R05-Login — page styles (exported from the Kirayo canvas). Shared tokens + fonts live in ../assets/css/kirayo.css */
 
 /* from R05-Login */
-body{margin:0;background:#F6F1E7;color:#23262A;font:400 15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif}
-a{color:#1F4D3A}a:hover{color:#163A2B}
+body{margin:0;background:var(--kb-f6f1e7);color:var(--kf-23262a);font:400 15px/1.55 'Plus Jakarta Sans',system-ui,sans-serif}
+a{color:var(--kf-1f4d3a)}a:hover{color:var(--kf-163a2b)}
 h1,h2,h3,h4,p{margin:0}
 .d{font-family:'Bricolage Grotesque',Georgia,serif;letter-spacing:-.025em}
 .ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:54px;padding:0 24px;border-radius:999px;font:700 15px/1 'Plus Jakarta Sans',sans-serif;border:0;cursor:pointer;text-decoration:none;white-space:nowrap;box-sizing:border-box}
-.btn-p{background:#C9491F;color:#fff}.btn-p:hover{background:#A93C18;color:#fff}
-.lbl{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:#474C52}
-.in{width:100%;box-sizing:border-box;min-height:54px;padding:0 16px 0 48px;border-radius:16px;border:1.5px solid #E3DACA;background:#fff;font:500 16px 'Plus Jakarta Sans',sans-serif;color:#23262A}
-.in:focus{outline:none;border-color:#1F4D3A;box-shadow:0 0 0 4px rgba(31,77,58,.14)}
-.mute{color:#60666C}
+.btn-p{background:var(--kb-c9491f);color:var(--kf-ffffff)}.btn-p:hover{background:var(--kb-a93c18);color:var(--kf-ffffff)}
+.lbl{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:var(--kf-474c52)}
+.in{width:100%;box-sizing:border-box;min-height:54px;padding:0 16px 0 48px;border-radius:16px;border:1.5px solid var(--kl-e3daca);background:var(--kb-ffffff);font:500 16px 'Plus Jakarta Sans',sans-serif;color:var(--kf-23262a)}
+.in:focus{outline:none;border-color:var(--kl-1f4d3a);box-shadow:0 0 0 4px rgba(31,77,58,.14)}
+.mute{color:var(--kf-60666c)}
 
 /* from KHeader */
 body{margin:0}

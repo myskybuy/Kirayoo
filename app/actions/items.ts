@@ -48,6 +48,7 @@ function parseJson(v: FormDataEntryValue | null): unknown {
 export async function saveItemAction(_: FormState, fd: FormData): Promise<FormState> {
   const user = await getUser();
   if (!user) return { error: 'Please log in again.' };
+  if (user.ownerStatus !== 'APPROVED') return { error: 'Your owner application must be approved before you list items.' };
   if (user.idStatus !== 'VERIFIED') return { error: 'Verify your ID before listing items.' };
 
   const parsed = itemSchema.safeParse({

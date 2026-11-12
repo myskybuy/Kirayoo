@@ -65,6 +65,8 @@ export function itemData(ownerId: string, c: CatalogItem, city: string, area: st
     area,
     status: o.status ?? 'ACTIVE',
     rejectReason: o.rejectReason ?? null,
+    // Demo page views (stable per title + area) so "Trending" has something to rank.
+    views: (o.status ?? 'ACTIVE') === 'ACTIVE' ? 6 + ([...(c.title + area)].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7) % 230) : 0,
     createdAt: o.createdAt ?? new Date(),
   };
 }
@@ -97,6 +99,7 @@ export async function seedAreaOwners(prisma: PrismaClient) {
             area,
             address: `${10 + Math.floor(r() * 200)}, ${area}, ${c.name}`,
             idStatus: 'VERIFIED',
+            ownerStatus: 'APPROVED',
             idDocType: 'Aadhaar',
             idSubmittedAt: new Date(Date.now() - days * 86400000),
             idReviewedAt: new Date(Date.now() - days * 86400000 + 3 * 3600000),

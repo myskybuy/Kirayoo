@@ -22,7 +22,7 @@ export default function ClaimForm({ bookingId, deposit, renterFirst, lateDays, p
       <input type="hidden" name="lateFee" value={lateN} />
       <div><span className="k-lbl" style={{ marginBottom: '6px' }}>What happened?</span>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-          {KINDS.map((k) => <button key={k} className="k-pill" type="button" aria-pressed={kind === k} onClick={() => setKind(k)} style={kind === k ? { background: '#23262A', color: '#fff' } : { background: '#fff', color: '#23262A', boxShadow: 'inset 0 0 0 1px #E3DACA' }}>{k}</button>)}
+          {KINDS.map((k) => <button key={k} className="k-pill" type="button" aria-pressed={kind === k} onClick={() => setKind(k)} style={kind === k ? { background: 'var(--kb-23262a)', color: 'var(--kf-ffffff)' } : { background: 'var(--kb-ffffff)', color: 'var(--kf-23262a)', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)' }}>{k}</button>)}
         </div>
       </div>
       <div style={{ display: 'grid', gap: '14px', gridTemplateColumns: 'repeat(auto-fit,minmax(min(220px,100%),1fr))' }}>
@@ -37,14 +37,14 @@ export default function ClaimForm({ bookingId, deposit, renterFirst, lateDays, p
       </div>
       <div><span className="k-lbl" style={{ marginBottom: '6px' }}>Evidence (photos, repair quote)</span><PhotoUploader kind="claim" name="photos" max={6} tile={110} label="Add photos" /></div>
       <label className="k-lbl">Explain for {renterFirst} and the admin<textarea className="k-in" name="reason" required minLength={5} maxLength={500} placeholder="What is damaged or missing, and how you worked out the amount."></textarea></label>
-      <div style={{ padding: '16px', borderRadius: '18px', background: '#F6F1E7', display: 'grid', gap: '6px', fontSize: '14px' }}>
+      <div style={{ padding: '16px', borderRadius: '18px', background: 'var(--kb-f6f1e7)', display: 'grid', gap: '6px', fontSize: '14px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Deposit held</span><b>{inr(deposit)}</b></div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', color: '#8E2A20' }}><span>Your claim</span><b>− {inr(total)}</b></div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', color: '#1E5A37' }}><span>Back to {renterFirst}</span><b>{inr(deposit - total)}</b></div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--kf-8e2a20)' }}><span>Your claim</span><b>− {inr(total)}</b></div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--kf-1e5a37)' }}><span>Back to {renterFirst}</span><b>{inr(deposit - total)}</b></div>
         <span className="mute" style={{ fontSize: '12.5px' }}>{renterFirst} can accept or dispute within 48 h (no answer = accepted). If disputed, Kirayo admin decides using both condition reports.</span>
-        {Number(extra) + lateN > deposit && <span style={{ color: '#8E2A20', fontSize: '12.5px', fontWeight: 700 }}>A claim can’t be more than the deposit — capped at {inr(deposit)}.</span>}
+        {Number(extra) + lateN > deposit && <span style={{ color: 'var(--kf-8e2a20)', fontSize: '12.5px', fontWeight: 700 }}>A claim can’t be more than the deposit — capped at {inr(deposit)}.</span>}
       </div>
-      <div style={{ display: 'flex', justifyContent: 'flex-end' }}><button className="k-btn" type="submit" disabled={total < 1} style={{ background: '#B3372B', color: '#fff' }}>Submit claim of {inr(total)}</button></div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}><button className="k-btn" type="submit" disabled={total < 1} style={{ background: 'var(--kb-b3372b)', color: 'var(--kf-ffffff)' }}>Submit claim of {inr(total)}</button></div>
     </form>
   );
 }

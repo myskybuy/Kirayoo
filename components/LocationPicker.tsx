@@ -21,13 +21,13 @@ export default function LocationPicker({ cities, current, next }: { cities: City
       <input type="hidden" name="area" value={areaOk ? area : ''} />
       <input type="hidden" name="next" value={next} />
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <b style={{ fontSize: '13px', color: '#474C52' }}>1 · City</b>
+        <b style={{ fontSize: '13px', color: 'var(--kf-474c52)' }}>1 · City</b>
         <div role="radiogroup" aria-label="City" style={{ display: 'grid', gap: '10px', gridTemplateColumns: 'repeat(auto-fill,minmax(150px,1fr))' }}>
           {cities.map((c) => {
             const on = c.name === city;
             return (
               <button key={c.name} className="city" type="button" role="radio" aria-checked={on} onClick={() => { setCity(c.name); setArea(''); setQ(''); }}
-                style={on ? { background: '#1F4D3A', color: '#fff', boxShadow: 'none' } : { background: '#F6F1E7', color: '#23262A', boxShadow: 'inset 0 0 0 1px #E3DACA' }}>
+                style={on ? { background: 'var(--kb-1f4d3a)', color: 'var(--kf-ffffff)', boxShadow: 'none' } : { background: 'var(--kb-f6f1e7)', color: 'var(--kf-23262a)', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)' }}>
                 {c.name}<span style={{ fontSize: '12px', fontWeight: '500', opacity: '.8' }}>{c.areas.length} areas</span>
               </button>
             );
@@ -35,9 +35,9 @@ export default function LocationPicker({ cities, current, next }: { cities: City
         </div>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <label htmlFor="area-q" style={{ fontSize: '13px', fontWeight: '700', color: '#474C52' }}>2 · Area in {city}</label>
+        <label htmlFor="area-q" style={{ fontSize: '13px', fontWeight: '700', color: 'var(--kf-474c52)' }}>2 · Area in {city}</label>
         <div style={{ position: 'relative' }}>
-          <svg className="ic" viewBox="0 0 24 24" style={{ position: 'absolute', left: '16px', top: '16px', color: '#60666C' }}><circle cx="11" cy="11" r="6.5"></circle><path d="m20 20-4-4"></path></svg>
+          <svg className="ic" viewBox="0 0 24 24" style={{ position: 'absolute', left: '16px', top: '16px', color: 'var(--kf-60666c)' }}><circle cx="11" cy="11" r="6.5"></circle><path d="m20 20-4-4"></path></svg>
           <input className="in" id="area-q" type="text" placeholder="Search areas" value={q} onChange={(e) => setQ(e.target.value)} />
         </div>
         <div role="radiogroup" aria-label="Area" style={{ display: 'grid', gap: '8px', gridTemplateColumns: 'repeat(auto-fill,minmax(200px,1fr))' }}>
@@ -45,15 +45,15 @@ export default function LocationPicker({ cities, current, next }: { cities: City
             const on = a === area;
             return (
               <button key={a} className="area" type="button" role="radio" aria-checked={on} onClick={() => setArea(a)}
-                style={on ? { background: '#EEF3EC', color: '#1F4D3A', boxShadow: 'inset 0 0 0 2px #1F4D3A' } : { background: '#fff', color: '#23262A', boxShadow: 'inset 0 0 0 1px #E3DACA' }}>
-                <span style={on ? { width: '20px', height: '20px', borderRadius: '50%', boxShadow: 'inset 0 0 0 5px #DCE6DA', background: '#1F4D3A', flex: 'none' } : { width: '20px', height: '20px', borderRadius: '50%', boxShadow: 'inset 0 0 0 1.5px #BFB4A0', background: '#fff', flex: 'none' }}></span>{a}
+                style={on ? { background: 'var(--kb-eef3ec)', color: 'var(--kf-1f4d3a)', boxShadow: 'inset 0 0 0 2px var(--kl-1f4d3a)' } : { background: 'var(--kb-ffffff)', color: 'var(--kf-23262a)', boxShadow: 'inset 0 0 0 1px var(--kl-e3daca)' }}>
+                <span style={on ? { width: '20px', height: '20px', borderRadius: '50%', boxShadow: 'inset 0 0 0 5px var(--kl-dce6da)', background: 'var(--kb-1f4d3a)', flex: 'none' } : { width: '20px', height: '20px', borderRadius: '50%', boxShadow: 'inset 0 0 0 1.5px var(--kl-bfb4a0)', background: 'var(--kb-ffffff)', flex: 'none' }}></span>{a}
               </button>
             );
           })}
           {!areas.length && <p className="mute">No area matches “{q}”.</p>}
         </div>
       </div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', alignItems: 'center', justifyContent: 'space-between', paddingTop: '20px', borderTop: '1px solid #E3DACA' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', alignItems: 'center', justifyContent: 'space-between', paddingTop: '20px', borderTop: '1px solid var(--kl-e3daca)' }}>
         <span style={{ fontSize: '14px' }}>{areaOk ? <>Showing items near <b>{area}, {city}</b></> : 'Pick an area to continue'}</span>
         <button className="btn btn-p" type="submit" disabled={!areaOk}>{areaOk ? `Show items in ${area}` : 'Choose an area'}
           <svg className="ic" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>

@@ -10,12 +10,12 @@ export default function Page() {
       <PageCss id="R24-Terms" />
       <div className="wrap" style={{ paddingTop: "48px", paddingBottom: "72px", display: "flex", flexDirection: "column", gap: "28px" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-            <span style={{ fontSize: "12px", fontWeight: "800", letterSpacing: ".08em", textTransform: "uppercase", color: "#C9491F" }}>Legal</span>
-            <h1 className="d" style={{ fontSize: "clamp(36px,4.4vw,56px)", fontWeight: "700", color: "#1F4D3A", lineHeight: "1" }}>Terms of use</h1>
+            <span style={{ fontSize: "12px", fontWeight: "800", letterSpacing: ".08em", textTransform: "uppercase", color: "var(--kf-c9491f)" }}>Legal</span>
+            <h1 className="d" style={{ fontSize: "clamp(36px,4.4vw,56px)", fontWeight: "700", color: "var(--kf-1f4d3a)", lineHeight: "1" }}>Terms of use</h1>
             <p className="mute">Last updated 13 Oct 2026</p>
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "40px", alignItems: "flex-start" }}>
-            <nav className="toc" aria-label="On this page" style={{ flex: "1 1 220px", maxWidth: "260px", position: "sticky", top: "20px", background: "#FFFDF8", borderRadius: "22px", padding: "10px" }}>
+            <nav className="toc" aria-label="On this page" style={{ flex: "1 1 220px", maxWidth: "260px", position: "sticky", top: "20px", background: "var(--kb-fffdf8)", borderRadius: "22px", padding: "10px" }}>
               <a href="#t1">1. Who we are</a><a href="#t2">2. Your account</a><a href="#t3">3. Listing items</a><a href="#t4">4. Renting items</a><a href="#t5">5. Payments &amp; fees</a><a href="#t6">6. Deposits &amp; disputes</a><a href="#t7">7. Prohibited items</a><a href="#t8">8. Liability</a><a href="#t9">9. Contact</a>
             </nav>
             <article className="doc" style={{ flex: "999 1 520px", minWidth: "0" }}>

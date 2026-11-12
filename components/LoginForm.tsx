@@ -18,7 +18,7 @@ export default function LoginForm({ next, signup = false, email = '' }: { next: 
         <div>
           <label className="lbl" htmlFor="nm">Full name (as on your government ID)</label>
           <div style={{ position: 'relative' }}>
-            <svg className="ic" viewBox="0 0 24 24" style={{ position: 'absolute', left: '16px', top: '17px', color: '#60666C' }}><circle cx="12" cy="8" r="4"></circle><path d="M4.5 20a7.5 7.5 0 0 1 15 0"></path></svg>
+            <svg className="ic" viewBox="0 0 24 24" style={{ position: 'absolute', left: '16px', top: '17px', color: 'var(--kf-60666c)' }}><circle cx="12" cy="8" r="4"></circle><path d="M4.5 20a7.5 7.5 0 0 1 15 0"></path></svg>
             <input className="in" id="nm" name="name" type="text" required autoComplete="name" value={nm} onChange={(e) => setNm(e.target.value)} />
           </div>
         </div>
@@ -26,7 +26,7 @@ export default function LoginForm({ next, signup = false, email = '' }: { next: 
       <div>
         <label className="lbl" htmlFor="em">Email address</label>
         <div style={{ position: 'relative' }}>
-          <svg className="ic" viewBox="0 0 24 24" style={{ position: 'absolute', left: '16px', top: '17px', color: '#60666C' }}><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="m4 7 8 6 8-6"></path></svg>
+          <svg className="ic" viewBox="0 0 24 24" style={{ position: 'absolute', left: '16px', top: '17px', color: 'var(--kf-60666c)' }}><rect x="3" y="5" width="18" height="14" rx="3"></rect><path d="m4 7 8 6 8-6"></path></svg>
           <input className="in" id="em" name="email" type="email" required value={em} onChange={(e) => setEm(e.target.value)} autoComplete="email" autoFocus={!signup} />
         </div>
       </div>

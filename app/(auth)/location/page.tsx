@@ -15,9 +15,9 @@ export default async function LocationPage({ searchParams }: { searchParams: Pro
     <>
       <PageCss id="R02-Location" />
       <div className="wrap" style={{ paddingTop: 'clamp(20px,5vw,48px)', paddingBottom: '72px' }}>
-        <div style={{ maxWidth: '880px', margin: '0 auto', background: '#FFFDF8', borderRadius: '32px', boxShadow: '0 2px 6px rgba(35,38,42,.06),0 30px 60px -24px rgba(31,77,58,.35)', padding: 'clamp(24px,4vw,44px)', display: 'flex', flexDirection: 'column', gap: '30px' }}>
+        <div style={{ maxWidth: '880px', margin: '0 auto', background: 'var(--kb-fffdf8)', borderRadius: '32px', boxShadow: '0 2px 6px rgba(35,38,42,.06),0 30px 60px -24px rgba(31,77,58,.35)', padding: 'clamp(24px,4vw,44px)', display: 'flex', flexDirection: 'column', gap: '30px' }}>
           <div style={{ display: 'flex', gap: '18px', alignItems: 'flex-start' }}>
-            <span style={{ width: '56px', height: '56px', borderRadius: '18px', background: '#DCE6DA', color: '#1F4D3A', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}><svg className="ic" viewBox="0 0 24 24" style={{ width: '28px', height: '28px' }}><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg></span>
+            <span style={{ width: '56px', height: '56px', borderRadius: '18px', background: 'var(--kb-dce6da)', color: 'var(--kf-1f4d3a)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none' }}><svg className="ic" viewBox="0 0 24 24" style={{ width: '28px', height: '28px' }}><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg></span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
               <span className="eyebrow">{current ? 'Change location' : 'One-time setup'}</span>
               <h1 className="d" style={{ fontSize: 'clamp(30px,3.4vw,42px)', fontWeight: '700', lineHeight: '1.05' }}>Where should we look for items?</h1>
